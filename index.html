@@ -1835,14 +1835,25 @@ async function renderAdmin(){
         Add, edit, delete and import CBT questions.
        </p>
 
-       <button
-        class="btn primary"
-        style="margin-top:15px"
-        onclick="adminQuestionBank()">
+       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">
 
-        Open Question Bank
+        <button
+         class="btn primary"
+         onclick="adminQuestionBank()">
 
-       </button>
+         Open Question Bank
+
+        </button>
+
+        <button
+         class="btn secondary"
+         onclick="openCSVImport()">
+
+         ð¥ Import Questions
+
+        </button>
+
+       </div>
 
       </div>
 
@@ -3839,6 +3850,7 @@ async function saveQuestion(id){
 
   const payload={
     subject_id,
+    topic_id: topic || null,
     question_text,
     correct_answer,
     difficulty,
@@ -3848,14 +3860,7 @@ async function saveQuestion(id){
     recommendation
   };
 
-  if(
-    existing?.topic!==undefined||
-    !existing
-  ){
-
-    payload.topic=
-      topic||null;
-  }
+  payload.topic_id=topic||null;
 
   /*
    * If the existing questions table stores the
@@ -3931,15 +3936,21 @@ async function saveQuestion(id){
 
   if(questionId){
 
-    await saveQuestionOptions(
+    const optionSync=await saveQuestionOptions(
       questionId,
       [
         ["A",option_a],
         ["B",option_b],
         ["C",option_c],
         ["D",option_d]
-      ]
+      ],
+      correct_answer
     );
+
+    if(!optionSync.success){
+      document.getElementById("questionMessage").innerHTML=`<div class="errorBox">${escapeHTML(optionSync.error)}</div>`;
+      return;
+    }
   }
 
   closeQuestionModal();
@@ -3947,73 +3958,52 @@ async function saveQuestion(id){
   await adminQuestionBank();
 }
 
-async function saveQuestionOptions(
-  questionId,
-  options
-){
+async function saveQuestionOptions(questionId, options, correctAnswer=""){
 
   try{
+    const normalizedCorrect=normalizeAnswer(correctAnswer);
 
-    const existing=
-      await db
-        .from("question_options")
-        .select("*")
-        .eq("question_id",questionId);
-
-    if(existing.error){
-
-      return;
-    }
-
-    /*
-     * Delete old options first, then recreate
-     * the four current options.
-    */
-
-    await db
+    const del=await db
       .from("question_options")
       .delete()
       .eq("question_id",questionId);
 
-    for(
-      const [letter,text]
-      of options
-    ){
-
-      const payload={
-        question_id:questionId,
-        option_letter:letter,
-        option_text:text
-      };
-
-      const insert=
-        await db
-          .from("question_options")
-          .insert(payload);
-
-      if(insert.error){
-
-        /*
-         * Some schemas use "label"/"text".
-         * Try a second common format.
-        */
-
-        await db
-          .from("question_options")
-          .insert({
-            question_id:questionId,
-            label:letter,
-            text:text
-          });
-      }
+    if(del.error){
+      throw new Error("Could not clear existing options: "+del.error.message);
     }
 
-  }catch(error){
+    const rows=(options||[])
+      .map((item,index)=>{
+        const letter=String(item?.[0]||"").trim().toUpperCase();
+        const text=String(item?.[1]||"").trim();
+        return {
+          question_id:questionId,
+          option_key:letter,
+          option_letter:letter,
+          option_text:text,
+          is_correct:letter===normalizedCorrect,
+          sort_order:index
+        };
+      })
+      .filter(row=>row.option_key && row.option_text);
 
-    console.warn(
-      "Question options sync:",
-      error
-    );
+    if(!rows.length){
+      throw new Error("No valid answer options were supplied.");
+    }
+
+    const ins=await db
+      .from("question_options")
+      .insert(rows);
+
+    if(ins.error){
+      throw new Error(ins.error.message);
+    }
+
+    return {success:true};
+
+  }catch(error){
+    console.error("Question options sync:",error);
+    return {success:false,error:error.message||"Could not save options."};
   }
 }
 
@@ -4059,7 +4049,23 @@ async function deleteQuestion(id){
    CSV IMPORT
 ========================================================= */
 
-function openCSVImport(){
+async function openCSVImport(){
+
+  // Prevent duplicate import windows.
+  const existing=document.getElementById("csvModal");
+  if(existing){
+    existing.remove();
+  }
+
+  // Make sure the subject list is available even when the
+  // import button is opened directly from the dashboard.
+  try{
+    if(!Array.isArray(subjects) || !subjects.length){
+      await loadSubjects();
+    }
+  }catch(error){
+    console.warn("Unable to load subjects before CSV import:",error);
+  }
 
   document.body.insertAdjacentHTML(
     "beforeend",
@@ -4076,6 +4082,7 @@ function openCSVImport(){
        </h2>
 
        <button
+        type="button"
         class="closeBtn"
         onclick="closeCSVImport()">
 
@@ -4085,45 +4092,43 @@ function openCSVImport(){
 
       </div>
 
-      <p class="muted"
-       style="margin-top:8px">
-
-       CSV columns supported:
-
+      <p class="muted" style="margin-top:8px">
+       Upload a CSV file and the questions will be saved directly to PHILMYSCHOOL.
       </p>
 
-      <div class="panel"
-       style="margin-top:15px">
+      <div class="panel" style="margin-top:15px">
 
-       <code style="
-        display:block;
-        white-space:pre-wrap;
-        line-height:1.7">
+       <strong>CSV columns</strong>
 
-subject_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answer,difficulty,marks,status,feedback,recommendation
-
+       <code style="display:block;white-space:pre-wrap;line-height:1.7;margin-top:8px">
+subject_id,subject,topic_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answer,difficulty,marks,status,explanation,feedback,recommendation
        </code>
+
+       <p class="muted" style="margin-top:10px">
+        correct_answer must be A, B, C or D.
+       </p>
 
       </div>
 
       <div class="formGroup">
 
-       <label>
-        CSV File
-       </label>
+       <label>CSV File</label>
 
        <input
         id="csvFile"
         type="file"
-        accept=".csv,text/csv">
+        accept=".csv,text/csv"
+        onchange="showCSVFileName()">
+
+       <small id="csvFileName" class="muted" style="display:block;margin-top:7px">
+        No file selected
+       </small>
 
       </div>
 
       <div class="formGroup">
 
-       <label>
-        Default Subject
-       </label>
+       <label>Default Subject</label>
 
        <select id="csvSubject">
 
@@ -4131,15 +4136,10 @@ subject_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answe
          Use subject_id column
         </option>
 
-        ${subjects.map(s=>`
+        ${(Array.isArray(subjects)?subjects:[]).map(s=>`
 
          <option value="${s.id}">
-          ${escapeHTML(
-            s.name||
-            s.subject_name||
-            s.code||
-            ""
-          )}
+          ${escapeHTML(s.name||s.subject_name||s.code||"")}
          </option>
 
         `).join("")}
@@ -4150,25 +4150,21 @@ subject_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answe
 
       <div id="csvMessage"></div>
 
-      <div style="
-       display:flex;
-       gap:10px;
-       margin-top:20px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
 
        <button
+        type="button"
         class="btn secondary"
         onclick="closeCSVImport()">
-
         Cancel
-
        </button>
 
        <button
+        type="button"
         class="btn primary"
+        id="csvImportButton"
         onclick="importCSV()">
-
-        Import Questions
-
+        ð¥ Import Questions
        </button>
 
       </div>
@@ -4177,6 +4173,15 @@ subject_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answe
 
     </div>`
   );
+}
+
+function showCSVFileName(){
+  const input=document.getElementById("csvFile");
+  const label=document.getElementById("csvFileName");
+  if(!label)return;
+  label.textContent=input?.files?.[0]
+    ? input.files[0].name
+    : "No file selected";
 }
 
 function closeCSVImport(){
@@ -4285,245 +4290,193 @@ function csvObjects(text){
 
 async function importCSV(){
 
-  const file=
-    document.getElementById(
-      "csvFile"
-    ).files[0];
+  const fileInput=document.getElementById("csvFile");
+  const subjectSelect=document.getElementById("csvSubject");
+  const message=document.getElementById("csvMessage");
+  const button=document.getElementById("csvImportButton");
 
-  const defaultSubject=
-    document.getElementById(
-      "csvSubject"
-    ).value||"";
+  if(!fileInput || !message){
+    alert("The import window could not be opened correctly. Refresh the page and try again.");
+    return;
+  }
 
-  const message=
-    document.getElementById(
-      "csvMessage"
-    );
-
+  const file=fileInput.files?.[0];
   if(!file){
-
-    message.innerHTML=`
-
-    <div class="errorBox">
-     Select a CSV file.
-    </div>`;
-
+    message.innerHTML=`<div class="errorBox">Select a CSV file first.</div>`;
     return;
   }
 
-  const text=
-    await file.text();
-
-  const rows=
-    csvObjects(text);
-
-  if(!rows.length){
-
-    message.innerHTML=`
-
-    <div class="errorBox">
-     No CSV records were found.
-    </div>`;
-
-    return;
+  if(button){
+    button.disabled=true;
+    button.textContent="â³ Importing...";
   }
 
-  let inserted=0;
-  let failed=0;
-  const errors=[];
+  message.innerHTML=`<div class="panel">Reading and validating your CSV...</div>`;
 
-  for(
-    let i=0;
-    i<rows.length;
-    i++
-  ){
+  try{
+    const text=await file.text();
+    const rows=csvObjects(text);
 
-    const r=rows[i];
-
-    const subject_id=
-      r.subject_id||
-      defaultSubject;
-
-    const question_text=
-      r.question_text||
-      r.question||
-      r.text||
-      "";
-
-    const option_a=
-      r.option_a||
-      r.a||
-      "";
-
-    const option_b=
-      r.option_b||
-      r.b||
-      "";
-
-    const option_c=
-      r.option_c||
-      r.c||
-      "";
-
-    const option_d=
-      r.option_d||
-      r.d||
-      "";
-
-    const correct_answer=
-      normalizeAnswer(
-        r.correct_answer||
-        r.answer
-      );
-
-    if(
-      !subject_id||
-      !question_text||
-      !option_a||
-      !option_b||
-      !option_c||
-      !option_d||
-      !["A","B","C","D"]
-        .includes(correct_answer)
-    ){
-
-      failed++;
-
-      errors.push(
-        `Row ${i+2}: missing required data`
-      );
-
-      continue;
+    if(!rows.length){
+      throw new Error("No CSV records were found. Make sure the first row contains column headers.");
     }
 
-    const payload={
-      subject_id,
-      question_text,
-      correct_answer,
-      difficulty:
-        r.difficulty||
-        "medium",
-      marks:
-        Number(r.marks||1),
-      status:
-        r.status||
-        "published",
-      feedback:
-        r.feedback||null,
-      recommendation:
-        r.recommendation||null,
-      created_by:
-        user?.id||null
+    const defaultSubjectId=subjectSelect?.value||"";
+
+    // Load subjects/topics once so CSV files may use IDs, names, or codes.
+    const [subjectsResult,topicsResult]=await Promise.all([
+      db.from("subjects").select("id,name,code,is_active"),
+      db.from("topics").select("id,subject_id,name,is_active")
+    ]);
+
+    if(subjectsResult.error){
+      throw new Error("Could not load subjects: "+subjectsResult.error.message);
+    }
+
+    if(topicsResult.error){
+      throw new Error("Could not load topics: "+topicsResult.error.message);
+    }
+
+    const subjectList=subjectsResult.data||[];
+    const topicList=topicsResult.data||[];
+
+    const findSubjectId=(raw)=>{
+      const value=String(raw||"").trim();
+      if(!value)return defaultSubjectId||null;
+      if(subjectList.some(x=>String(x.id)===value))return value;
+      const lower=value.toLowerCase();
+      const match=subjectList.find(x=>
+        String(x.name||"").trim().toLowerCase()===lower ||
+        String(x.code||"").trim().toLowerCase()===lower
+      );
+      return match?.id||null;
     };
 
-    /*
-     * Topic is supported when the column exists.
-     * Supabase rejects unknown columns, so try the
-     * normal current structure first.
-    */
+    const findTopicId=(raw,subjectId)=>{
+      const value=String(raw||"").trim();
+      if(!value)return null;
+      if(topicList.some(x=>String(x.id)===value))return value;
+      const lower=value.toLowerCase();
+      const match=topicList.find(x=>
+        String(x.subject_id||"")===String(subjectId||"") &&
+        String(x.name||"").trim().toLowerCase()===lower
+      );
+      return match?.id||null;
+    };
 
-    payload.topic=
-      r.topic||
-      r.topic_name||
-      null;
+    let inserted=0;
+    let failed=0;
+    const errors=[];
 
-    payload.option_a=option_a;
-    payload.option_b=option_b;
-    payload.option_c=option_c;
-    payload.option_d=option_d;
+    for(let i=0;i<rows.length;i++){
+      const r=rows[i]||{};
 
-    let result=
-      await db
-        .from("questions")
-        .insert(payload)
-        .select()
-        .single();
+      try{
+        const subjectId=findSubjectId(
+          r.subject_id||r.subject_id_uuid||r.subject||r.subject_name||r.subject_code
+        );
 
-    /*
-     * If the current table doesn't have direct option
-     * columns, retry without them.
-    */
+        const topicId=findTopicId(
+          r.topic_id||r.topic||r.topic_name,
+          subjectId
+        );
 
-    if(
-      result.error&&
-      /option_[abcd]/i.test(
-        result.error.message||""
-      )
-    ){
+        const questionText=String(
+          r.question_text||r.question||r.text||""
+        ).trim();
 
-      delete payload.option_a;
-      delete payload.option_b;
-      delete payload.option_c;
-      delete payload.option_d;
+        const optionA=String(r.option_a||r.a||"").trim();
+        const optionB=String(r.option_b||r.b||"").trim();
+        const optionC=String(r.option_c||r.c||"").trim();
+        const optionD=String(r.option_d||r.d||"").trim();
 
-      result=
-        await db
+        const correctAnswer=normalizeAnswer(
+          r.correct_answer||r.answer||r.correct
+        );
+
+        if(!subjectId)throw new Error("Subject was not found. Use a subject UUID, subject name/code, or select Default Subject.");
+        if(!questionText)throw new Error("Question text is missing.");
+        if(!optionA||!optionB||!optionC||!optionD)throw new Error("Options A, B, C and D are all required.");
+        if(!["A","B","C","D"].includes(correctAnswer))throw new Error("Correct answer must be A, B, C or D.");
+
+        const payload={
+          subject_id:subjectId,
+          topic_id:topicId,
+          question_text:questionText,
+          explanation:r.explanation||null,
+          difficulty:r.difficulty||"medium",
+          marks:Number(r.marks||1),
+          source_type:r.source_type||"import",
+          source_name:r.source_name||null,
+          source_year:r.source_year?Number(r.source_year):null,
+          status:r.status||"published",
+          created_by:user?.id||null,
+          reviewed_by:null,
+          image_url:r.image_url||null,
+          option_a:optionA,
+          option_b:optionB,
+          option_c:optionC,
+          option_d:optionD,
+          correct_answer:correctAnswer,
+          feedback:r.feedback||null,
+          recommendation:r.recommendation||null
+        };
+
+        const result=await db
           .from("questions")
           .insert(payload)
-          .select()
+          .select("id")
           .single();
+
+        if(result.error){
+          throw new Error(result.error.message);
+        }
+
+        const questionId=result.data?.id;
+        if(!questionId)throw new Error("Question was saved but no question ID was returned.");
+
+        const optionResult=await saveQuestionOptions(
+          questionId,
+          [["A",optionA],["B",optionB],["C",optionC],["D",optionD]],
+          correctAnswer
+        );
+
+        if(!optionResult.success){
+          await db.from("questions").delete().eq("id",questionId);
+          throw new Error(optionResult.error||"Could not save the answer options.");
+        }
+
+        inserted++;
+
+      }catch(rowError){
+        failed++;
+        errors.push(`Row ${i+2}: ${rowError.message||"Unknown error"}`);
+      }
     }
 
-    if(result.error){
+    const errorBlock=errors.length
+      ?`<div style="margin-top:14px;max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px">${escapeHTML(errors.slice(0,30).join("\n"))}</div>`
+      :"";
 
-      failed++;
+    message.innerHTML=`
+      <div class="${failed?"errorBox":"successBox"}">
+        <strong>Import complete</strong><br><br>
+        Added: <strong>${inserted}</strong><br>
+        Failed: <strong>${failed}</strong>
+        ${errorBlock}
+      </div>`;
 
-      errors.push(
-        `Row ${i+2}: ${result.error.message}`
-      );
+    await loadQuestionBank();
 
-      continue;
-    }
-
-    inserted++;
-
-    const questionId=
-      result.data?.id;
-
-    if(questionId){
-
-      await saveQuestionOptions(
-        questionId,
-        [
-          ["A",option_a],
-          ["B",option_b],
-          ["C",option_c],
-          ["D",option_d]
-        ]
-      );
+  }catch(error){
+    console.error("CSV IMPORT ERROR",error);
+    message.innerHTML=`<div class="errorBox"><strong>Import failed</strong><br><br>${escapeHTML(error.message||"Unknown error")}</div>`;
+  }finally{
+    if(button){
+      button.disabled=false;
+      button.textContent="ð¥ Import Questions";
     }
   }
-
-  message.innerHTML=`
-
-  <div class="${
-    failed
-    ?"errorBox"
-    :"successBox"
-  }">
-
-   Import complete.
-
-   <br>
-   Added: ${inserted}
-
-   <br>
-   Failed: ${failed}
-
-   ${
-     errors.length
-     ?`
-      <br><br>
-      ${escapeHTML(
-        errors.slice(0,10).join("\n")
-      )}
-     `
-     :""
-   }
-
-  </div>`;
-
-  await loadQuestionBank();
 }
 
 /* =========================================================
@@ -7305,7 +7258,7 @@ const MODULES={
     ],
 
     defaults:{
-      mode:"mock",
+      mode:existing?.mode||"mock",
       access_level:"free",
       price:0,
       currency:"NGN",
@@ -7464,7 +7417,312 @@ const MODULES={
   }
 };
 
+function examSlug(title){
+  const base=String(title||"exam")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"") || "exam";
+  return base+"-"+Date.now().toString(36);
+}
+
+async function adminExams(){
+
+  await loadSubjects();
+
+  document.getElementById("app").innerHTML=`
+  <div class="portal">
+    ${adminSidebar()}
+    <div class="main">
+      ${portalHeader("Exams")}
+      <main class="content">
+        <h1>ð§ª Exams</h1>
+        <p class="muted">Create, configure, publish and assign questions to examinations without opening Supabase.</p>
+        <div class="moduleToolbar">
+          <button class="btn primary" onclick="openExamForm()">+ Create Exam</button>
+          <button class="btn secondary" onclick="adminExams()">â» Refresh</button>
+        </div>
+        <div id="examAdminArea" class="studentTableWrap">
+          <div class="loading">Loading exams...</div>
+        </div>
+      </main>
+    </div>
+  </div>`;
+
+  await loadAdminExams();
+}
+
+async function loadAdminExams(){
+  const area=document.getElementById("examAdminArea");
+  if(!area)return;
+
+  const result=await db
+    .from("exams")
+    .select("*")
+    .order("created_at",{ascending:false})
+    .limit(500);
+
+  if(result.error){
+    area.innerHTML=`<div class="errorBox">${escapeHTML(result.error.message)}</div>`;
+    return;
+  }
+
+  const exams=result.data||[];
+  window.adminExamRows=exams;
+
+  if(!exams.length){
+    area.innerHTML=`<div class="tableEmpty"><h3>No exams yet.</h3><p>Create your first exam above.</p></div>`;
+    return;
+  }
+
+  area.innerHTML=`
+    <table class="studentTable">
+      <thead><tr>
+        <th>Exam</th><th>Type</th><th>Duration</th><th>Questions</th><th>Pass Mark</th><th>Status</th><th>Actions</th>
+      </tr></thead>
+      <tbody>
+        ${exams.map(e=>`
+          <tr>
+            <td><strong>${escapeHTML(e.title||"Untitled")}</strong><br><small>${escapeHTML(e.slug||"")}</small></td>
+            <td>${escapeHTML(e.exam_type||"CBT")}</td>
+            <td>${escapeHTML(e.duration_minutes??"â")} min</td>
+            <td>${escapeHTML(e.total_questions??0)}</td>
+            <td>${escapeHTML(e.pass_mark??0)}</td>
+            <td><span class="badge ${e.status==="published"?"badgeGreen":"badgeRed"}">${escapeHTML(e.status||"draft")}</span></td>
+            <td>
+              <div style="display:flex;gap:7px;flex-wrap:wrap">
+                <button class="btn primary" style="padding:7px 10px" onclick="manageExamQuestions('${e.id}')">Questions</button>
+                <button class="btn secondary" style="padding:7px 10px" onclick="openExamForm('${e.id}')">Edit</button>
+                <button class="btn danger" style="padding:7px 10px" onclick="deleteExam('${e.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>`).join("")}
+      </tbody>
+    </table>`;
+}
+
+function openExamForm(id=null){
+  const existing=(window.adminExamRows||[]).find(x=>String(x.id)===String(id))||null;
+  const title=existing?.title||"";
+  const slug=existing?.slug||"";
+  const subjectId=existing?.subject_id||"";
+
+  document.body.insertAdjacentHTML("beforeend",`
+    <div class="modal" id="examAdminModal">
+      <div class="modalBox">
+        <div class="modalHead">
+          <h2>${id?"Edit":"Create"} Exam</h2>
+          <button class="closeBtn" onclick="closeExamForm()">â</button>
+        </div>
+        <div class="formGrid">
+          <div class="formGroup full"><label>Title *</label><input id="exam_title" value="${escapeHTML(title)}" placeholder="e.g. JAMB Biology Mock 1"></div>
+          <div class="formGroup"><label>Subject</label><select id="exam_subject"><option value="">All / Mixed Subjects</option>${subjects.map(s=>`<option value="${s.id}" ${String(subjectId)===String(s.id)?"selected":""}>${escapeHTML(s.name||s.code||"")}</option>`).join("")}</select></div>
+          <div class="formGroup"><label>Exam Type *</label><input id="exam_type" value="${escapeHTML(existing?.exam_type||"CBT")}"></div>
+          <div class="formGroup"><label>Duration (minutes) *</label><input id="exam_duration" type="number" min="1" value="${escapeHTML(existing?.duration_minutes??60)}"></div>
+          <div class="formGroup"><label>Questions per Attempt</label><input id="exam_questions_per_attempt" type="number" min="0" value="${escapeHTML(existing?.questions_per_attempt??0)}"><small class="muted">0 = use all assigned questions.</small></div>
+          <div class="formGroup"><label>Question Selection</label><select id="exam_selection"><option value="all" ${existing?.question_selection_mode!=="random"?"selected":""}>All assigned</option><option value="random" ${existing?.question_selection_mode==="random"?"selected":""}>Random</option></select></div>
+          <div class="formGroup"><label>Pass Mark (%)</label><input id="exam_pass" type="number" min="0" max="100" value="${escapeHTML(existing?.pass_mark??50)}"></div>
+          <div class="formGroup"><label>Access Level</label><input id="exam_access" value="${escapeHTML(existing?.access_level||"free")}"></div>
+          <div class="formGroup"><label>Price</label><input id="exam_price" type="number" min="0" value="${escapeHTML(existing?.price??0)}"></div>
+          <div class="formGroup"><label>Currency</label><input id="exam_currency" value="${escapeHTML(existing?.currency||"NGN")}"></div>
+          <div class="formGroup"><label>Status</label><select id="exam_status"><option value="draft" ${existing?.status!=="published"?"selected":""}>Draft</option><option value="published" ${existing?.status==="published"?"selected":""}>Published</option><option value="active" ${existing?.status==="active"?"selected":""}>Active</option><option value="closed" ${existing?.status==="closed"?"selected":""}>Closed</option></select></div>
+          <div class="formGroup"><label><input id="exam_random_questions" type="checkbox" style="width:auto" ${existing?.randomize_questions!==false?"checked":""}> Randomize Questions</label></div>
+          <div class="formGroup"><label><input id="exam_random_options" type="checkbox" style="width:auto" ${existing?.randomize_options!==false?"checked":""}> Randomize Options</label></div>
+          <div class="formGroup"><label><input id="exam_back" type="checkbox" style="width:auto" ${existing?.allow_back_navigation!==false?"checked":""}> Allow Back Navigation</label></div>
+          <div class="formGroup"><label><input id="exam_result" type="checkbox" style="width:auto" ${existing?.show_result_immediately!==false?"checked":""}> Show Result Immediately</label></div>
+          <div class="formGroup full"><label>Description</label><textarea id="exam_description">${escapeHTML(existing?.description||"")}</textarea></div>
+          <div class="formGroup full"><label>Instructions</label><textarea id="exam_instructions">${escapeHTML(existing?.instructions||"")}</textarea></div>
+        </div>
+        <div id="examFormMessage"></div>
+        <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+          <button class="btn secondary" onclick="closeExamForm()">Cancel</button>
+          <button class="btn primary" onclick="saveExamForm('${id||""}')">${id?"Save Changes":"Create Exam"}</button>
+        </div>
+      </div>
+    </div>`);
+}
+
+function closeExamForm(){document.getElementById("examAdminModal")?.remove();}
+
+async function saveExamForm(id){
+  const title=document.getElementById("exam_title")?.value.trim();
+  const duration=Number(document.getElementById("exam_duration")?.value||0);
+  const type=document.getElementById("exam_type")?.value.trim()||"CBT";
+  const message=document.getElementById("examFormMessage");
+
+  if(!title||duration<1){
+    message.innerHTML=`<div class="errorBox">Exam title and duration are required.</div>`;
+    return;
+  }
+
+  const existing=(window.adminExamRows||[]).find(x=>String(x.id)===String(id))||null;
+  const payload={
+    title,
+    slug:existing?.slug||examSlug(title),
+    description:document.getElementById("exam_description")?.value.trim()||null,
+    exam_type:type,
+    mode:"mock",
+    duration_minutes:duration,
+    total_questions:Number(existing?.total_questions||0),
+    total_marks:Number(existing?.total_marks||0),
+    pass_mark:Number(document.getElementById("exam_pass")?.value||50),
+    instructions:document.getElementById("exam_instructions")?.value.trim()||null,
+    randomize_questions:document.getElementById("exam_random_questions")?.checked===true,
+    randomize_options:document.getElementById("exam_random_options")?.checked===true,
+    allow_back_navigation:document.getElementById("exam_back")?.checked===true,
+    show_result_immediately:document.getElementById("exam_result")?.checked===true,
+    access_level:document.getElementById("exam_access")?.value.trim()||"free",
+    price:Number(document.getElementById("exam_price")?.value||0),
+    currency:document.getElementById("exam_currency")?.value.trim()||"NGN",
+    status:document.getElementById("exam_status")?.value||"draft",
+    subject_id:document.getElementById("exam_subject")?.value||null,
+    questions_per_attempt:Number(document.getElementById("exam_questions_per_attempt")?.value||0)||null,
+    question_selection_mode:document.getElementById("exam_selection")?.value||"all",
+    updated_at:new Date().toISOString()
+  };
+
+  if(!id)payload.created_by=user?.id||null;
+
+  const result=id
+    ?await db.from("exams").update(payload).eq("id",id)
+    :await db.from("exams").insert(payload).select("id").single();
+
+  if(result.error){
+    message.innerHTML=`<div class="errorBox">${escapeHTML(result.error.message)}</div>`;
+    return;
+  }
+
+  closeExamForm();
+  await adminExams();
+}
+
+async function deleteExam(examId){
+  if(!confirm("Delete this exam? Its question assignments and attempts may also need to be removed first."))return;
+
+  const attempts=await db.from("exam_attempts").select("id").eq("exam_id",examId).limit(1);
+  if(attempts.data?.length){
+    alert("This exam already has student attempts and cannot be safely deleted. Set its status to closed instead.");
+    return;
+  }
+
+  await db.from("exam_questions").delete().eq("exam_id",examId);
+  const result=await db.from("exams").delete().eq("id",examId);
+  if(result.error){alert(result.error.message);return;}
+  await adminExams();
+}
+
+async function manageExamQuestions(examId){
+  const exam=(window.adminExamRows||[]).find(x=>String(x.id)===String(examId));
+  if(!exam)return;
+
+  const [qResult,linkResult]=await Promise.all([
+    db.from("questions").select("id,subject_id,topic_id,question_text,marks,status").order("created_at",{ascending:false}).limit(1000),
+    db.from("exam_questions").select("id,question_id,question_number,marks").eq("exam_id",examId).order("question_number",{ascending:true})
+  ]);
+
+  if(qResult.error){alert(qResult.error.message);return;}
+  if(linkResult.error){alert(linkResult.error.message);return;}
+
+  const selected=new Map((linkResult.data||[]).map(x=>[String(x.question_id),x]));
+  const qs=qResult.data||[];
+
+  document.body.insertAdjacentHTML("beforeend",`
+    <div class="modal" id="examQuestionsModal">
+      <div class="modalBox" style="max-width:1000px">
+        <div class="modalHead">
+          <h2>Questions â ${escapeHTML(exam.title||"")}</h2>
+          <button class="closeBtn" onclick="closeExamQuestions()">â</button>
+        </div>
+        <p class="muted">Select the questions students should receive in this exam. You can import more questions from the Question Bank at any time.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:15px 0">
+          <input id="examQuestionSearch" class="searchBox" placeholder="Search questions..." oninput="filterExamQuestionPicker()">
+          <button class="btn secondary" onclick="selectAllExamQuestions(true)">Select All</button>
+          <button class="btn secondary" onclick="selectAllExamQuestions(false)">Clear All</button>
+        </div>
+        <div id="examQuestionPicker" style="max-height:55vh;overflow:auto;display:grid;gap:8px">
+          ${qs.map((q,i)=>`
+            <label class="panel examPickerRow" data-search="${escapeHTML((q.question_text||"").toLowerCase())}" style="display:flex;gap:12px;align-items:flex-start;padding:12px;cursor:pointer">
+              <input class="examQuestionCheck" type="checkbox" value="${q.id}" ${selected.has(String(q.id))?"checked":""} style="width:auto;margin-top:4px">
+              <span><strong>#${i+1}</strong> ${escapeHTML(q.question_text||"")}<br><small class="muted">${escapeHTML(q.marks??1)} mark(s)</small></span>
+            </label>`).join("")}
+        </div>
+        <div id="examQuestionsMessage" style="margin-top:15px"></div>
+        <div style="display:flex;gap:10px;margin-top:20px">
+          <button class="btn secondary" onclick="closeExamQuestions()">Cancel</button>
+          <button class="btn primary" onclick="saveExamQuestions('${examId}')">Save Selected Questions</button>
+        </div>
+      </div>
+    </div>`);
+}
+
+function closeExamQuestions(){document.getElementById("examQuestionsModal")?.remove();}
+
+function filterExamQuestionPicker(){
+  const term=(document.getElementById("examQuestionSearch")?.value||"").toLowerCase();
+  document.querySelectorAll(".examPickerRow").forEach(row=>{
+    row.style.display=(row.dataset.search||"").includes(term)?"flex":"none";
+  });
+}
+
+function selectAllExamQuestions(value){
+  document.querySelectorAll(".examPickerRow").forEach(row=>{
+    if(row.style.display!=="none"){
+      const cb=row.querySelector(".examQuestionCheck");
+      if(cb)cb.checked=value;
+    }
+  });
+}
+
+async function saveExamQuestions(examId){
+  const message=document.getElementById("examQuestionsMessage");
+  const selected=[...document.querySelectorAll(".examQuestionCheck:checked")].map(x=>x.value);
+
+  if(!selected.length){
+    message.innerHTML=`<div class="errorBox">Select at least one question.</div>`;
+    return;
+  }
+
+  const qResult=await db.from("questions").select("id,marks").in("id",selected);
+  if(qResult.error){message.innerHTML=`<div class="errorBox">${escapeHTML(qResult.error.message)}</div>`;return;}
+  const marksMap={};
+  (qResult.data||[]).forEach(q=>marksMap[q.id]=Number(q.marks||1));
+
+  const rows=selected.map((questionId,index)=>({
+    exam_id:examId,
+    question_id:questionId,
+    question_number:index+1,
+    marks:marksMap[questionId]||1
+  }));
+
+  const del=await db.from("exam_questions").delete().eq("exam_id",examId);
+  if(del.error){message.innerHTML=`<div class="errorBox">${escapeHTML(del.error.message)}</div>`;return;}
+
+  const ins=await db.from("exam_questions").insert(rows);
+  if(ins.error){message.innerHTML=`<div class="errorBox">${escapeHTML(ins.error.message)}</div>`;return;}
+
+  const totalMarks=rows.reduce((sum,row)=>sum+Number(row.marks||0),0);
+  const exam=(window.adminExamRows||[]).find(x=>String(x.id)===String(examId));
+  const requested=Number(exam?.questions_per_attempt||0);
+  const totalQuestions=rows.length;
+
+  const update=await db.from("exams").update({
+    total_questions:totalQuestions,
+    total_marks:totalMarks,
+    questions_per_attempt:requested>0?Math.min(requested,totalQuestions):totalQuestions,
+    updated_at:new Date().toISOString()
+  }).eq("id",examId);
+
+  if(update.error){message.innerHTML=`<div class="errorBox">Questions saved, but exam totals could not be updated: ${escapeHTML(update.error.message)}</div>`;return;}
+
+  message.innerHTML=`<div class="successBox">Saved ${totalQuestions} questions (${totalMarks} total marks).</div>`;
+  setTimeout(async()=>{closeExamQuestions();await adminExams();},500);
+}
+
 async function adminModule(module){
+
+  if(module==="exams"){
+    return adminExams();
+  }
 
   const cfg=
     MODULES[module];
@@ -8610,6 +8868,20 @@ db.auth.onAuthStateChange(
     }
   }
 );
+
+/* Ensure inline buttons always resolve these handlers. */
+window.openCSVImport = openCSVImport;
+window.closeCSVImport = closeCSVImport;
+window.showCSVFileName = showCSVFileName;
+window.importCSV = importCSV;
+window.saveQuestionOptions = saveQuestionOptions;
+window.adminExams = adminExams;
+window.openExamForm = openExamForm;
+window.saveExamForm = saveExamForm;
+window.manageExamQuestions = manageExamQuestions;
+window.saveExamQuestions = saveExamQuestions;
+window.closeExamQuestions = closeExamQuestions;
+window.deleteExam = deleteExam;
 
 /* =========================================================
    INITIAL LOAD
