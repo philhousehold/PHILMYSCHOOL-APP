@@ -1,9 +1,8 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>PHILMYSCHOOL</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -235,7 +234,6 @@ button{
   line-height:1.6;
 }
 
-
 /* AUTH */
 
 .authPage{
@@ -370,7 +368,6 @@ button{
   color:var(--blue);
   font-weight:700;
 }
-
 
 /* PORTAL */
 
@@ -551,8 +548,7 @@ button{
   font-size:13px;
 }
 
-
-/* MANAGEMENT */
+/* TABLES */
 
 .managementHeader{
   display:flex;
@@ -583,7 +579,7 @@ button{
 .studentTable{
   width:100%;
   border-collapse:collapse;
-  min-width:750px;
+  min-width:700px;
 }
 
 .studentTable th{
@@ -599,6 +595,7 @@ button{
   padding:15px;
   border-bottom:1px solid var(--border);
   font-size:13px;
+  vertical-align:top;
 }
 
 .studentName{
@@ -670,11 +667,20 @@ button{
   color:#b42318;
 }
 
+.moduleStats{
+  margin-top:25px;
+}
 
 /* MOBILE */
 
 .mobileMenu{
   display:none;
+  border:0;
+  background:#eaf2ff;
+  color:var(--blue);
+  border-radius:8px;
+  padding:9px 12px;
+  font-weight:700;
 }
 
 @media(max-width:900px){
@@ -717,14 +723,7 @@ button{
 
   .mobileMenu{
     display:block;
-    border:0;
-    background:#eaf2ff;
-    color:var(--blue);
-    border-radius:8px;
-    padding:9px 12px;
-    font-weight:700;
   }
-
 }
 
 @media(max-width:600px){
@@ -777,7 +776,6 @@ button{
     padding:8px 10px;
     font-size:12px;
   }
-
 }
 </style>
 </head>
@@ -798,7 +796,6 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_-HIg7bCv6G1hLQoh5OWasA_hvhWrYOx";
 
-
 if(!window.supabase){
 
   document.getElementById("app").innerHTML=`
@@ -815,9 +812,7 @@ if(!window.supabase){
         class="btn primary"
         style="margin-top:20px"
         onclick="location.reload()">
-
         Reload
-
       </button>
 
     </div>
@@ -825,9 +820,7 @@ if(!window.supabase){
   `;
 
   throw new Error("Supabase library failed");
-
 }
-
 
 const db =
 window.supabase.createClient(
@@ -845,6 +838,7 @@ let profile=null;
 let role=null;
 let selectedRole="student";
 let allStudents=[];
+let loggingOut=false;
 
 
 /* =========================================================
@@ -873,7 +867,6 @@ function showAuthMessage(message,type=""){
   if(!box)return;
 
   box.textContent=message;
-
   box.className="authMessage show "+type;
 }
 
@@ -909,17 +902,13 @@ function renderLanding(){
       <button
         class="btn secondary"
         onclick="renderLogin()">
-
         Login
-
       </button>
 
       <button
         class="btn primary"
         onclick="renderRegister('student')">
-
         Get Started
-
       </button>
 
     </div>
@@ -952,17 +941,13 @@ function renderLanding(){
         <button
           class="btn primary"
           onclick="renderRegister('student')">
-
           🎓 Start Learning
-
         </button>
 
         <button
           class="btn secondary"
           onclick="renderRegister('tutor')">
-
           👨‍🏫 Become a Tutor
-
         </button>
 
       </div>
@@ -1076,7 +1061,6 @@ function renderLanding(){
   </section>
 
   `;
-
 }
 
 
@@ -1093,10 +1077,8 @@ function renderLogin(){
     <div class="authBrand">
 
       <div class="logo">
-
         <div class="logoIcon">P</div>
         PHILMYSCHOOL
-
       </div>
 
       <div>
@@ -1121,10 +1103,8 @@ function renderLogin(){
       <div class="authBox">
 
         <div class="logo">
-
           <div class="logoIcon">P</div>
           PHILMYSCHOOL
-
         </div>
 
         <h2>Sign in</h2>
@@ -1216,7 +1196,6 @@ function renderLogin(){
   </div>
 
   `;
-
 }
 
 
@@ -1394,7 +1373,6 @@ function renderRegister(type="student"){
   </div>
 
   `;
-
 }
 
 
@@ -1402,16 +1380,14 @@ function chooseRole(type){
 
   selectedRole=type;
 
-  document
-    .getElementById("studentRole")
-    .classList
-    .toggle("active",type==="student");
+  const student=document.getElementById("studentRole");
+  const tutor=document.getElementById("tutorRole");
 
-  document
-    .getElementById("tutorRole")
-    .classList
-    .toggle("active",type==="tutor");
+  if(student)
+    student.classList.toggle("active",type==="student");
 
+  if(tutor)
+    tutor.classList.toggle("active",type==="tutor");
 }
 
 
@@ -1440,16 +1416,10 @@ async function register(event){
   const button=
     document.getElementById("registerButton");
 
-  if(button){
-    button.disabled=true;
-    button.textContent="Creating account...";
-  }
+  button.disabled=true;
+  button.textContent="Creating account...";
 
-  showAuthMessage(
-    "Creating your account...",
-    ""
-  );
-
+  showAuthMessage("Creating your account...","");
 
   try{
 
@@ -1469,7 +1439,6 @@ async function register(event){
 
       });
 
-
     if(result.error){
 
       showAuthMessage(
@@ -1477,60 +1446,39 @@ async function register(event){
         "error"
       );
 
-      if(button){
-        button.disabled=false;
-        button.textContent="Create Account";
-      }
+      button.disabled=false;
+      button.textContent="Create Account";
 
       return;
     }
-
-
-    /*
-      If email confirmation is enabled,
-      there may be no session yet.
-    */
 
     if(!result.data.session){
 
       showAuthMessage(
-        "Account created successfully. Please check your email and confirm your account, then sign in.",
+        "Account created successfully. Please confirm your email, then sign in.",
         "success"
       );
 
-      if(button){
-        button.disabled=false;
-        button.textContent="Create Account";
-      }
+      button.disabled=false;
+      button.textContent="Create Account";
 
       return;
     }
 
-
-    /*
-      If Supabase immediately gives a session,
-      load the user's dashboard.
-    */
-
     await loadCurrentUser();
-
 
   }catch(error){
 
     console.error(error);
 
     showAuthMessage(
-      error.message || "Registration failed.",
+      error.message||"Registration failed.",
       "error"
     );
 
-    if(button){
-      button.disabled=false;
-      button.textContent="Create Account";
-    }
-
+    button.disabled=false;
+    button.textContent="Create Account";
   }
-
 }
 
 
@@ -1553,27 +1501,18 @@ async function login(event){
   const button=
     document.getElementById("loginButton");
 
-  if(button){
-    button.disabled=true;
-    button.textContent="Signing in...";
-  }
+  button.disabled=true;
+  button.textContent="Signing in...";
 
-  showAuthMessage(
-    "Signing you in...",
-    ""
-  );
-
+  showAuthMessage("Signing you in...","");
 
   try{
 
     const result=
       await db.auth.signInWithPassword({
-
         email,
         password
-
       });
-
 
     if(result.error){
 
@@ -1582,34 +1521,26 @@ async function login(event){
         "error"
       );
 
-      if(button){
-        button.disabled=false;
-        button.textContent="Sign In";
-      }
+      button.disabled=false;
+      button.textContent="Sign In";
 
       return;
     }
 
-
     await loadCurrentUser();
-
 
   }catch(error){
 
     console.error(error);
 
     showAuthMessage(
-      error.message || "Login failed.",
+      error.message||"Login failed.",
       "error"
     );
 
-    if(button){
-      button.disabled=false;
-      button.textContent="Sign In";
-    }
-
+    button.disabled=false;
+    button.textContent="Sign In";
   }
-
 }
 
 
@@ -1624,7 +1555,6 @@ async function loadCurrentUser(){
     const auth=
       await db.auth.getUser();
 
-
     if(auth.error || !auth.data.user){
 
       user=null;
@@ -1636,13 +1566,7 @@ async function loadCurrentUser(){
       return;
     }
 
-
     user=auth.data.user;
-
-
-    /*
-      Get profile.
-    */
 
     const profileResult=
       await db
@@ -1651,30 +1575,12 @@ async function loadCurrentUser(){
         .eq("id",user.id)
         .maybeSingle();
 
-
-    if(profileResult.error){
-
-      console.warn(
-        "Profile:",
-        profileResult.error.message
-      );
-
-    }
-
-
     profile=
-      profileResult.data || {
-
+      profileResult.data||{
         id:user.id,
         email:user.email,
         display_name:user.email
-
       };
-
-
-    /*
-      Get role.
-    */
 
     const roleResult=
       await db
@@ -1686,32 +1592,17 @@ async function loadCurrentUser(){
         .limit(1)
         .maybeSingle();
 
-
-    if(roleResult.error){
-
-      console.warn(
-        "Role:",
-        roleResult.error.message
-      );
-
-    }
-
-
     role=
-      roleResult.data?.role || "student";
-
+      roleResult.data?.role||"student";
 
     openPortal();
-
 
   }catch(error){
 
     console.error(error);
 
     renderLanding();
-
   }
-
 }
 
 
@@ -1728,14 +1619,12 @@ function openPortal(){
 
   }
 
-
   if(role==="admin"){
 
     renderAdmin();
     return;
 
   }
-
 
   if(role==="tutor"){
 
@@ -1744,9 +1633,7 @@ function openPortal(){
 
   }
 
-
   renderStudent();
-
 }
 
 
@@ -1768,22 +1655,19 @@ function portalHeader(title){
 
       </button>
 
-
       <strong>
         ${escapeHTML(title)}
       </strong>
-
 
       <div class="topUser">
 
         <span>
           ${escapeHTML(
-            profile?.display_name ||
-            user?.email ||
+            profile?.display_name||
+            user?.email||
             ""
           )}
         </span>
-
 
         <button
           class="mobileLogout"
@@ -1798,7 +1682,6 @@ function portalHeader(title){
     </header>
 
   `;
-
 }
 
 
@@ -1813,16 +1696,10 @@ function toggleMobileMenu(){
 
   if(!sidebar)return;
 
-  if(sidebar.style.display==="block"){
-
-    sidebar.style.display="none";
-
-  }else{
-
-    sidebar.style.display="block";
-
-  }
-
+  sidebar.style.display=
+    sidebar.style.display==="block"
+      ?"none"
+      :"block";
 }
 
 
@@ -1850,13 +1727,11 @@ function sidebar(items){
       <div class="sideLabel">
 
         ${escapeHTML(
-
           role==="admin"
           ?"ADMIN PORTAL"
           :role==="tutor"
           ?"TUTOR PORTAL"
           :"STUDENT PORTAL"
-
         )}
 
       </div>
@@ -1876,100 +1751,63 @@ function sidebar(items){
     </aside>
 
   `;
-
 }
 
 
 /* =========================================================
-   STUDENT
+   STUDENT PORTAL
 ========================================================= */
 
 function renderStudent(){
 
   const nav=sidebar(`
 
-    <button
-      class="sideButton active"
+    <button class="sideButton active"
       onclick="renderStudent()">
-
       📊 Dashboard
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Mock Exams')">
-
       📝 Mock Exams
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Practice Questions')">
-
       ❓ Practice Questions
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Study Materials')">
-
       📚 Study Materials
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Study Plans')">
-
       📅 Study Plan
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Find a Tutor')">
-
       👨‍🏫 Find a Tutor
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Scholarships')">
-
       🎓 Scholarships
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('My Progress')">
-
       📈 My Progress
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Subscription')">
-
       💳 Subscription
-
     </button>
 
   `);
-
 
   document.getElementById("app").innerHTML=`
 
@@ -1991,7 +1829,6 @@ function renderStudent(){
           <p class="muted">
             Your PHILMYSCHOOL learning dashboard.
           </p>
-
 
           <div class="stats">
 
@@ -2016,7 +1853,6 @@ function renderStudent(){
             </div>
 
           </div>
-
 
           <div class="panelGrid">
 
@@ -2111,100 +1947,63 @@ function renderStudent(){
     </div>
 
   `;
-
 }
 
 
 /* =========================================================
-   TUTOR
+   TUTOR PORTAL
 ========================================================= */
 
 function renderTutor(){
 
   const nav=sidebar(`
 
-    <button
-      class="sideButton active"
+    <button class="sideButton active"
       onclick="renderTutor()">
-
       📊 Dashboard
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('My Tutor Services')">
-
       📚 My Services
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Tutor Bookings')">
-
       📅 Bookings
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('My Students')">
-
       👨‍🎓 My Students
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Tutor Availability')">
-
       🗓 Availability
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Tutor Messages')">
-
       💬 Messages
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Tutor Materials')">
-
       📎 Materials
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Tutor Earnings')">
-
       💰 Earnings
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Withdrawals')">
-
       🏦 Withdrawals
-
     </button>
 
   `);
-
 
   document.getElementById("app").innerHTML=`
 
@@ -2226,7 +2025,6 @@ function renderTutor(){
             Manage your tutoring business,
             students and earnings.
           </p>
-
 
           <div class="stats">
 
@@ -2252,89 +2050,58 @@ function renderTutor(){
 
           </div>
 
-
           <div class="panelGrid">
 
             <div class="panel">
-
               <h2>📚 My Services</h2>
-
               <p>
-                Create and manage tutoring
-                services students can book.
+                Create and manage tutoring services.
               </p>
-
               <button
                 class="btn primary"
                 style="margin-top:20px"
                 onclick="featurePage('My Tutor Services')">
-
                 Manage Services
-
               </button>
-
             </div>
 
-
             <div class="panel">
-
               <h2>📅 Bookings</h2>
-
               <p>
-                View upcoming lessons
-                and student bookings.
+                View upcoming lessons and bookings.
               </p>
-
               <button
                 class="btn secondary"
                 style="margin-top:20px"
                 onclick="featurePage('Tutor Bookings')">
-
                 View Bookings
-
               </button>
-
             </div>
 
-
             <div class="panel">
-
               <h2>💬 Messages</h2>
-
               <p>
                 Communicate with students.
               </p>
-
               <button
                 class="btn secondary"
                 style="margin-top:20px"
                 onclick="featurePage('Tutor Messages')">
-
                 Open Messages
-
               </button>
-
             </div>
 
-
             <div class="panel">
-
               <h2>💰 Earnings</h2>
-
               <p>
-                Track tutoring income and
-                withdrawal requests.
+                Track tutoring income and withdrawals.
               </p>
-
               <button
                 class="btn secondary"
                 style="margin-top:20px"
                 onclick="featurePage('Tutor Earnings')">
-
                 View Earnings
-
               </button>
-
             </div>
 
           </div>
@@ -2346,118 +2113,73 @@ function renderTutor(){
     </div>
 
   `;
-
 }
 
 
 /* =========================================================
-   ADMIN
+   ADMIN PORTAL
 ========================================================= */
 
 function renderAdmin(){
 
   const nav=sidebar(`
 
-    <button
-      class="sideButton active"
+    <button class="sideButton active"
       onclick="renderAdmin()">
-
       📊 Dashboard
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="renderStudentManagement()">
-
       👨‍🎓 Students
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Tutor Management')">
-
       👨‍🏫 Tutors
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Exam Management')">
-
       📝 Exams
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Question Bank')">
-
       ❓ Question Bank
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Study Materials')">
-
       📚 Materials
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Scholarship Management')">
-
       🎓 Scholarships
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Subscriptions')">
-
       💳 Subscriptions
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Transactions')">
-
       💰 Transactions
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Withdrawals')">
-
       🏦 Withdrawals
-
     </button>
 
-
-    <button
-      class="sideButton"
+    <button class="sideButton"
       onclick="featurePage('Reports')">
-
       📊 Reports
-
     </button>
 
   `);
-
 
   document.getElementById("app").innerHTML=`
 
@@ -2479,11 +2201,9 @@ function renderAdmin(){
             Manage the entire PHILMYSCHOOL ecosystem.
           </p>
 
-
           <div class="status">
             ✓ Supabase connection configured.
           </div>
-
 
           <div class="stats">
 
@@ -2494,17 +2214,17 @@ function renderAdmin(){
 
             <div class="stat">
               <small>Tutors</small>
-              <strong>—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Revenue</small>
-              <strong>₦0</strong>
+              <strong id="adminTutorCount">—</strong>
             </div>
 
             <div class="stat">
               <small>Exams</small>
-              <strong>—</strong>
+              <strong id="adminExamCount">—</strong>
+            </div>
+
+            <div class="stat">
+              <small>Questions</small>
+              <strong id="adminQuestionCount">—</strong>
             </div>
 
           </div>
@@ -2517,8 +2237,7 @@ function renderAdmin(){
               <h2>👨‍🎓 Student Management</h2>
 
               <p>
-                Manage student accounts,
-                profiles and account status.
+                Manage student accounts and profiles.
               </p>
 
               <button
@@ -2538,8 +2257,7 @@ function renderAdmin(){
               <h2>👨‍🏫 Tutor Management</h2>
 
               <p>
-                Review tutor applications,
-                profiles and verification.
+                Review tutor accounts and profiles.
               </p>
 
               <button
@@ -2559,8 +2277,7 @@ function renderAdmin(){
               <h2>📝 Exam Management</h2>
 
               <p>
-                Manage exams, questions,
-                subjects and results.
+                Manage examinations and questions.
               </p>
 
               <button
@@ -2577,11 +2294,11 @@ function renderAdmin(){
 
             <div class="panel">
 
-              <h2>💳 Financial Management</h2>
+              <h2>💰 Financial Management</h2>
 
               <p>
-                Monitor subscriptions,
-                transactions and withdrawals.
+                Monitor subscriptions, transactions
+                and withdrawals.
               </p>
 
               <button
@@ -2605,59 +2322,68 @@ function renderAdmin(){
 
   `;
 
-
-  loadStudentCount();
-
+  loadAdminCounts();
 }
 
 
 /* =========================================================
-   STUDENT COUNT
+   ADMIN COUNTS
 ========================================================= */
 
-async function loadStudentCount(){
-
-  const el=
-    document.getElementById("adminStudentCount");
-
-  if(!el)return;
-
+async function loadAdminCounts(){
 
   try{
 
-    const result=
+    const students=
       await db
         .from("user_roles")
-        .select("id",{count:"exact",head:true})
+        .select("*",{count:"exact",head:true})
         .eq("role","student")
         .eq("is_active",true);
 
+    const tutors=
+      await db
+        .from("user_roles")
+        .select("*",{count:"exact",head:true})
+        .eq("role","tutor")
+        .eq("is_active",true);
 
-    if(result.error){
+    const exams=
+      await db
+        .from("exams")
+        .select("*",{count:"exact",head:true});
 
-      console.warn(
-        "Student count:",
-        result.error.message
-      );
+    const questions=
+      await db
+        .from("questions")
+        .select("*",{count:"exact",head:true});
 
-      el.textContent="—";
+    const s=document.getElementById("adminStudentCount");
+    const t=document.getElementById("adminTutorCount");
+    const e=document.getElementById("adminExamCount");
+    const q=document.getElementById("adminQuestionCount");
 
-      return;
-    }
+    if(s)
+      s.textContent=
+        students.error?"—":students.count??0;
 
+    if(t)
+      t.textContent=
+        tutors.error?"—":tutors.count??0;
 
-    el.textContent=
-      result.count ?? 0;
+    if(e)
+      e.textContent=
+        exams.error?"—":exams.count??0;
 
+    if(q)
+      q.textContent=
+        questions.error?"—":questions.count??0;
 
   }catch(error){
 
-    console.warn(error);
-
-    el.textContent="—";
+    console.error("Admin counts:",error);
 
   }
-
 }
 
 
@@ -2672,22 +2398,16 @@ async function renderStudentManagement(){
     <button
       class="sideButton"
       onclick="renderAdmin()">
-
       ← Dashboard
-
     </button>
-
 
     <button
       class="sideButton active"
       onclick="renderStudentManagement()">
-
       👨‍🎓 Students
-
     </button>
 
   `);
-
 
   document.getElementById("app").innerHTML=`
 
@@ -2706,9 +2426,8 @@ async function renderStudentManagement(){
           </h1>
 
           <p class="muted">
-            View and manage registered PHILMYSCHOOL students.
+            View registered PHILMYSCHOOL students.
           </p>
-
 
           <div class="stats">
 
@@ -2734,7 +2453,6 @@ async function renderStudentManagement(){
 
           </div>
 
-
           <div class="managementHeader">
 
             <div>
@@ -2743,12 +2461,7 @@ async function renderStudentManagement(){
                 Registered Students
               </h2>
 
-              <p class="muted">
-                Search and view student accounts.
-              </p>
-
             </div>
-
 
             <div style="
               display:flex;
@@ -2762,19 +2475,15 @@ async function renderStudentManagement(){
                 placeholder="Search name or email..."
                 oninput="filterStudents()">
 
-
               <button
                 class="btn secondary"
                 onclick="loadStudents()">
-
                 ↻ Refresh
-
               </button>
 
             </div>
 
           </div>
-
 
           <div
             id="studentManagementArea"
@@ -2794,15 +2503,9 @@ async function renderStudentManagement(){
 
   `;
 
-
   await loadStudents();
-
 }
 
-
-/* =========================================================
-   LOAD STUDENTS
-========================================================= */
 
 async function loadStudents(){
 
@@ -2810,7 +2513,6 @@ async function loadStudents(){
     document.getElementById("studentManagementArea");
 
   if(!area)return;
-
 
   area.innerHTML=`
 
@@ -2820,21 +2522,14 @@ async function loadStudents(){
 
   `;
 
-
   try{
 
     const rolesResult=
       await db
         .from("user_roles")
-        .select(
-          "id,user_id,role,is_active,created_at"
-        )
+        .select("id,user_id,role,is_active,created_at")
         .eq("role","student")
-        .order(
-          "created_at",
-          {ascending:false}
-        );
-
+        .order("created_at",{ascending:false});
 
     if(rolesResult.error){
 
@@ -2859,34 +2554,25 @@ async function loadStudents(){
       return;
     }
 
+    const roles=rolesResult.data||[];
 
-    const roles=
-      rolesResult.data||[];
+    const ids=
+      roles.map(x=>x.user_id).filter(Boolean);
 
-
-    const userIds=
-      roles
-        .map(x=>x.user_id)
-        .filter(Boolean);
-
-
-    if(userIds.length===0){
+    if(!ids.length){
 
       allStudents=[];
 
       updateStudentStats();
 
-
       area.innerHTML=`
 
         <div class="tableEmpty">
 
-          <h3>
-            No students yet
-          </h3>
+          <h3>No students yet</h3>
 
           <p style="margin-top:8px">
-            Registered student accounts will appear here.
+            Registered students will appear here.
           </p>
 
         </div>
@@ -2896,30 +2582,11 @@ async function loadStudents(){
       return;
     }
 
-
     const profilesResult=
       await db
         .from("profiles")
-        .select(`
-          id,
-          email,
-          first_name,
-          last_name,
-          display_name,
-          phone,
-          avatar_url,
-          date_of_birth,
-          gender,
-          state,
-          lga,
-          country,
-          account_status,
-          onboarding_completed,
-          created_at,
-          updated_at
-        `)
-        .in("id",userIds);
-
+        .select("*")
+        .in("id",ids);
 
     if(profilesResult.error){
 
@@ -2944,123 +2611,71 @@ async function loadStudents(){
       return;
     }
 
-
     const profiles=
       profilesResult.data||[];
 
-
     allStudents=
-      roles.map(roleRow=>{
+      roles.map(r=>{
 
         const p=
-          profiles.find(
-            profileRow=>
-              profileRow.id===roleRow.user_id
-          )||{};
-
+          profiles.find(x=>x.id===r.user_id)||{};
 
         return{
 
           ...p,
 
-          user_id:roleRow.user_id,
-
-          role:roleRow.role,
-
-          is_active:roleRow.is_active,
-
-          role_created_at:
-            roleRow.created_at
+          user_id:r.user_id,
+          role:r.role,
+          is_active:r.is_active,
+          role_created_at:r.created_at
 
         };
 
       });
 
-
     updateStudentStats();
-
     renderStudentTable(allStudents);
 
-
   }catch(error){
-
-    console.error(error);
-
 
     area.innerHTML=`
 
       <div class="errorBox">
 
-        <strong>
-          Something went wrong.
-        </strong>
-
-        <br><br>
-
         ${escapeHTML(
-          error.message ||
+          error.message||
           "Unable to load students."
         )}
 
       </div>
 
     `;
-
   }
-
 }
 
-
-/* =========================================================
-   STUDENT STATS
-========================================================= */
 
 function updateStudentStats(){
 
-  const total=
-    allStudents.length;
+  const total=allStudents.length;
 
   const active=
     allStudents.filter(
-      student=>
-        student.is_active!==false
+      x=>x.is_active!==false
     ).length;
 
-  const inactive=
-    total-active;
+  const inactive=total-active;
 
+  const a=document.getElementById("totalStudents");
+  const b=document.getElementById("activeStudents");
+  const c=document.getElementById("inactiveStudents");
+  const d=document.getElementById("showingStudents");
 
-  const totalEl=
-    document.getElementById("totalStudents");
-
-  const activeEl=
-    document.getElementById("activeStudents");
-
-  const inactiveEl=
-    document.getElementById("inactiveStudents");
-
-  const showingEl=
-    document.getElementById("showingStudents");
-
-
-  if(totalEl)
-    totalEl.textContent=total;
-
-  if(activeEl)
-    activeEl.textContent=active;
-
-  if(inactiveEl)
-    inactiveEl.textContent=inactive;
-
-  if(showingEl)
-    showingEl.textContent=total;
-
+  if(a)a.textContent=total;
+  if(b)b.textContent=active;
+  if(c)c.textContent=inactive;
+  if(d)d.textContent=total;
 }
 
-
-/* =========================================================
-   FILTER
-========================================================= */
 
 function filterStudents(){
 
@@ -3069,87 +2684,54 @@ function filterStudents(){
 
   if(!input)return;
 
-
   const search=
-    input.value
-      .trim()
-      .toLowerCase();
-
+    input.value.trim().toLowerCase();
 
   if(!search){
 
     renderStudentTable(allStudents);
 
-    const showingEl=
+    const el=
       document.getElementById("showingStudents");
 
-    if(showingEl)
-      showingEl.textContent=
-        allStudents.length;
+    if(el)
+      el.textContent=allStudents.length;
 
     return;
   }
 
-
   const filtered=
     allStudents.filter(student=>{
 
-      const name=
-        `
+      const text=`
+
         ${student.first_name||""}
         ${student.last_name||""}
         ${student.display_name||""}
-        `
-        .toLowerCase();
+        ${student.email||""}
+        ${student.phone||""}
 
+      `.toLowerCase();
 
-      const email=
-        (student.email||"")
-        .toLowerCase();
-
-
-      const phone=
-        (student.phone||"")
-        .toLowerCase();
-
-
-      return(
-        name.includes(search)||
-        email.includes(search)||
-        phone.includes(search)
-      );
-
+      return text.includes(search);
     });
 
-
-  const showingEl=
+  const el=
     document.getElementById("showingStudents");
 
-
-  if(showingEl)
-    showingEl.textContent=
-      filtered.length;
-
+  if(el)
+    el.textContent=filtered.length;
 
   renderStudentTable(filtered);
-
 }
 
-
-/* =========================================================
-   STUDENT TABLE
-========================================================= */
 
 function renderStudentTable(students){
 
   const area=
-    document.getElementById(
-      "studentManagementArea"
-    );
-
+    document.getElementById("studentManagementArea");
 
   if(!area)return;
-
 
   if(!students.length){
 
@@ -3157,9 +2739,7 @@ function renderStudentTable(students){
 
       <div class="tableEmpty">
 
-        <h3>
-          No students found
-        </h3>
+        <h3>No students found</h3>
 
         <p style="margin-top:8px">
           Try another search.
@@ -3172,79 +2752,55 @@ function renderStudentTable(students){
     return;
   }
 
-
   let rows="";
-
 
   students.forEach((student,index)=>{
 
-    const fullName=
+    const name=
       student.display_name||
-      `
-      ${student.first_name||""}
-      ${student.last_name||""}
-      `
-      .trim()||
+      `${student.first_name||""} ${student.last_name||""}`.trim()||
       "Unnamed Student";
-
-
-    const email=
-      student.email||
-      "No email";
-
-
-    const location=
-      [
-        student.state,
-        student.lga
-      ]
-      .filter(Boolean)
-      .join(", ")||
-      "—";
-
 
     const status=
       student.is_active!==false;
 
+    const location=
+      [student.state,student.lga]
+        .filter(Boolean)
+        .join(", ")||"—";
 
     rows+=`
 
       <tr>
 
-        <td>
-          ${index+1}
-        </td>
-
+        <td>${index+1}</td>
 
         <td>
 
           <div class="studentName">
-            ${escapeHTML(fullName)}
+            ${escapeHTML(name)}
           </div>
 
           <div class="studentEmail">
-            ${escapeHTML(email)}
+            ${escapeHTML(student.email||"No email")}
           </div>
 
         </td>
-
 
         <td>
           ${escapeHTML(student.phone||"—")}
         </td>
 
-
         <td>
           ${escapeHTML(location)}
         </td>
-
 
         <td>
 
           <span class="badge ${
             status
-            ?"badgeGreen"
-            :"badgeRed"
+              ?"badgeGreen"
+              :"badgeRed"
           }">
 
             ${status?"Active":"Inactive"}
@@ -3252,7 +2808,6 @@ function renderStudentTable(students){
           </span>
 
         </td>
-
 
         <td>
 
@@ -3270,9 +2825,7 @@ function renderStudentTable(students){
       </tr>
 
     `;
-
   });
-
 
   area.innerHTML=`
 
@@ -3281,54 +2834,38 @@ function renderStudentTable(students){
       <thead>
 
         <tr>
-
           <th>#</th>
           <th>Student</th>
           <th>Phone</th>
           <th>Location</th>
           <th>Status</th>
           <th>Action</th>
-
         </tr>
 
       </thead>
 
       <tbody>
-
         ${rows}
-
       </tbody>
 
     </table>
 
   `;
-
 }
 
-
-/* =========================================================
-   VIEW STUDENT
-========================================================= */
 
 function viewStudent(id){
 
   const student=
     allStudents.find(
-      item=>
-        item.id===id||
-        item.user_id===id
+      x=>x.id===id||x.user_id===id
     );
-
 
   if(!student){
 
-    alert(
-      "Student information could not be found."
-    );
-
+    alert("Student information could not be found.");
     return;
   }
-
 
   const nav=sidebar(`
 
@@ -3342,16 +2879,10 @@ function viewStudent(id){
 
   `);
 
-
-  const fullName=
+  const name=
     student.display_name||
-    `
-    ${student.first_name||""}
-    ${student.last_name||""}
-    `
-    .trim()||
+    `${student.first_name||""} ${student.last_name||""}`.trim()||
     "Student";
-
 
   document.getElementById("app").innerHTML=`
 
@@ -3369,17 +2900,11 @@ function viewStudent(id){
             Student Details
           </h1>
 
-          <p class="muted">
-            View the student's PHILMYSCHOOL account information.
-          </p>
-
-
           <div class="studentCard">
 
             <h2>
-              👨‍🎓 ${escapeHTML(fullName)}
+              👨‍🎓 ${escapeHTML(name)}
             </h2>
-
 
             <div
               style="
@@ -3393,7 +2918,6 @@ function viewStudent(id){
 
             </div>
 
-
             <div class="detailGrid">
 
               <div class="detailItem">
@@ -3403,14 +2927,12 @@ function viewStudent(id){
                 </strong>
               </div>
 
-
               <div class="detailItem">
                 <small>Last Name</small>
                 <strong>
                   ${escapeHTML(student.last_name||"—")}
                 </strong>
               </div>
-
 
               <div class="detailItem">
                 <small>Email</small>
@@ -3419,14 +2941,12 @@ function viewStudent(id){
                 </strong>
               </div>
 
-
               <div class="detailItem">
                 <small>Phone</small>
                 <strong>
                   ${escapeHTML(student.phone||"—")}
                 </strong>
               </div>
-
 
               <div class="detailItem">
                 <small>Gender</small>
@@ -3435,14 +2955,12 @@ function viewStudent(id){
                 </strong>
               </div>
 
-
               <div class="detailItem">
                 <small>Date of Birth</small>
                 <strong>
                   ${escapeHTML(student.date_of_birth||"—")}
                 </strong>
               </div>
-
 
               <div class="detailItem">
                 <small>State</small>
@@ -3451,14 +2969,12 @@ function viewStudent(id){
                 </strong>
               </div>
 
-
               <div class="detailItem">
                 <small>LGA</small>
                 <strong>
                   ${escapeHTML(student.lga||"—")}
                 </strong>
               </div>
-
 
               <div class="detailItem">
                 <small>Country</small>
@@ -3467,14 +2983,12 @@ function viewStudent(id){
                 </strong>
               </div>
 
-
               <div class="detailItem">
                 <small>Account Status</small>
                 <strong>
                   ${escapeHTML(student.account_status||"—")}
                 </strong>
               </div>
-
 
               <div class="detailItem">
                 <small>Onboarding</small>
@@ -3487,15 +3001,13 @@ function viewStudent(id){
                 </strong>
               </div>
 
-
               <div class="detailItem">
                 <small>Account Created</small>
                 <strong>
                   ${
                     student.created_at
-                    ?new Date(
-                      student.created_at
-                    ).toLocaleDateString()
+                    ?new Date(student.created_at)
+                      .toLocaleDateString()
                     :"—"
                   }
                 </strong>
@@ -3503,23 +3015,14 @@ function viewStudent(id){
 
             </div>
 
+            <button
+              class="btn primary"
+              style="margin-top:25px"
+              onclick="renderStudentManagement()">
 
-            <div style="
-              margin-top:25px;
-              display:flex;
-              gap:10px;
-              flex-wrap:wrap;
-            ">
+              ← Back to Students
 
-              <button
-                class="btn primary"
-                onclick="renderStudentManagement()">
-
-                ← Back to Students
-
-              </button>
-
-            </div>
+            </button>
 
           </div>
 
@@ -3530,41 +3033,96 @@ function viewStudent(id){
     </div>
 
   `;
-
 }
 
 
 /* =========================================================
-   OTHER MODULES
+   REAL ADMIN MODULE SYSTEM
 ========================================================= */
+
+const ADMIN_MODULES={
+
+  "Exam Management":{
+    table:"exams",
+    icon:"📝",
+    label:"Exams"
+  },
+
+  "Question Bank":{
+    table:"questions",
+    icon:"❓",
+    label:"Question Bank"
+  },
+
+  "Study Materials":{
+    table:"materials",
+    icon:"📚",
+    label:"Materials"
+  },
+
+  "Scholarship Management":{
+    table:"scholarships",
+    icon:"🎓",
+    label:"Scholarships"
+  },
+
+  "Subscriptions":{
+    table:"subscriptions",
+    icon:"💳",
+    label:"Subscriptions"
+  },
+
+  "Transactions":{
+    table:"transactions",
+    icon:"💰",
+    label:"Transactions"
+  },
+
+  "Withdrawals":{
+    table:"withdrawals",
+    icon:"🏦",
+    label:"Withdrawals"
+  }
+
+};
+
 
 function featurePage(title){
 
   if(title==="Student Management"){
 
     renderStudentManagement();
-
     return;
+
   }
 
 
-  let backFunction=
-    "renderStudent()";
+  if(role==="admin" && ADMIN_MODULES[title]){
 
+    renderAdminModule(
+      title,
+      ADMIN_MODULES[title]
+    );
+
+    return;
+
+  }
+
+
+  let back="renderStudent()";
 
   if(role==="admin")
-    backFunction="renderAdmin()";
-
+    back="renderAdmin()";
 
   if(role==="tutor")
-    backFunction="renderTutor()";
+    back="renderTutor()";
 
 
   const nav=sidebar(`
 
     <button
       class="sideButton"
-      onclick="${backFunction}">
+      onclick="${back}">
 
       ← Dashboard
 
@@ -3589,11 +3147,6 @@ function featurePage(title){
             ${escapeHTML(title)}
           </h1>
 
-          <p class="muted">
-            PHILMYSCHOOL ${escapeHTML(title)} module.
-          </p>
-
-
           <div
             class="panel"
             style="margin-top:25px">
@@ -3608,16 +3161,15 @@ function featurePage(title){
 
                 <p style="margin-top:10px">
 
-                  This module is connected to
-                  PHILMYSCHOOL and will use the
-                  existing Supabase database.
+                  This section is ready for the
+                  next PHILMYSCHOOL feature.
 
                 </p>
 
                 <button
                   class="btn primary"
                   style="margin-top:20px"
-                  onclick="${backFunction}">
+                  onclick="${back}">
 
                   Back to Dashboard
 
@@ -3636,16 +3188,766 @@ function featurePage(title){
     </div>
 
   `;
+}
+
+
+/* =========================================================
+   ADMIN DATABASE MODULE
+========================================================= */
+
+function renderAdminModule(title,config){
+
+  const nav=sidebar(`
+
+    <button
+      class="sideButton"
+      onclick="renderAdmin()">
+
+      ← Dashboard
+
+    </button>
+
+    <button
+      class="sideButton active">
+
+      ${config.icon}
+      ${escapeHTML(config.label)}
+
+    </button>
+
+  `);
+
+
+  document.getElementById("app").innerHTML=`
+
+    <div class="portal">
+
+      ${nav}
+
+      <div class="main">
+
+        ${portalHeader(config.label)}
+
+        <main class="content">
+
+          <h1>
+            ${config.icon}
+            ${escapeHTML(config.label)}
+          </h1>
+
+          <p class="muted">
+            Live data from the Supabase
+            <strong>${escapeHTML(config.table)}</strong>
+            table.
+          </p>
+
+
+          <div class="stats">
+
+            <div class="stat">
+
+              <small>
+                Total Records
+              </small>
+
+              <strong id="moduleCount">
+                —
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="managementHeader">
+
+            <div>
+
+              <h2>
+                ${escapeHTML(config.label)}
+              </h2>
+
+              <p class="muted">
+                Records currently stored in Supabase.
+              </p>
+
+            </div>
+
+
+            <button
+              class="btn secondary"
+              onclick="loadAdminModule('${config.table}')">
+
+              ↻ Refresh
+
+            </button>
+
+          </div>
+
+
+          <div
+            id="moduleArea"
+            class="studentTableWrap">
+
+            <div class="loading">
+              Loading ${escapeHTML(config.label)}...
+            </div>
+
+          </div>
+
+        </main>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  loadAdminModule(config.table);
+}
+
+
+/* =========================================================
+   LOAD ANY ADMIN TABLE
+========================================================= */
+
+async function loadAdminModule(table){
+
+  const area=
+    document.getElementById("moduleArea");
+
+  if(!area)return;
+
+
+  area.innerHTML=`
+
+    <div class="loading">
+      Loading data from ${escapeHTML(table)}...
+    </div>
+
+  `;
+
+
+  try{
+
+    /*
+      IMPORTANT:
+      We use select("*") without assuming
+      specific columns. This makes the module
+      work with the actual columns in your
+      existing tables.
+    */
+
+    const result=
+      await db
+        .from(table)
+        .select("*");
+
+
+    if(result.error){
+
+      area.innerHTML=`
+
+        <div class="errorBox">
+
+          <strong>
+            Supabase could not load this table.
+          </strong>
+
+          <br><br>
+
+          Table:
+          <strong>
+            ${escapeHTML(table)}
+          </strong>
+
+          <br><br>
+
+          Error:
+
+          ${escapeHTML(
+            result.error.message
+          )}
+
+        </div>
+
+      `;
+
+      const count=
+        document.getElementById("moduleCount");
+
+      if(count)
+        count.textContent="—";
+
+      return;
+
+    }
+
+
+    const rows=result.data||[];
+
+
+    const count=
+      document.getElementById("moduleCount");
+
+    if(count)
+      count.textContent=rows.length;
+
+
+    if(!rows.length){
+
+      area.innerHTML=`
+
+        <div class="tableEmpty">
+
+          <h3>
+            No records yet
+          </h3>
+
+          <p style="margin-top:8px">
+
+            The
+            <strong>
+              ${escapeHTML(table)}
+            </strong>
+            table exists, but it currently has
+            no records.
+
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /*
+      Get column names directly from
+      the actual returned Supabase data.
+    */
+
+    const columns=
+      Object.keys(rows[0]);
+
+
+    /*
+      Display the most useful columns first.
+    */
+
+    const priority=[
+      "title",
+      "name",
+      "email",
+      "amount",
+      "status",
+      "role",
+      "subject",
+      "description",
+      "type",
+      "created_at"
+    ];
+
+
+    const sortedColumns=
+      columns.slice().sort((a,b)=>{
+
+        const ai=
+          priority.indexOf(a);
+
+        const bi=
+          priority.indexOf(b);
+
+        const av=
+          ai===-1?999:ai;
+
+        const bv=
+          bi===-1?999:bi;
+
+        return av-bv;
+
+      });
+
+
+    const visibleColumns=
+      sortedColumns.slice(0,7);
+
+
+    let html=`
+
+      <table class="studentTable">
+
+        <thead>
+
+          <tr>
+
+            <th>#</th>
+
+    `;
+
+
+    visibleColumns.forEach(column=>{
+
+      html+=`
+
+        <th>
+          ${escapeHTML(
+            formatColumnName(column)
+          )}
+        </th>
+
+      `;
+
+    });
+
+
+    html+=`
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+    `;
+
+
+    rows.forEach((row,index)=>{
+
+      html+=`
+
+        <tr>
+
+          <td>
+            ${index+1}
+          </td>
+
+      `;
+
+
+      visibleColumns.forEach(column=>{
+
+        let value=row[column];
+
+
+        if(value===null ||
+           value===undefined ||
+           value===""){
+
+          value="—";
+
+        }
+
+
+        if(
+          column==="created_at" &&
+          value!=="—"
+        ){
+
+          try{
+
+            value=
+              new Date(value)
+                .toLocaleString();
+
+          }catch(e){}
+
+        }
+
+
+        if(
+          typeof value==="object"
+        ){
+
+          try{
+
+            value=
+              JSON.stringify(value);
+
+          }catch(e){
+
+            value="[object]";
+
+          }
+
+        }
+
+
+        const text=
+          String(value);
+
+
+        html+=`
+
+          <td>
+
+            ${escapeHTML(
+              text.length>120
+                ?text.substring(0,120)+"..."
+                :text
+            )}
+
+          </td>
+
+        `;
+
+      });
+
+
+      html+=`
+
+        </tr>
+
+      `;
+
+    });
+
+
+    html+=`
+
+        </tbody>
+
+      </table>
+
+    `;
+
+
+    area.innerHTML=html;
+
+
+  }catch(error){
+
+    area.innerHTML=`
+
+      <div class="errorBox">
+
+        <strong>
+          Something went wrong.
+        </strong>
+
+        <br><br>
+
+        ${escapeHTML(
+          error.message||
+          "Unable to load data."
+        )}
+
+      </div>
+
+    `;
+
+  }
 
 }
 
 
 /* =========================================================
-   LOGOUT — FIXED
+   COLUMN NAME FORMATTER
 ========================================================= */
 
-let loggingOut=false;
+function formatColumnName(value){
 
+  return String(value)
+    .replaceAll("_"," ")
+    .replace(
+      /\w\S*/g,
+      word=>
+        word.charAt(0).toUpperCase()+
+        word.substring(1).toLowerCase()
+    );
+}
+
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+async function renderReports(){
+
+  const nav=sidebar(`
+
+    <button
+      class="sideButton"
+      onclick="renderAdmin()">
+
+      ← Dashboard
+
+    </button>
+
+    <button
+      class="sideButton active">
+
+      📊 Reports
+
+    </button>
+
+  `);
+
+
+  document.getElementById("app").innerHTML=`
+
+    <div class="portal">
+
+      ${nav}
+
+      <div class="main">
+
+        ${portalHeader("Reports")}
+
+        <main class="content">
+
+          <h1>
+            📊 Reports
+          </h1>
+
+          <p class="muted">
+            Live summary of your PHILMYSCHOOL database.
+          </p>
+
+
+          <div class="stats">
+
+            <div class="stat">
+              <small>Students</small>
+              <strong id="reportStudents">—</strong>
+            </div>
+
+            <div class="stat">
+              <small>Tutors</small>
+              <strong id="reportTutors">—</strong>
+            </div>
+
+            <div class="stat">
+              <small>Exams</small>
+              <strong id="reportExams">—</strong>
+            </div>
+
+            <div class="stat">
+              <small>Questions</small>
+              <strong id="reportQuestions">—</strong>
+            </div>
+
+          </div>
+
+
+          <div class="panelGrid">
+
+            <div class="panel">
+              <h2>📚 Materials</h2>
+              <p>Total material records.</p>
+              <strong
+                id="reportMaterials"
+                style="
+                  display:block;
+                  font-size:30px;
+                  margin-top:20px;
+                ">
+                —
+              </strong>
+            </div>
+
+
+            <div class="panel">
+              <h2>🎓 Scholarships</h2>
+              <p>Total scholarship records.</p>
+              <strong
+                id="reportScholarships"
+                style="
+                  display:block;
+                  font-size:30px;
+                  margin-top:20px;
+                ">
+                —
+              </strong>
+            </div>
+
+
+            <div class="panel">
+              <h2>💳 Subscriptions</h2>
+              <p>Total subscription records.</p>
+              <strong
+                id="reportSubscriptions"
+                style="
+                  display:block;
+                  font-size:30px;
+                  margin-top:20px;
+                ">
+                —
+              </strong>
+            </div>
+
+
+            <div class="panel">
+              <h2>💰 Transactions</h2>
+              <p>Total transaction records.</p>
+              <strong
+                id="reportTransactions"
+                style="
+                  display:block;
+                  font-size:30px;
+                  margin-top:20px;
+                ">
+                —
+              </strong>
+            </div>
+
+
+            <div class="panel">
+              <h2>🏦 Withdrawals</h2>
+              <p>Total withdrawal records.</p>
+              <strong
+                id="reportWithdrawals"
+                style="
+                  display:block;
+                  font-size:30px;
+                  margin-top:20px;
+                ">
+                —
+              </strong>
+            </div>
+
+          </div>
+
+        </main>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  await loadReports();
+}
+
+
+async function countTable(table){
+
+  try{
+
+    const result=
+      await db
+        .from(table)
+        .select("*",{count:"exact",head:true});
+
+    if(result.error){
+
+      console.warn(
+        table,
+        result.error.message
+      );
+
+      return "—";
+    }
+
+    return result.count??0;
+
+  }catch(error){
+
+    return "—";
+  }
+}
+
+
+async function loadReports(){
+
+  try{
+
+    const students=
+      await db
+        .from("user_roles")
+        .select("*",{count:"exact",head:true})
+        .eq("role","student")
+        .eq("is_active",true);
+
+    const tutors=
+      await db
+        .from("user_roles")
+        .select("*",{count:"exact",head:true})
+        .eq("role","tutor")
+        .eq("is_active",true);
+
+
+    const exams=
+      await countTable("exams");
+
+    const questions=
+      await countTable("questions");
+
+    const materials=
+      await countTable("materials");
+
+    const scholarships=
+      await countTable("scholarships");
+
+    const subscriptions=
+      await countTable("subscriptions");
+
+    const transactions=
+      await countTable("transactions");
+
+    const withdrawals=
+      await countTable("withdrawals");
+
+
+    const values={
+
+      reportStudents:
+        students.error
+          ?"—"
+          :(students.count??0),
+
+      reportTutors:
+        tutors.error
+          ?"—"
+          :(tutors.count??0),
+
+      reportExams:exams,
+
+      reportQuestions:questions,
+
+      reportMaterials:materials,
+
+      reportScholarships:scholarships,
+
+      reportSubscriptions:subscriptions,
+
+      reportTransactions:transactions,
+
+      reportWithdrawals:withdrawals
+
+    };
+
+
+    Object.entries(values)
+      .forEach(([id,value])=>{
+
+        const el=
+          document.getElementById(id);
+
+        if(el)
+          el.textContent=value;
+
+      });
+
+
+  }catch(error){
+
+    console.error(
+      "Reports error:",
+      error
+    );
+
+  }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 async function logout(){
 
@@ -3653,78 +3955,27 @@ async function logout(){
 
   loggingOut=true;
 
-
   try{
 
-    /*
-      Sign out from Supabase.
-    */
-
-    const result=
-      await db.auth.signOut();
-
-
-    if(result.error){
-
-      console.error(
-        "Logout error:",
-        result.error
-      );
-
-      /*
-        Even if the local logout request
-        has a problem, clear the local UI.
-      */
-
-    }
+    await db.auth.signOut();
 
   }catch(error){
 
     console.error(
-      "Logout exception:",
+      "Logout error:",
       error
     );
 
   }
-
-
-  /*
-    Always clear local application state.
-  */
 
   user=null;
   profile=null;
   role=null;
   allStudents=[];
 
-
-  /*
-    Remove any cached Supabase session
-    from the browser.
-  */
-
-  try{
-
-    localStorage.removeItem(
-      `sb-${new URL(SUPABASE_URL).hostname.split(".")[0]}-auth-token`
-    );
-
-  }catch(e){
-
-    console.warn(e);
-
-  }
-
-
   loggingOut=false;
 
-
-  /*
-    Send user to login page.
-  */
-
   renderLogin();
-
 }
 
 
@@ -3740,7 +3991,6 @@ db.auth.onAuthStateChange(
       event
     );
 
-
     if(event==="SIGNED_OUT"){
 
       user=null;
@@ -3750,25 +4000,6 @@ db.auth.onAuthStateChange(
 
       renderLogin();
 
-      return;
-    }
-
-
-    /*
-      Do not repeatedly rebuild the portal
-      while the page is already loading.
-    */
-
-    if(
-      event==="INITIAL_SESSION" &&
-      session
-    ){
-
-      /*
-        Initial session is handled below.
-      */
-
-      return;
     }
 
   }
@@ -3783,23 +4014,19 @@ db.auth.onAuthStateChange(
 
   try{
 
-    const sessionResult=
+    const result=
       await db.auth.getSession();
 
+    if(result.error){
 
-    if(sessionResult.error){
-
-      console.error(
-        sessionResult.error
-      );
+      console.error(result.error);
 
       renderLanding();
 
       return;
     }
 
-
-    if(sessionResult.data.session){
+    if(result.data.session){
 
       await loadCurrentUser();
 
@@ -3809,45 +4036,11 @@ db.auth.onAuthStateChange(
 
     }
 
-
   }catch(error){
 
     console.error(error);
 
-
-    document.getElementById("app").innerHTML=`
-
-      <div style="
-        padding:40px;
-        font-family:Arial;
-      ">
-
-        <h2>
-          PHILMYSCHOOL
-        </h2>
-
-        <p style="
-          margin-top:10px;
-          color:#718096;
-        ">
-
-          The application could not finish loading.
-
-        </p>
-
-
-        <button
-          class="btn primary"
-          style="margin-top:20px"
-          onclick="renderLanding()">
-
-          Reload PHILMYSCHOOL
-
-        </button>
-
-      </div>
-
-    `;
+    renderLanding();
 
   }
 
