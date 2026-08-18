@@ -8555,7 +8555,8 @@ async function logout(){
     await db.auth.signOut();
 
   }catch(error){
-console.error(
+
+    console.error(
       "Logout:",
       error
     );
