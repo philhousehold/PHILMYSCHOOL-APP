@@ -12,9 +12,8 @@
 
 :root{
  --navy:#10233f;
- --navy2:#19395e;
  --blue:#155eef;
- --blue2:#6ba9ff;
+ --blue2:#0b4dcc;
  --light:#f5f7fb;
  --white:#fff;
  --muted:#718096;
@@ -22,6 +21,7 @@
  --green:#159447;
  --red:#d92d20;
  --orange:#b54708;
+ --yellow:#fff7e6;
 }
 
 body{
@@ -45,7 +45,7 @@ button{cursor:pointer}
 .secondary{background:#eaf2ff;color:var(--blue)}
 .danger{background:#fff0ef;color:#b42318}
 .success{background:#e9f8ef;color:#126b35}
-.warning{background:#fff4e5;color:#9a4d00}
+.warning{background:#fff4df;color:#8a5200}
 
 .navbar{
  height:74px;
@@ -250,7 +250,7 @@ button{cursor:pointer}
 }
 
 .authBox{
- width:min(450px,100%)
+ width:min(500px,100%)
 }
 
 .authBox h2{
@@ -451,7 +451,7 @@ button{cursor:pointer}
 }
 
 .content{
- max-width:1450px;
+ max-width:1500px;
  margin:auto;
  padding:30px
 }
@@ -602,11 +602,6 @@ button{cursor:pointer}
  color:#155eef
 }
 
-.badgeOrange{
- background:#fff4e5;
- color:#9a4d00
-}
-
 .tableEmpty,
 .loading{
  text-align:center;
@@ -641,6 +636,8 @@ button{cursor:pointer}
  color:#b42318
 }
 
+/* MODULE */
+
 .moduleToolbar{
  display:flex;
  gap:10px;
@@ -663,7 +660,9 @@ button{cursor:pointer}
  gap:12px
 }
 
-.formGrid .full{grid-column:1/-1}
+.formGrid .full{
+ grid-column:1/-1
+}
 
 .modal{
  position:fixed;
@@ -678,7 +677,7 @@ button{cursor:pointer}
 .modalBox{
  background:#fff;
  border-radius:16px;
- width:min(760px,100%);
+ width:min(800px,100%);
  max-height:90vh;
  overflow:auto;
  padding:25px
@@ -698,46 +697,61 @@ button{cursor:pointer}
  padding:8px 12px
 }
 
-.cardList{
- display:grid;
- gap:12px;
- margin-top:18px
-}
+/* CSV */
 
-.dataCard{
+.csvBox{
  background:#fff;
  border:1px solid var(--border);
+ border-radius:15px;
+ padding:24px;
+ margin-top:20px
+}
+
+.csvDrop{
+ border:2px dashed #cbd5e1;
  border-radius:13px;
- padding:18px
+ padding:35px;
+ text-align:center;
+ background:#f8fafc
 }
 
-.dataCard h3{margin-bottom:7px}
-
-.dataMeta{
- font-size:12px;
- color:var(--muted);
- line-height:1.7
+.csvDrop.drag{
+ border-color:var(--blue);
+ background:#eaf2ff
 }
 
-.cardActions{
- display:flex;
- gap:8px;
- flex-wrap:wrap;
+.csvPreview{
+ max-height:400px;
+ overflow:auto;
+ margin-top:20px
+}
+
+.importProgress{
+ height:10px;
+ background:#e8edf3;
+ border-radius:20px;
+ overflow:hidden;
+ margin-top:12px
+}
+
+.importProgress span{
+ display:block;
+ width:0;
+ height:100%;
+ background:var(--blue);
+ transition:.2s
+}
+
+.csvStats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
  margin-top:15px
 }
 
-.notice{
- padding:13px;
- border-radius:9px;
- background:#f8fafc;
- color:#607089;
- margin-top:15px;
- font-size:13px
-}
+/* SUBJECT */
 
-/* SUBJECTS */
-
-.subjectGrid{
+.subjectCards{
  display:grid;
  grid-template-columns:repeat(3,1fr);
  gap:15px;
@@ -751,150 +765,100 @@ button{cursor:pointer}
  padding:20px
 }
 
-.subjectCode{
- display:inline-block;
- background:#eaf2ff;
+.subjectCard h3{margin-bottom:8px}
+
+.subjectCard .subjectCode{
  color:var(--blue);
- padding:5px 9px;
- border-radius:20px;
- font-size:11px;
  font-weight:800;
- margin-bottom:12px
+ font-size:12px
 }
 
-.subjectCard h3{
- font-size:18px;
- margin-bottom:7px
+/* CBT */
+
+.cbtWrap{
+ max-width:950px;
+ margin:auto
 }
 
-.subjectCard p{
- color:var(--muted);
- font-size:13px;
- line-height:1.5
-}
-
-/* EXAM */
-
-.examSetup{
- max-width:900px;
- margin:0 auto
-}
-
-.examSetupCard{
+.cbtHeader{
  background:#fff;
  border:1px solid var(--border);
- border-radius:18px;
- padding:25px;
- margin-top:20px
+ border-radius:15px;
+ padding:20px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ flex-wrap:wrap
 }
 
-.examOptions{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:12px;
- margin-top:20px
-}
-
-.examOption{
- border:1px solid var(--border);
- background:#fff;
- border-radius:12px;
- padding:18px;
- text-align:center
-}
-
-.examOption.active{
- border-color:var(--blue);
- background:#eaf2ff;
+.timer{
+ font-size:25px;
+ font-weight:900;
  color:var(--blue)
 }
 
-.examOption strong{
- display:block;
- font-size:20px;
- margin-top:7px
-}
-
-.examTop{
- background:#fff;
- border-bottom:1px solid var(--border);
- padding:15px 25px;
- position:sticky;
- top:0;
- z-index:20
-}
-
-.examTopInner{
- max-width:1200px;
- margin:auto;
- display:flex;
- align-items:center;
- gap:15px
-}
-
-.examTimer{
- margin-left:auto;
- background:#fff0ef;
- color:#b42318;
- border-radius:10px;
- padding:10px 15px;
- font-weight:800
-}
-
-.examBody{
- max-width:1200px;
- margin:auto;
- padding:25px
+.timer.dangerTimer{
+ color:var(--red)
 }
 
 .questionCard{
  background:#fff;
  border:1px solid var(--border);
- border-radius:16px;
+ border-radius:15px;
  padding:25px;
- margin-bottom:18px
+ margin-top:18px
 }
 
 .questionNumber{
  color:var(--blue);
+ font-size:13px;
  font-weight:800;
- font-size:13px
+ margin-bottom:15px
 }
 
 .questionText{
- font-size:21px;
- line-height:1.5;
- margin:12px 0 22px
+ font-size:20px;
+ font-weight:700;
+ line-height:1.55
+}
+
+.options{
+ display:grid;
+ gap:11px;
+ margin-top:22px
 }
 
 .option{
  width:100%;
- text-align:left;
  border:1px solid var(--border);
  background:#fff;
- border-radius:10px;
  padding:15px;
- margin-bottom:10px;
+ border-radius:10px;
+ text-align:left;
  display:flex;
  gap:12px;
- align-items:flex-start
+ align-items:flex-start;
+ transition:.15s
 }
 
 .option:hover{
- border-color:var(--blue)
+ border-color:var(--blue);
+ background:#f7faff
 }
 
 .option.selected{
  border-color:var(--blue);
- background:#eaf2ff
+ background:#eaf2ff;
+ color:var(--blue)
 }
 
 .optionLetter{
- width:30px;
- height:30px;
- min-width:30px;
+ width:28px;
+ height:28px;
+ flex:none;
  border-radius:50%;
- background:#f1f3f6;
+ background:#eef2f6;
  display:grid;
  place-items:center;
  font-weight:800
@@ -905,154 +869,192 @@ button{cursor:pointer}
  color:#fff
 }
 
-.examLayout{
- display:grid;
- grid-template-columns:1fr 260px;
- gap:18px
-}
-
-.questionNavigator{
- background:#fff;
- border:1px solid var(--border);
- border-radius:15px;
- padding:18px;
- height:max-content;
- position:sticky;
- top:95px
-}
-
-.questionNumbers{
- display:grid;
- grid-template-columns:repeat(5,1fr);
- gap:7px;
- margin-top:15px
-}
-
-.qNum{
- border:0;
- background:#f1f3f6;
- border-radius:7px;
- padding:9px 3px;
- font-weight:700;
- font-size:12px
-}
-
-.qNum.answered{
- background:#d9f3e3;
- color:#126b35
-}
-
-.qNum.current{
- background:var(--blue);
- color:#fff
-}
-
-.examActions{
+.cbtActions{
  display:flex;
  justify-content:space-between;
  gap:10px;
  margin-top:20px
 }
 
-/* RESULTS */
+.questionDots{
+ display:flex;
+ flex-wrap:wrap;
+ gap:7px;
+ margin-top:18px
+}
 
-.resultBox{
- max-width:700px;
- margin:30px auto;
- background:#fff;
- border:1px solid var(--border);
- border-radius:20px;
- padding:35px;
+.questionDot{
+ width:32px;
+ height:32px;
+ border:0;
+ border-radius:7px;
+ background:#eef2f6;
+ font-size:12px;
+ font-weight:700
+}
+
+.questionDot.answered{
+ background:#d9f4e4;
+ color:#126b35
+}
+
+.questionDot.current{
+ background:var(--blue);
+ color:#fff
+}
+
+/* RESULT */
+
+.resultHero{
+ background:var(--navy);
+ color:#fff;
+ border-radius:18px;
+ padding:30px;
  text-align:center
 }
 
-.resultScore{
- font-size:65px;
- font-weight:900;
- color:var(--blue);
- margin:20px 0
+.scoreCircle{
+ width:130px;
+ height:130px;
+ border-radius:50%;
+ background:#fff;
+ color:var(--navy);
+ display:grid;
+ place-items:center;
+ margin:20px auto;
+ font-size:34px;
+ font-weight:900
 }
 
 .resultGrid{
  display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:12px;
- margin-top:25px
+ grid-template-columns:1fr 1fr;
+ gap:16px;
+ margin-top:18px
 }
 
-.resultStat{
- background:#f8fafc;
- border-radius:10px;
- padding:15px
-}
-
-.resultStat small{
- display:block;
- color:var(--muted)
-}
-
-.resultStat strong{
- display:block;
- font-size:22px;
- margin-top:5px
-}
-
-/* QUESTION CARDS */
-
-.questionAdminCard{
+.performanceCard{
  background:#fff;
  border:1px solid var(--border);
- border-radius:14px;
- padding:18px;
- margin-top:12px
+ border-radius:15px;
+ padding:20px
 }
 
-.questionAdminCard .qText{
- font-size:16px;
- line-height:1.6;
- margin-bottom:12px
+.performanceRow{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ align-items:center;
+ padding:12px 0;
+ border-bottom:1px solid var(--border)
 }
 
-/* MOBILE */
+.performanceRow:last-child{border-bottom:0}
 
-@media(max-width:1000px){
- .subjectGrid{grid-template-columns:1fr 1fr}
- .examLayout{grid-template-columns:1fr}
- .questionNavigator{position:static}
+.percentGood{color:var(--green);font-weight:800}
+.percentWeak{color:var(--red);font-weight:800}
+.percentMedium{color:var(--orange);font-weight:800}
+
+.recommendation{
+ background:#eaf2ff;
+ border-left:4px solid var(--blue);
+ padding:15px;
+ border-radius:8px;
+ margin-top:10px;
+ line-height:1.6
 }
+
+.feedbackBox{
+ padding:15px;
+ border-radius:10px;
+ margin-top:10px;
+ line-height:1.6
+}
+
+.feedbackCorrect{
+ background:#e9f8ef;
+ color:#126b35
+}
+
+.feedbackWrong{
+ background:#fff0ef;
+ color:#b42318
+}
+
+/* RESPONSIVE */
 
 @media(max-width:900px){
+
  .hero{grid-template-columns:1fr}
- .featureGrid{grid-template-columns:1fr 1fr}
- .authPage{grid-template-columns:1fr}
+
+ .featureGrid{
+  grid-template-columns:1fr 1fr
+ }
+
+ .authPage{
+  grid-template-columns:1fr
+ }
+
  .authBrand{display:none}
+
  .sidebar{display:none}
+
  .main{margin-left:0}
- .stats{grid-template-columns:1fr 1fr}
- .panelGrid{grid-template-columns:1fr}
+
+ .stats{
+  grid-template-columns:1fr 1fr
+ }
+
+ .panelGrid{
+  grid-template-columns:1fr
+ }
+
  .mobileLogout{display:block}
+
  .mobileMenu{display:block}
+
  .formGrid{grid-template-columns:1fr}
+
  .formGrid .full{grid-column:auto}
- .examOptions{grid-template-columns:1fr}
+
+ .subjectCards{
+  grid-template-columns:1fr 1fr
+ }
+
+ .csvStats{
+  grid-template-columns:1fr 1fr
+ }
 }
 
 @media(max-width:600px){
+
  .navbar{padding:0 15px}
+
  .hero{padding:55px 18px}
+
  .hero h1{font-size:44px}
+
  .heroButtons{flex-direction:column}
+
  .heroButtons .btn{width:100%}
+
  .featureGrid{grid-template-columns:1fr}
+
  .content{padding:20px 15px}
+
  .topbar{padding:0 15px}
+
  .topUser span{display:none}
+
  .stats{grid-template-columns:1fr 1fr}
+
  .detailGrid{grid-template-columns:1fr}
- .subjectGrid{grid-template-columns:1fr}
- .examBody{padding:15px}
- .questionText{font-size:18px}
+
+ .subjectCards{grid-template-columns:1fr}
+
  .resultGrid{grid-template-columns:1fr}
+
+ .questionText{font-size:18px}
 }
 </style>
 </head>
@@ -1062,7 +1064,6 @@ button{cursor:pointer}
 <div id="app"></div>
 
 <script>
-
 /* =========================================================
    SUPABASE
 ========================================================= */
@@ -1073,28 +1074,14 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_-HIg7bCv6G1hLQoh5OWasA_hvhWrYOx";
 
-if(!window.supabase){
-
- document.getElementById("app").innerHTML=`
- <div style="padding:40px;font-family:Arial">
-   <h2>PHILMYSCHOOL Loading Error</h2>
-   <p style="margin-top:10px">
-    Supabase could not load.
-   </p>
-   <button class="btn primary"
-    style="margin-top:20px"
-    onclick="location.reload()">
-    Reload
-   </button>
- </div>`;
-
- throw new Error("Supabase library failed");
-}
-
 const db=window.supabase.createClient(
  SUPABASE_URL,
  SUPABASE_PUBLISHABLE_KEY
 );
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
 
 let user=null;
 let profile=null;
@@ -1104,26 +1091,21 @@ let selectedRole="student";
 let allStudents=[];
 let tutorRows=[];
 let currentModuleRows=[];
-let currentModuleName="";
 
 let subjects=[];
-let subjectSearchTimer=null;
+let questionRows=[];
 
-/* =========================================================
-   EXAM STATE
-========================================================= */
-
-let examState={
- active:false,
- exam:null,
- subject:null,
+let cbt={
  questions:[],
  answers:{},
  current:0,
- startedAt:null,
- endAt:null,
+ subject:null,
+ subjectId:null,
+ started:false,
+ submitted:false,
  timer:null,
- submitted:false
+ seconds:0,
+ startedAt:null
 };
 
 /* =========================================================
@@ -1143,7 +1125,6 @@ function escapeHTML(value){
 
 function showAuthMessage(message,type=""){
  const box=document.getElementById("authMessage");
-
  if(!box)return;
 
  box.textContent=message;
@@ -1152,7 +1133,6 @@ function showAuthMessage(message,type=""){
 
 function clearAuthMessage(){
  const box=document.getElementById("authMessage");
-
  if(!box)return;
 
  box.textContent="";
@@ -1160,12 +1140,7 @@ function clearAuthMessage(){
 }
 
 function money(value){
- const n=Number(value||0);
-
- return "₦"+
- n.toLocaleString("en-NG",{
-  minimumFractionDigits:0
- });
+ return "₦"+Number(value||0).toLocaleString("en-NG");
 }
 
 function dateText(value){
@@ -1178,16 +1153,6 @@ function dateText(value){
   :d.toLocaleDateString("en-NG");
 }
 
-function dateTimeText(value){
- if(!value)return "—";
-
- const d=new Date(value);
-
- return isNaN(d)
-  ?"—"
-  :d.toLocaleString("en-NG");
-}
-
 function safeJSON(value){
  try{
   return JSON.stringify(value||{});
@@ -1196,8 +1161,39 @@ function safeJSON(value){
  }
 }
 
-function notify(message){
- alert(message);
+function normalizeAnswer(value){
+ return String(value||"")
+ .trim()
+ .toUpperCase()
+ .replace("OPTION ","")
+ .replace("ANSWER ","");
+}
+
+function percent(correct,total){
+ if(!total)return 0;
+ return Math.round((correct/total)*100);
+}
+
+function weaknessLevel(score){
+ if(score<50)return "weak";
+ if(score<70)return "medium";
+ return "good";
+}
+
+function recommendationForTopic(topic,score){
+ if(score<50){
+  return `You need major improvement in ${topic}. Revise this topic carefully and practise at least 20 additional questions before your next examination.`;
+ }
+
+ if(score<70){
+  return `You have some difficulty with ${topic}. Review your study material and practise more questions from this topic.`;
+ }
+
+ if(score<85){
+  return `You are doing fairly well in ${topic}. Continue practising to improve your accuracy.`;
+ }
+
+ return `Excellent performance in ${topic}. Continue practising to maintain this level.`;
 }
 
 /* =========================================================
@@ -1216,10 +1212,7 @@ function renderLanding(){
   </div>
 
   <div class="navButtons">
-   <button class="btn secondary"
-    onclick="renderLogin()">
-    Login
-   </button>
+   <button class="btn secondary" onclick="renderLogin()">Login</button>
 
    <button class="btn primary"
     onclick="renderRegister('student')">
@@ -1243,9 +1236,8 @@ function renderLanding(){
    </h1>
 
    <p class="heroText">
-    PHILMYSCHOOL brings CBT practice,
-    mock examinations, study materials,
-    tutors and educational opportunities
+    PHILMYSCHOOL brings CBT practice, mock examinations,
+    study materials, tutors and educational opportunities
     together in one platform.
    </p>
 
@@ -1290,7 +1282,7 @@ function renderLanding(){
 
     <div class="previewCard">
      <small>Subjects</small>
-     <strong>500+</strong>
+     <strong>∞</strong>
     </div>
 
     <div class="previewCard">
@@ -1299,7 +1291,6 @@ function renderLanding(){
     </div>
 
    </div>
-
   </div>
 
  </section>
@@ -1309,14 +1300,14 @@ function renderLanding(){
   <div class="sectionTitle">
 
    <div class="eyebrow">
-    EVERYTHING IN ONE PLACE
+    COMPLETE CBT PLATFORM
    </div>
 
    <h2>Built around the student.</h2>
 
    <p class="muted">
-    Learn, practice, prepare for examinations,
-    connect with tutors and discover opportunities.
+    Learn, practise, take examinations and automatically
+    discover the areas where you need improvement.
    </p>
 
   </div>
@@ -1326,25 +1317,25 @@ function renderLanding(){
    <div class="feature">
     <div class="featureIcon">📝</div>
     <h3>CBT & Mock Exams</h3>
-    <p>Timed examinations and practice.</p>
+    <p>Timed examinations with automatic marking.</p>
    </div>
 
    <div class="feature">
     <div class="featureIcon">📚</div>
-    <h3>Study Materials</h3>
-    <p>Organized learning resources.</p>
+    <h3>Question Bank</h3>
+    <p>500+ questions can be stored for every subject.</p>
    </div>
 
    <div class="feature">
-    <div class="featureIcon">👨‍🏫</div>
-    <h3>Professional Tutors</h3>
-    <p>Find and connect with tutors.</p>
+    <div class="featureIcon">🎯</div>
+    <h3>Weakness Detection</h3>
+    <p>Automatically identify weak subjects and topics.</p>
    </div>
 
    <div class="feature">
-    <div class="featureIcon">🎓</div>
-    <h3>Scholarships</h3>
-    <p>Discover educational opportunities.</p>
+    <div class="featureIcon">💡</div>
+    <h3>Recommendations</h3>
+    <p>Students receive recommendations based on their results.</p>
    </div>
 
   </div>
@@ -1372,8 +1363,7 @@ function renderLogin(){
    <div>
     <h1>Welcome<br>back.</h1>
     <p>
-     Continue your learning journey
-     with PHILMYSCHOOL.
+     Continue your learning journey with PHILMYSCHOOL.
     </p>
    </div>
 
@@ -1398,8 +1388,7 @@ function renderLogin(){
 
      <div class="formGroup">
       <label>Email</label>
-      <input
-       id="loginEmail"
+      <input id="loginEmail"
        type="email"
        autocomplete="email"
        required>
@@ -1407,18 +1396,15 @@ function renderLogin(){
 
      <div class="formGroup">
       <label>Password</label>
-      <input
-       id="loginPassword"
+      <input id="loginPassword"
        type="password"
        autocomplete="current-password"
        required>
      </div>
 
-     <div id="authMessage"
-      class="authMessage"></div>
+     <div id="authMessage" class="authMessage"></div>
 
-     <button
-      id="loginButton"
+     <button id="loginButton"
       class="btn primary"
       style="width:100%;margin-top:18px">
       Sign In
@@ -1427,25 +1413,18 @@ function renderLogin(){
     </form>
 
     <div class="authSwitch">
-
      Don't have an account?
-
-     <button
-      class="linkButton"
+     <button class="linkButton"
       onclick="renderRegister('student')">
       Create account
      </button>
-
     </div>
 
     <div style="text-align:center;margin-top:12px">
-
-     <button
-      class="linkButton"
+     <button class="linkButton"
       onclick="renderLanding()">
       ← Back to PHILMYSCHOOL
      </button>
-
     </div>
 
    </div>
@@ -1478,8 +1457,7 @@ function renderRegister(type="student"){
     <h1>Start your<br>journey.</h1>
 
     <p>
-     Learn, practice, teach and grow
-     with PHILMYSCHOOL.
+     Learn, practise, teach and grow with PHILMYSCHOOL.
     </p>
    </div>
 
@@ -1502,16 +1480,14 @@ function renderRegister(type="student"){
 
     <div class="roleGrid">
 
-     <button
-      id="studentRole"
+     <button id="studentRole"
       type="button"
       class="roleChoice ${type==="student"?"active":""}"
       onclick="chooseRole('student')">
       🎓 Student
      </button>
 
-     <button
-      id="tutorRole"
+     <button id="tutorRole"
       type="button"
       class="roleChoice ${type==="tutor"?"active":""}"
       onclick="chooseRole('tutor')">
@@ -1534,16 +1510,14 @@ function renderRegister(type="student"){
 
      <div class="formGroup">
       <label>Email</label>
-      <input
-       id="registerEmail"
+      <input id="registerEmail"
        type="email"
        required>
      </div>
 
      <div class="formGroup">
       <label>Password</label>
-      <input
-       id="registerPassword"
+      <input id="registerPassword"
        type="password"
        minlength="6"
        required>
@@ -1552,8 +1526,7 @@ function renderRegister(type="student"){
      <div id="authMessage"
       class="authMessage"></div>
 
-     <button
-      id="registerButton"
+     <button id="registerButton"
       class="btn primary"
       style="width:100%;margin-top:18px">
       Create Account
@@ -1562,15 +1535,11 @@ function renderRegister(type="student"){
     </form>
 
     <div class="authSwitch">
-
      Already have an account?
-
-     <button
-      class="linkButton"
+     <button class="linkButton"
       onclick="renderLogin()">
       Sign in
      </button>
-
     </div>
 
    </div>
@@ -1585,16 +1554,10 @@ function chooseRole(type){
  selectedRole=type;
 
  document.getElementById("studentRole")
- .classList.toggle(
-  "active",
-  type==="student"
- );
+ .classList.toggle("active",type==="student");
 
  document.getElementById("tutorRole")
- .classList.toggle(
-  "active",
-  type==="tutor"
- );
+ .classList.toggle("active",type==="tutor");
 }
 
 /* =========================================================
@@ -1604,23 +1567,14 @@ function chooseRole(type){
 async function register(event){
 
  event.preventDefault();
-
  clearAuthMessage();
 
- const firstName=
- document.getElementById("firstName").value.trim();
+ const firstName=document.getElementById("firstName").value.trim();
+ const lastName=document.getElementById("lastName").value.trim();
+ const email=document.getElementById("registerEmail").value.trim();
+ const password=document.getElementById("registerPassword").value;
 
- const lastName=
- document.getElementById("lastName").value.trim();
-
- const email=
- document.getElementById("registerEmail").value.trim();
-
- const password=
- document.getElementById("registerPassword").value;
-
- const button=
- document.getElementById("registerButton");
+ const button=document.getElementById("registerButton");
 
  button.disabled=true;
  button.textContent="Creating account...";
@@ -1630,10 +1584,8 @@ async function register(event){
  try{
 
   const result=await db.auth.signUp({
-
    email,
    password,
-
    options:{
     data:{
      first_name:firstName,
@@ -1641,7 +1593,6 @@ async function register(event){
      requested_role:selectedRole
     }
    }
-
   });
 
   if(result.error){
@@ -1653,7 +1604,6 @@ async function register(event){
 
    button.disabled=false;
    button.textContent="Create Account";
-
    return;
   }
 
@@ -1689,17 +1639,12 @@ async function register(event){
 async function login(event){
 
  event.preventDefault();
-
  clearAuthMessage();
 
- const email=
- document.getElementById("loginEmail").value.trim();
+ const email=document.getElementById("loginEmail").value.trim();
+ const password=document.getElementById("loginPassword").value;
 
- const password=
- document.getElementById("loginPassword").value;
-
- const button=
- document.getElementById("loginButton");
+ const button=document.getElementById("loginButton");
 
  button.disabled=true;
  button.textContent="Signing in...";
@@ -1708,8 +1653,7 @@ async function login(event){
 
  try{
 
-  const result=
-  await db.auth.signInWithPassword({
+  const result=await db.auth.signInWithPassword({
    email,
    password
   });
@@ -1756,29 +1700,24 @@ async function loadCurrentUser(){
    role=null;
 
    renderLanding();
-
    return;
   }
 
   user=auth.data.user;
 
-  const profileResult=
-  await db
+  const profileResult=await db
    .from("profiles")
    .select("*")
    .eq("id",user.id)
    .maybeSingle();
 
-  profile=
-   profileResult.data||
-   {
-    id:user.id,
-    email:user.email,
-    display_name:user.email
-   };
+  profile=profileResult.data||{
+   id:user.id,
+   email:user.email,
+   display_name:user.email
+  };
 
-  const roleResult=
-  await db
+  const roleResult=await db
    .from("user_roles")
    .select("role,is_active,created_at")
    .eq("user_id",user.id)
@@ -1787,16 +1726,13 @@ async function loadCurrentUser(){
    .limit(1)
    .maybeSingle();
 
-  role=
-   roleResult.data?.role||
-   "student";
+  role=roleResult.data?.role||"student";
 
   openPortal();
 
  }catch(error){
 
   console.error(error);
-
   renderLanding();
  }
 }
@@ -1822,7 +1758,7 @@ function openPortal(){
 }
 
 /* =========================================================
-   PORTAL HEADER
+   PORTAL HELPERS
 ========================================================= */
 
 function portalHeader(title){
@@ -1830,8 +1766,7 @@ function portalHeader(title){
  return `
  <header class="topbar">
 
-  <button
-   class="mobileMenu"
+  <button class="mobileMenu"
    onclick="toggleMobileMenu()">
    ☰
   </button>
@@ -1848,8 +1783,7 @@ function portalHeader(title){
     )}
    </span>
 
-   <button
-    class="mobileLogout"
+   <button class="mobileLogout"
     onclick="logout()">
     🚪 Logout
    </button>
@@ -1861,20 +1795,15 @@ function portalHeader(title){
 
 function toggleMobileMenu(){
 
- const sidebar=
- document.querySelector(".sidebar");
+ const sidebar=document.querySelector(".sidebar");
 
  if(!sidebar)return;
 
  sidebar.style.display=
  sidebar.style.display==="block"
-  ?"none"
-  :"block";
+ ?"none"
+ :"block";
 }
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
 
 function sidebar(items){
 
@@ -1882,33 +1811,23 @@ function sidebar(items){
  <aside class="sidebar">
 
   <div class="sidebarLogo">
-
-   <div class="sidebarLogoIcon">
-    P
-   </div>
-
+   <div class="sidebarLogoIcon">P</div>
    PHILMYSCHOOL
-
   </div>
 
   <div class="sideLabel">
-
    ${escapeHTML(
     role==="admin"
-     ?"ADMIN PORTAL"
-     :
-     role==="tutor"
-     ?"TUTOR PORTAL"
-     :
-     "STUDENT PORTAL"
+    ?"ADMIN PORTAL"
+    :role==="tutor"
+    ?"TUTOR PORTAL"
+    :"STUDENT PORTAL"
    )}
-
   </div>
 
   ${items}
 
-  <button
-   class="sideButton logoutButton"
+  <button class="sideButton logoutButton"
    onclick="logout()">
    🚪 Sign Out
   </button>
@@ -1917,71 +1836,51 @@ function sidebar(items){
 }
 
 /* =========================================================
-   STUDENT DASHBOARD
+   STUDENT
 ========================================================= */
 
 function renderStudent(){
 
  const nav=sidebar(`
 
- <button
-  class="sideButton active"
+ <button class="sideButton active"
   onclick="renderStudent()">
   📊 Dashboard
  </button>
 
- <button
-  class="sideButton"
-  onclick="renderStudentExams()">
-  📝 Mock Exams
+ <button class="sideButton"
+  onclick="studentSubjects()">
+  📝 CBT Exams
  </button>
 
- <button
-  class="sideButton"
-  onclick="renderPracticeQuestions()">
+ <button class="sideButton"
+  onclick="studentQuestionPractice()">
   ❓ Practice Questions
  </button>
 
- <button
-  class="sideButton"
-  onclick="renderStudentSubjects()">
-  📚 Subjects
- </button>
-
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Study Materials')">
-  📖 Study Materials
+  📚 Study Materials
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
+  onclick="studentProgress()">
+  📈 My Progress
+ </button>
+
+ <button class="sideButton"
   onclick="featurePage('Study Plans')">
   📅 Study Plan
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Find a Tutor')">
   👨‍🏫 Find a Tutor
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Scholarships')">
   🎓 Scholarships
- </button>
-
- <button
-  class="sideButton"
-  onclick="renderMyResults()">
-  📈 My Results
- </button>
-
- <button
-  class="sideButton"
-  onclick="featurePage('Subscription')">
-  💳 Subscription
  </button>
 
  `);
@@ -2001,10 +1900,8 @@ function renderStudent(){
     <h1>
      Welcome,
      ${escapeHTML(
-      profile?.first_name||
-      "Student"
-     )}
-     👋
+      profile?.first_name||"Student"
+     )} 👋
     </h1>
 
     <p class="muted">
@@ -2015,12 +1912,12 @@ function renderStudent(){
 
      <div class="stat">
       <small>Questions Practiced</small>
-      <strong id="studentPracticeCount">0</strong>
+      <strong id="studentQuestions">0</strong>
      </div>
 
      <div class="stat">
       <small>Mock Exams</small>
-      <strong id="studentExamCount">0</strong>
+      <strong id="studentExams">0</strong>
      </div>
 
      <div class="stat">
@@ -2029,8 +1926,8 @@ function renderStudent(){
      </div>
 
      <div class="stat">
-      <small>Study Time</small>
-      <strong>0m</strong>
+      <small>Weak Areas</small>
+      <strong id="studentWeak">—</strong>
      </div>
 
     </div>
@@ -2039,18 +1936,34 @@ function renderStudent(){
 
      <div class="panel">
 
-      <h2>📝 Mock Exams</h2>
+      <h2>📝 CBT Examination</h2>
 
       <p>
-       Take timed practice examinations
-       and receive your results.
+       Choose a subject and take a randomised
+       CBT examination from the question bank.
       </p>
 
-      <button
-       class="btn primary"
+      <button class="btn primary"
        style="margin-top:20px"
-       onclick="renderStudentExams()">
-       Open Mock Exams
+       onclick="studentSubjects()">
+       Start CBT
+      </button>
+
+     </div>
+
+     <div class="panel">
+
+      <h2>🎯 Find Your Weakness</h2>
+
+      <p>
+       After every examination PHILMYSCHOOL
+       analyses the topics where you need improvement.
+      </p>
+
+      <button class="btn secondary"
+       style="margin-top:20px"
+       onclick="studentProgress()">
+       View My Analysis
       </button>
 
      </div>
@@ -2060,15 +1973,1865 @@ function renderStudent(){
       <h2>❓ Practice Questions</h2>
 
       <p>
-       Select any subject and practise
-       randomly selected questions.
+       Practise individual questions before taking
+       a full examination.
       </p>
 
-      <button
-       class="btn primary"
+      <button class="btn secondary"
        style="margin-top:20px"
-       onclick="renderPracticeQuestions()">
-       Start Practice
+       onclick="studentQuestionPractice()">
+       Practise Now
+      </button>
+
+     </div>
+
+     <div class="panel">
+
+      <h2>💡 Personal Recommendation</h2>
+
+      <p id="dashboardRecommendation">
+       Complete an examination to receive
+       your personalised study recommendation.
+      </p>
+
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+
+ loadStudentDashboard();
+}
+
+async function loadStudentDashboard(){
+
+ try{
+
+  const result=await db
+   .from("exam_attempts")
+   .select("*")
+   .eq("student_id",user.id);
+
+  if(result.error)return;
+
+  const attempts=result.data||[];
+
+  const qCount=attempts.reduce(
+   (sum,x)=>sum+Number(x.total_questions||0),
+   0
+  );
+
+  const correct=attempts.reduce(
+   (sum,x)=>sum+Number(x.correct_answers||0),
+   0
+  );
+
+  const weak=attempts.filter(
+   x=>Number(x.score||0)<70
+  ).length;
+
+  const q=document.getElementById("studentQuestions");
+  const e=document.getElementById("studentExams");
+  const a=document.getElementById("studentAccuracy");
+  const w=document.getElementById("studentWeak");
+
+  if(q)q.textContent=qCount;
+  if(e)e.textContent=attempts.length;
+  if(a)a.textContent=qCount
+   ?percent(correct,qCount)+"%"
+   :"—";
+
+  if(w)w.textContent=weak||"—";
+
+  const latest=attempts
+   .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))[0];
+
+  if(latest){
+   const rec=document.getElementById(
+    "dashboardRecommendation"
+   );
+
+   if(rec){
+    rec.textContent=
+     latest.recommendation||
+     "Continue practising your weaker areas.";
+   }
+  }
+
+ }catch(e){}
+}
+
+/* =========================================================
+   SUBJECT LIST FOR STUDENT
+========================================================= */
+
+async function studentSubjects(){
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${sidebar(`
+   <button class="sideButton"
+    onclick="renderStudent()">
+    ← Dashboard
+   </button>
+
+   <button class="sideButton active">
+    📝 CBT Exams
+   </button>
+  `)}
+
+  <div class="main">
+
+   ${portalHeader("CBT Exams")}
+
+   <main class="content">
+
+    <h1>📝 Choose a Subject</h1>
+
+    <p class="muted">
+     Select a subject to start your CBT examination.
+    </p>
+
+    <div id="studentSubjectArea"
+     class="subjectCards">
+
+     <div class="loading">
+      Loading subjects...
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+
+ await loadSubjects();
+
+ const area=document.getElementById(
+  "studentSubjectArea"
+ );
+
+ if(!area)return;
+
+ if(!subjects.length){
+
+  area.innerHTML=`
+   <div class="panel">
+    <h3>No subjects available yet.</h3>
+    <p style="margin-top:8px">
+     The administrator needs to create subjects
+     and import questions.
+    </p>
+   </div>`;
+
+  return;
+ }
+
+ area.innerHTML=subjects.map(s=>`
+
+  <div class="subjectCard">
+
+   <div class="subjectCode">
+    ${escapeHTML(s.subject_code||"")}
+   </div>
+
+   <h3>
+    ${escapeHTML(s.subject_name)}
+   </h3>
+
+   <p class="muted">
+    Up to 500+ questions can be stored
+    in this subject.
+   </p>
+
+   <button class="btn primary"
+    style="margin-top:15px"
+    onclick="startCBT(
+     '${s.id}',
+     '${escapeHTML(s.subject_name)}'
+    )">
+    Start CBT
+   </button>
+
+  </div>
+
+ `).join("");
+}
+
+async function loadSubjects(){
+
+ try{
+
+  const result=await db
+   .from("subjects")
+   .select("*")
+   .order("subject_name",{ascending:true});
+
+  if(result.error){
+
+   console.error(result.error);
+   subjects=[];
+   return;
+  }
+
+  subjects=result.data||[];
+
+ }catch(error){
+
+  console.error(error);
+  subjects=[];
+ }
+}
+
+/* =========================================================
+   START CBT
+========================================================= */
+
+async function startCBT(subjectId,subjectName){
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${sidebar(`
+   <button class="sideButton"
+    onclick="studentSubjects()">
+    ← Subjects
+   </button>
+  `)}
+
+  <div class="main">
+
+   ${portalHeader("Preparing CBT")}
+
+   <main class="content">
+
+    <div class="panel"
+     style="text-align:center">
+
+     <h2>Preparing your examination...</h2>
+
+     <p class="muted"
+      style="margin-top:10px">
+      Selecting random questions from
+      ${escapeHTML(subjectName)}.
+     </p>
+
+     <div class="loading">
+      Please wait...
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+
+ try{
+
+  let questions=[];
+
+  /*
+   First use the random question-bank RPC
+   installed in your Supabase database.
+  */
+
+  const rpc=await db.rpc(
+   "get_random_subject_questions",
+   {
+    p_subject_id:subjectId,
+    p_question_count:50
+   }
+  );
+
+  if(!rpc.error&&rpc.data){
+   questions=rpc.data;
+  }
+
+  /*
+   Fallback: directly select up to 50 questions
+   if the RPC returns an error.
+  */
+
+  if(!questions.length){
+
+   const fallback=await db
+    .from("questions")
+    .select("*")
+    .eq("subject_id",subjectId)
+    .eq("status","published")
+    .limit(50);
+
+   if(fallback.error){
+    throw fallback.error;
+   }
+
+   questions=fallback.data||[];
+
+   questions.sort(
+    ()=>Math.random()-.5
+   );
+  }
+
+  if(!questions.length){
+
+   alert(
+    "There are no published questions available for this subject."
+   );
+
+   studentSubjects();
+   return;
+  }
+
+  cbt={
+   questions,
+   answers:{},
+   current:0,
+   subject:subjectName,
+   subjectId,
+   started:true,
+   submitted:false,
+   timer:null,
+   seconds:questions.length*60,
+   startedAt:new Date().toISOString()
+  };
+
+  renderCBT();
+
+  startCBTTimer();
+
+ }catch(error){
+
+  console.error(error);
+
+  document.getElementById("app").innerHTML=`
+
+   <div class="content">
+
+    <div class="errorBox">
+
+     <h3>Could not start CBT</h3>
+
+     <p style="margin-top:10px">
+      ${escapeHTML(error.message)}
+     </p>
+
+     <button class="btn primary"
+      style="margin-top:20px"
+      onclick="studentSubjects()">
+      Back to Subjects
+     </button>
+
+    </div>
+
+   </div>`;
+ }
+}
+
+/* =========================================================
+   CBT
+========================================================= */
+
+function renderCBT(){
+
+ const q=cbt.questions[cbt.current];
+
+ if(!q)return;
+
+ const answer=cbt.answers[q.id];
+
+ const options=[
+  ["A",q.option_a],
+  ["B",q.option_b],
+  ["C",q.option_c],
+  ["D",q.option_d]
+ ];
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  <div class="main" style="margin-left:0">
+
+   <header class="topbar">
+
+    <strong>
+     📝 ${escapeHTML(cbt.subject)}
+    </strong>
+
+    <div class="topUser">
+
+     <span>
+      Question
+      ${cbt.current+1}
+      /
+      ${cbt.questions.length}
+     </span>
+
+     <div id="cbtTimer"
+      class="timer">
+      00:00
+     </div>
+
+    </div>
+
+   </header>
+
+   <main class="content">
+
+    <div class="cbtWrap">
+
+     <div class="cbtHeader">
+
+      <div>
+
+       <strong>
+        ${escapeHTML(cbt.subject)}
+       </strong>
+
+       <div class="muted"
+        style="font-size:12px;margin-top:5px">
+        Select one answer.
+       </div>
+
+      </div>
+
+      <button class="btn danger"
+       onclick="confirmSubmitCBT()">
+       Submit Exam
+      </button>
+
+     </div>
+
+     <div class="questionCard">
+
+      <div class="questionNumber">
+       QUESTION ${cbt.current+1}
+       OF ${cbt.questions.length}
+      </div>
+
+      <div class="questionText">
+       ${escapeHTML(
+        q.question_text||
+        q.question||
+        ""
+       )}
+      </div>
+
+      <div class="options">
+
+       ${options.map(o=>`
+
+        <button
+         class="option ${
+          normalizeAnswer(answer)===o[0]
+          ?"selected"
+          :""
+         }"
+         onclick="selectCBTAnswer('${q.id}','${o[0]}')">
+
+         <span class="optionLetter">
+          ${o[0]}
+         </span>
+
+         <span>
+          ${escapeHTML(o[1]||"")}
+         </span>
+
+        </button>
+
+       `).join("")}
+
+      </div>
+
+      <div class="cbtActions">
+
+       <button class="btn secondary"
+        onclick="previousCBTQuestion()"
+        ${cbt.current===0?"disabled":""}>
+        ← Previous
+       </button>
+
+       ${
+        cbt.current===cbt.questions.length-1
+        ?`
+         <button class="btn success"
+          onclick="confirmSubmitCBT()">
+          Finish Exam ✓
+         </button>
+        `
+        :`
+         <button class="btn primary"
+          onclick="nextCBTQuestion()">
+          Next →
+         </button>
+        `
+       }
+
+      </div>
+
+      <div class="questionDots">
+
+       ${cbt.questions.map((x,i)=>`
+
+        <button
+         class="questionDot
+          ${cbt.answers[x.id]?"answered":""}
+          ${i===cbt.current?"current":""}"
+         onclick="goCBTQuestion(${i})">
+
+         ${i+1}
+
+        </button>
+
+       `).join("")}
+
+      </div>
+
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+}
+
+function selectCBTAnswer(id,answer){
+
+ cbt.answers[id]=answer;
+
+ renderCBT();
+}
+
+function nextCBTQuestion(){
+
+ if(cbt.current<cbt.questions.length-1){
+
+  cbt.current++;
+
+  renderCBT();
+ }
+}
+
+function previousCBTQuestion(){
+
+ if(cbt.current>0){
+
+  cbt.current--;
+
+  renderCBT();
+ }
+}
+
+function goCBTQuestion(index){
+
+ cbt.current=index;
+
+ renderCBT();
+}
+
+function startCBTTimer(){
+
+ clearInterval(cbt.timer);
+
+ cbt.timer=setInterval(()=>{
+
+  cbt.seconds--;
+
+  const el=document.getElementById("cbtTimer");
+
+  if(el){
+
+   const minutes=Math.floor(
+    Math.max(0,cbt.seconds)/60
+   );
+
+   const seconds=Math.max(
+    0,cbt.seconds%60
+   );
+
+   el.textContent=
+    String(minutes).padStart(2,"0")+
+    ":"+
+    String(seconds).padStart(2,"0");
+
+   if(cbt.seconds<=60){
+    el.classList.add("dangerTimer");
+   }
+  }
+
+  if(cbt.seconds<=0){
+
+   clearInterval(cbt.timer);
+
+   submitCBT();
+  }
+
+ },1000);
+}
+
+function confirmSubmitCBT(){
+
+ const answered=
+  Object.keys(cbt.answers).length;
+
+ const total=cbt.questions.length;
+
+ if(answered<total){
+
+  const yes=confirm(
+   `You have answered ${answered} of ${total} questions.\n\nSubmit anyway?`
+  );
+
+  if(!yes)return;
+ }
+
+ submitCBT();
+}
+
+/* =========================================================
+   SUBMIT CBT + ANALYSIS
+========================================================= */
+
+async function submitCBT(){
+
+ if(cbt.submitted)return;
+
+ cbt.submitted=true;
+
+ clearInterval(cbt.timer);
+
+ let correct=0;
+ let totalMarks=0;
+ let earnedMarks=0;
+
+ const topicStats={};
+ const questionResults=[];
+
+ for(const q of cbt.questions){
+
+  const selected=normalizeAnswer(
+   cbt.answers[q.id]
+  );
+
+  const correctAnswer=normalizeAnswer(
+   q.correct_answer||
+   q.answer||
+   q.correct_option
+  );
+
+  const marks=Number(q.marks||1);
+
+  totalMarks+=marks;
+
+  const isCorrect=
+   selected &&
+   selected===correctAnswer;
+
+  if(isCorrect){
+   correct++;
+   earnedMarks+=marks;
+  }
+
+  const topic=
+   q.topic||
+   q.topic_name||
+   "General";
+
+  if(!topicStats[topic]){
+
+   topicStats[topic]={
+    total:0,
+    correct:0,
+    marks:0,
+    earned:0
+   };
+  }
+
+  topicStats[topic].total++;
+  topicStats[topic].marks+=marks;
+
+  if(isCorrect){
+
+   topicStats[topic].correct++;
+   topicStats[topic].earned+=marks;
+  }
+
+  questionResults.push({
+   question_id:q.id,
+   question_text:q.question_text,
+   selected_answer:selected,
+   correct_answer:correctAnswer,
+   is_correct:isCorrect,
+   topic,
+   feedback:q.feedback||"",
+   recommendation:q.recommendation||""
+  });
+ }
+
+ const score=percent(
+  earnedMarks,
+  totalMarks
+ );
+
+ const topicAnalysis=
+  Object.entries(topicStats)
+  .map(([topic,data])=>({
+
+   topic,
+
+   total:data.total,
+
+   correct:data.correct,
+
+   score:percent(
+    data.correct,
+    data.total
+   ),
+
+   level:weaknessLevel(
+    percent(data.correct,data.total)
+   ),
+
+   recommendation:
+    recommendationForTopic(
+     topic,
+     percent(data.correct,data.total)
+    )
+  }))
+  .sort((a,b)=>a.score-b.score);
+
+ const weakTopics=
+  topicAnalysis.filter(x=>x.score<70);
+
+ const strongTopics=
+  topicAnalysis.filter(x=>x.score>=70);
+
+ let overallRecommendation="";
+
+ if(!topicAnalysis.length){
+
+  overallRecommendation=
+   "Continue practising regularly.";
+ }
+ else if(weakTopics.length){
+
+  const names=weakTopics
+   .slice(0,3)
+   .map(x=>x.topic)
+   .join(", ");
+
+  overallRecommendation=
+   `Your main area${weakTopics.length>1?"s are":" is"} ${names}. `+
+   `Focus your next study session on these topics and `+
+   `practise additional questions before attempting another full CBT.`;
+ }
+ else if(score>=85){
+
+  overallRecommendation=
+   "Excellent performance. Continue practising to maintain your strong performance.";
+ }
+ else{
+
+  overallRecommendation=
+   "You are making good progress. Continue practising and review the topics where your score is below 85%.";
+ }
+
+ const resultData={
+  score,
+  total_questions:cbt.questions.length,
+  correct_answers:correct,
+  wrong_answers:cbt.questions.length-correct,
+  total_marks:totalMarks,
+  earned_marks:earnedMarks,
+  subject_id:cbt.subjectId,
+  subject_name:cbt.subject,
+  recommendation:overallRecommendation,
+  weak_topics:weakTopics,
+  strong_topics:strongTopics
+ };
+
+ /*
+  Save the overall attempt when the exam_attempts
+  table is available.
+ */
+
+ try{
+
+  await db.from("exam_attempts").insert({
+   student_id:user.id,
+   subject_id:cbt.subjectId,
+   total_questions:cbt.questions.length,
+   correct_answers:correct,
+   wrong_answers:cbt.questions.length-correct,
+   score,
+   total_marks:totalMarks,
+   earned_marks:earnedMarks,
+   recommendation:overallRecommendation,
+   created_at:new Date().toISOString()
+  });
+
+ }catch(error){
+
+  console.warn(
+   "Attempt save warning:",
+   error
+  );
+ }
+
+ /*
+  Store the result locally as well, so the result
+  can always be displayed even if the optional
+  result-history table is not installed yet.
+ */
+
+ localStorage.setItem(
+  "philmyschool_last_result",
+  JSON.stringify({
+   ...resultData,
+   questionResults,
+   topicAnalysis,
+   date:new Date().toISOString()
+  })
+ );
+
+ renderCBTResult({
+  ...resultData,
+  questionResults,
+  topicAnalysis
+ });
+}
+
+/* =========================================================
+   CBT RESULT
+========================================================= */
+
+function renderCBTResult(result){
+
+ const grade=
+  result.score>=80
+  ?"Excellent"
+  :result.score>=70
+  ?"Good"
+  :result.score>=50
+  ?"Needs Improvement"
+  :"Weak Performance";
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${sidebar(`
+   <button class="sideButton active"
+    onclick="renderStudent()">
+    📊 Dashboard
+   </button>
+
+   <button class="sideButton"
+    onclick="studentSubjects()">
+    📝 Take Another CBT
+   </button>
+
+   <button class="sideButton"
+    onclick="studentProgress()">
+    📈 My Progress
+   </button>
+  `)}
+
+  <div class="main">
+
+   ${portalHeader("CBT Result")}
+
+   <main class="content">
+
+    <div class="cbtWrap">
+
+     <div class="resultHero">
+
+      <div class="eyebrow"
+       style="color:#9fc4ff">
+       ${escapeHTML(result.subject_name)}
+      </div>
+
+      <h1 style="margin-top:10px">
+       Examination Complete
+      </h1>
+
+      <div class="scoreCircle">
+       ${result.score}%
+      </div>
+
+      <h2>${grade}</h2>
+
+      <p style="margin-top:10px;color:#c5d2e2">
+       ${result.correct_answers}
+       correct out of
+       ${result.total_questions}
+       questions.
+      </p>
+
+     </div>
+
+     <div class="resultGrid">
+
+      <div class="performanceCard">
+
+       <h2>🎯 Topic Performance</h2>
+
+       ${result.topicAnalysis.map(t=>`
+
+        <div class="performanceRow">
+
+         <div>
+          <strong>
+           ${escapeHTML(t.topic)}
+          </strong>
+
+          <div class="muted"
+           style="font-size:12px">
+           ${t.correct}/${t.total} correct
+          </div>
+         </div>
+
+         <div class="${
+          t.score<50
+          ?"percentWeak"
+          :t.score<70
+          ?"percentMedium"
+          :"percentGood"
+         }">
+          ${t.score}%
+         </div>
+
+        </div>
+
+       `).join("")}
+
+      </div>
+
+      <div class="performanceCard">
+
+       <h2>💡 Recommendation</h2>
+
+       <div class="recommendation">
+        ${escapeHTML(
+         result.recommendation
+        )}
+       </div>
+
+       ${
+        result.weak_topics.length
+        ?`
+         <h3 style="margin-top:22px">
+          🔴 Weak Areas
+         </h3>
+
+         ${result.weak_topics.map(t=>`
+
+          <div class="recommendation"
+           style="margin-top:10px;background:#fff0ef;border-left-color:#d92d20">
+
+           <strong>
+            ${escapeHTML(t.topic)}
+           </strong>
+
+           <div style="margin-top:5px">
+            ${escapeHTML(t.recommendation)}
+           </div>
+
+          </div>
+
+         `).join("")}
+        `
+        :`
+         <div class="recommendation"
+          style="margin-top:15px">
+          🎉 No major weak topic was detected
+          in this examination.
+         </div>
+        `
+       }
+
+      </div>
+
+     </div>
+
+     <div class="performanceCard"
+      style="margin-top:18px">
+
+      <h2>📖 Question Review</h2>
+
+      ${result.questionResults.map((q,i)=>`
+
+       <div style="
+        padding:18px 0;
+        border-bottom:1px solid var(--border)
+       ">
+
+        <strong>
+         ${i+1}. ${escapeHTML(q.question_text)}
+        </strong>
+
+        <div style="margin-top:8px">
+
+         ${
+          q.is_correct
+          ?`
+           <div class="feedbackBox feedbackCorrect">
+            ✓ Correct — Your answer:
+            <strong>${escapeHTML(q.selected_answer)}</strong>
+           </div>
+          `
+          :`
+           <div class="feedbackBox feedbackWrong">
+            ✕ Incorrect<br>
+            Your answer:
+            <strong>${escapeHTML(q.selected_answer||"Not answered")}</strong>
+            <br>
+            Correct answer:
+            <strong>${escapeHTML(q.correct_answer)}</strong>
+           </div>
+          `
+         }
+
+         ${
+          q.feedback
+          ?`
+           <div class="notice"
+            style="margin-top:8px">
+            <strong>Feedback:</strong>
+            ${escapeHTML(q.feedback)}
+           </div>
+          `
+          :""
+         }
+
+         ${
+          q.recommendation
+          ?`
+           <div class="recommendation">
+            <strong>Recommendation:</strong>
+            ${escapeHTML(q.recommendation)}
+           </div>
+          `
+          :""
+         }
+
+        </div>
+
+       </div>
+
+      `).join("")}
+
+     </div>
+
+     <div style="
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:20px
+     ">
+
+      <button class="btn primary"
+       onclick="studentSubjects()">
+       📝 Take Another CBT
+      </button>
+
+      <button class="btn secondary"
+       onclick="studentProgress()">
+       📈 View My Progress
+      </button>
+
+      <button class="btn secondary"
+       onclick="renderStudent()">
+       ← Dashboard
+      </button>
+
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+}
+
+/* =========================================================
+   STUDENT PROGRESS
+========================================================= */
+
+async function studentProgress(){
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${sidebar(`
+   <button class="sideButton"
+    onclick="renderStudent()">
+    ← Dashboard
+   </button>
+
+   <button class="sideButton active">
+    📈 My Progress
+   </button>
+
+   <button class="sideButton"
+    onclick="studentSubjects()">
+    📝 CBT Exams
+   </button>
+  `)}
+
+  <div class="main">
+
+   ${portalHeader("My Progress")}
+
+   <main class="content">
+
+    <h1>📈 My Performance Analysis</h1>
+
+    <p class="muted">
+     PHILMYSCHOOL automatically analyses your results
+     and identifies where you need to improve.
+    </p>
+
+    <div id="progressArea"
+     style="margin-top:20px">
+
+     <div class="loading">
+      Analysing your performance...
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+
+ try{
+
+  const result=await db
+   .from("exam_attempts")
+   .select("*")
+   .eq("student_id",user.id)
+   .order("created_at",{ascending:false});
+
+  if(result.error){
+
+   renderLocalProgress();
+
+   return;
+  }
+
+  const attempts=result.data||[];
+
+  if(!attempts.length){
+
+   renderLocalProgress();
+
+   return;
+  }
+
+  renderProgressFromAttempts(attempts);
+
+ }catch(error){
+
+  console.error(error);
+
+  renderLocalProgress();
+ }
+}
+
+function renderLocalProgress(){
+
+ const raw=localStorage.getItem(
+  "philmyschool_last_result"
+ );
+
+ const area=document.getElementById(
+  "progressArea"
+ );
+
+ if(!area)return;
+
+ if(!raw){
+
+  area.innerHTML=`
+
+   <div class="panel">
+
+    <h2>No examination yet</h2>
+
+    <p style="margin-top:10px">
+     Take your first CBT examination.
+     PHILMYSCHOOL will analyse your performance
+     automatically.
+    </p>
+
+    <button class="btn primary"
+     style="margin-top:20px"
+     onclick="studentSubjects()">
+     Start CBT
+    </button>
+
+   </div>`;
+
+  return;
+ }
+
+ try{
+
+  const result=JSON.parse(raw);
+
+  renderProgressFromSingleResult(result);
+
+ }catch(e){
+
+  area.innerHTML=`
+   <div class="errorBox">
+    Could not read your performance data.
+   </div>`;
+ }
+}
+
+function renderProgressFromSingleResult(result){
+
+ const area=document.getElementById(
+  "progressArea"
+ );
+
+ if(!area)return;
+
+ const weak=result.topicAnalysis||
+ [];
+
+ area.innerHTML=`
+
+ <div class="stats">
+
+  <div class="stat">
+   <small>Latest Score</small>
+   <strong>${result.score}%</strong>
+  </div>
+
+  <div class="stat">
+   <small>Correct</small>
+   <strong>${result.correct_answers}</strong>
+  </div>
+
+  <div class="stat">
+   <small>Wrong</small>
+   <strong>${result.wrong_answers}</strong>
+  </div>
+
+  <div class="stat">
+   <small>Weak Topics</small>
+   <strong>
+    ${weak.filter(x=>x.score<70).length}
+   </strong>
+  </div>
+
+ </div>
+
+ <div class="resultGrid">
+
+  <div class="performanceCard">
+
+   <h2>🔴 Where You Are Weak</h2>
+
+   ${
+    weak.filter(x=>x.score<70).length
+    ?weak
+     .filter(x=>x.score<70)
+     .map(t=>`
+
+      <div class="recommendation"
+       style="background:#fff0ef;border-left-color:#d92d20">
+
+       <strong>
+        ${escapeHTML(t.topic)}
+       </strong>
+
+       <div style="margin-top:5px">
+        Score: ${t.score}%
+       </div>
+
+       <div style="margin-top:6px">
+        ${escapeHTML(t.recommendation)}
+       </div>
+
+      </div>
+
+     `).join("")
+    :`
+     <div class="recommendation">
+      🎉 No major weakness detected.
+     </div>
+    `
+   }
+
+  </div>
+
+  <div class="performanceCard">
+
+   <h2>💡 What You Should Work On</h2>
+
+   <div class="recommendation">
+    ${escapeHTML(
+     result.recommendation||
+     "Continue practising regularly."
+    )}
+   </div>
+
+  </div>
+
+ </div>`;
+}
+
+function renderProgressFromAttempts(attempts){
+
+ const latest=attempts[0];
+
+ const average=Math.round(
+  attempts.reduce(
+   (sum,x)=>sum+Number(x.score||0),
+   0
+  )/attempts.length
+ );
+
+ const weak=attempts.filter(
+  x=>Number(x.score||0)<70
+ ).length;
+
+ const area=document.getElementById(
+  "progressArea"
+ );
+
+ if(!area)return;
+
+ area.innerHTML=`
+
+ <div class="stats">
+
+  <div class="stat">
+   <small>Exams Taken</small>
+   <strong>${attempts.length}</strong>
+  </div>
+
+  <div class="stat">
+   <small>Average Score</small>
+   <strong>${average}%</strong>
+  </div>
+
+  <div class="stat">
+   <small>Latest Score</small>
+   <strong>${Number(latest.score||0)}%</strong>
+  </div>
+
+  <div class="stat">
+   <small>Needs Attention</small>
+   <strong>${weak}</strong>
+  </div>
+
+ </div>
+
+ <div class="panel"
+  style="margin-top:18px">
+
+  <h2>💡 Latest Recommendation</h2>
+
+  <div class="recommendation">
+   ${escapeHTML(
+    latest.recommendation||
+    "Continue practising."
+   )}
+  </div>
+
+ </div>
+
+ <div class="performanceCard"
+  style="margin-top:18px">
+
+  <h2>📋 Examination History</h2>
+
+  <div class="studentTableWrap">
+
+   <table class="studentTable">
+
+    <thead>
+     <tr>
+      <th>Date</th>
+      <th>Subject</th>
+      <th>Score</th>
+      <th>Correct</th>
+      <th>Questions</th>
+      <th>Recommendation</th>
+     </tr>
+    </thead>
+
+    <tbody>
+
+     ${attempts.map(a=>`
+
+      <tr>
+
+       <td>${dateText(a.created_at)}</td>
+
+       <td>
+        ${escapeHTML(
+         a.subject_name||
+         a.subject||
+         "—"
+        )}
+       </td>
+
+       <td>
+        <strong>
+         ${Number(a.score||0)}%
+        </strong>
+       </td>
+
+       <td>
+        ${Number(a.correct_answers||0)}
+       </td>
+
+       <td>
+        ${Number(a.total_questions||0)}
+       </td>
+
+       <td>
+        ${escapeHTML(
+         a.recommendation||
+         "—"
+        )}
+       </td>
+
+      </tr>
+
+     `).join("")}
+
+    </tbody>
+
+   </table>
+
+  </div>
+
+ </div>`;
+}
+
+/* =========================================================
+   PRACTICE
+========================================================= */
+
+async function studentQuestionPractice(){
+
+ await loadSubjects();
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${sidebar(`
+   <button class="sideButton"
+    onclick="renderStudent()">
+    ← Dashboard
+   </button>
+
+   <button class="sideButton active">
+    ❓ Practice Questions
+   </button>
+  `)}
+
+  <div class="main">
+
+   ${portalHeader("Practice Questions")}
+
+   <main class="content">
+
+    <h1>❓ Practice Questions</h1>
+
+    <p class="muted">
+     Choose a subject for practice.
+    </p>
+
+    <div class="subjectCards">
+
+     ${subjects.map(s=>`
+
+      <div class="subjectCard">
+
+       <div class="subjectCode">
+        ${escapeHTML(s.subject_code||"")}
+       </div>
+
+       <h3>
+        ${escapeHTML(s.subject_name)}
+       </h3>
+
+       <button class="btn secondary"
+        style="margin-top:15px"
+        onclick="startPractice('${s.id}','${escapeHTML(s.subject_name)}')">
+        Practise
+       </button>
+
+      </div>
+
+     `).join("")}
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+}
+
+async function startPractice(subjectId,subjectName){
+
+ const result=await db
+  .from("questions")
+  .select("*")
+  .eq("subject_id",subjectId)
+  .eq("status","published")
+  .limit(20);
+
+ if(result.error){
+
+  alert(result.error.message);
+  return;
+ }
+
+ const rows=(result.data||[])
+  .sort(()=>Math.random()-.5);
+
+ if(!rows.length){
+
+  alert("No published questions found.");
+  return;
+ }
+
+ let index=0;
+ let score=0;
+
+ function showPractice(){
+
+  const q=rows[index];
+
+  document.getElementById("app").innerHTML=`
+
+   <div class="portal">
+
+    <div class="main"
+     style="margin-left:0">
+
+     <header class="topbar">
+      <strong>
+       ❓ ${escapeHTML(subjectName)}
+      </strong>
+
+      <div class="topUser">
+       ${index+1}/${rows.length}
+      </div>
+     </header>
+
+     <main class="content">
+
+      <div class="cbtWrap">
+
+       <div class="questionCard">
+
+        <div class="questionNumber">
+         PRACTICE QUESTION ${index+1}
+        </div>
+
+        <div class="questionText">
+         ${escapeHTML(q.question_text)}
+        </div>
+
+        <div class="options">
+
+         ${[
+          ["A",q.option_a],
+          ["B",q.option_b],
+          ["C",q.option_c],
+          ["D",q.option_d]
+         ].map(o=>`
+
+          <button class="option"
+           onclick="answerPractice(
+            '${q.id}',
+            '${o[0]}'
+           )">
+
+           <span class="optionLetter">
+            ${o[0]}
+           </span>
+
+           <span>
+            ${escapeHTML(o[1]||"")}
+           </span>
+
+          </button>
+
+         `).join("")}
+
+        </div>
+
+        <div id="practiceFeedback"></div>
+
+       </div>
+
+      </div>
+
+     </main>
+
+    </div>
+
+   </div>`;
+
+  window.answerPractice=function(id,answer){
+
+   const correct=
+    normalizeAnswer(q.correct_answer);
+
+   const chosen=
+    normalizeAnswer(answer);
+
+   const ok=chosen===correct;
+
+   if(ok)score++;
+
+   const feedback=
+    document.getElementById(
+     "practiceFeedback"
+    );
+
+   feedback.innerHTML=`
+
+    <div class="feedbackBox ${
+     ok
+     ?"feedbackCorrect"
+     :"feedbackWrong"
+    }">
+
+     ${
+      ok
+      ?"✓ Correct!"
+      :"✕ Incorrect."
+     }
+
+     <br>
+
+     Correct answer:
+     <strong>${escapeHTML(correct)}</strong>
+
+    </div>
+
+    ${
+     q.feedback
+     ?`
+      <div class="notice">
+       <strong>Feedback:</strong>
+       ${escapeHTML(q.feedback)}
+      </div>
+     `
+     :""
+    }
+
+    ${
+     q.recommendation
+     ?`
+      <div class="recommendation">
+       <strong>Recommendation:</strong>
+       ${escapeHTML(q.recommendation)}
+      </div>
+     `
+     :""
+    }
+
+    <button class="btn primary"
+     style="margin-top:15px"
+     onclick="
+      if(${index+1}>=${rows.length}){
+       alert('Practice complete! Score: '+${score}+'/'+${rows.length});
+       studentSubjects();
+      }else{
+       ${index}++;
+       showPractice();
+      }
+     ">
+     ${index+1>=rows.length?"Finish":"Next Question →"}
+    </button>
+   `;
+  };
+ }
+
+ showPractice();
+}
+
+/* =========================================================
+   ADMIN SIDEBAR
+========================================================= */
+
+function adminSidebar(){
+
+ return sidebar(`
+
+ <button class="sideButton active"
+  onclick="renderAdmin()">
+  📊 Dashboard
+ </button>
+
+ <button class="sideButton"
+  onclick="renderStudentManagement()">
+  👨‍🎓 Students
+ </button>
+
+ <button class="sideButton"
+  onclick="renderTutors()">
+  👨‍🏫 Tutors
+ </button>
+
+ <button class="sideButton"
+  onclick="adminSubjects()">
+  📚 Subjects
+ </button>
+
+ <button class="sideButton"
+  onclick="adminQuestionBank()">
+  ❓ Question Bank
+ </button>
+
+ <button class="sideButton"
+  onclick="csvImporter()">
+  📥 CSV Importer
+ </button>
+
+ <button class="sideButton"
+  onclick="adminModule('exams')">
+  📝 Exams
+ </button>
+
+ <button class="sideButton"
+  onclick="adminModule('materials')">
+  📚 Materials
+ </button>
+
+ <button class="sideButton"
+  onclick="adminModule('scholarships')">
+  🎓 Scholarships
+ </button>
+
+ <button class="sideButton"
+  onclick="adminModule('subscriptions')">
+  💳 Subscriptions
+ </button>
+
+ <button class="sideButton"
+  onclick="adminModule('transactions')">
+  💰 Transactions
+ </button>
+
+ <button class="sideButton"
+  onclick="adminModule('withdrawals')">
+  🏦 Withdrawals
+ </button>
+
+ <button class="sideButton"
+  onclick="renderReports()">
+  📊 Reports
+ </button>
+
+ `);
+}
+
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
+
+function renderAdmin(){
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${adminSidebar()}
+
+  <div class="main">
+
+   ${portalHeader("Admin Dashboard")}
+
+   <main class="content">
+
+    <h1>
+     PHILMYSCHOOL Admin 🛡️
+    </h1>
+
+    <p class="muted">
+     Manage the entire PHILMYSCHOOL ecosystem.
+    </p>
+
+    <div class="status">
+     ✓ Supabase connection configured.
+    </div>
+
+    <div class="stats">
+
+     <div class="stat">
+      <small>Students</small>
+      <strong id="adminStudentCount">—</strong>
+     </div>
+
+     <div class="stat">
+      <small>Tutors</small>
+      <strong id="adminTutorCount">—</strong>
+     </div>
+
+     <div class="stat">
+      <small>Subjects</small>
+      <strong id="adminSubjectCount">—</strong>
+     </div>
+
+     <div class="stat">
+      <small>Questions</small>
+      <strong id="adminQuestionCount">—</strong>
+     </div>
+
+    </div>
+
+    <div class="panelGrid">
+
+     <div class="panel">
+
+      <h2>📥 Import Questions</h2>
+
+      <p>
+       Upload a CSV containing questions,
+       options, answers, feedback and recommendations.
+      </p>
+
+      <button class="btn primary"
+       style="margin-top:20px"
+       onclick="csvImporter()">
+       Open CSV Importer
       </button>
 
      </div>
@@ -2078,33 +3841,47 @@ function renderStudent(){
       <h2>📚 Subjects</h2>
 
       <p>
-       Browse the PHILMYSCHOOL subject
-       library.
+       Create and manage subjects.
+       Each subject can contain 500+ questions.
       </p>
 
-      <button
-       class="btn secondary"
+      <button class="btn primary"
        style="margin-top:20px"
-       onclick="renderStudentSubjects()">
-       Browse Subjects
+       onclick="adminSubjects()">
+       Manage Subjects
       </button>
 
      </div>
 
      <div class="panel">
 
-      <h2>📈 My Results</h2>
+      <h2>❓ Question Bank</h2>
 
       <p>
-       Review your examination history
-       and performance.
+       View, search, edit and delete imported questions.
       </p>
 
-      <button
-       class="btn secondary"
+      <button class="btn secondary"
        style="margin-top:20px"
-       onclick="renderMyResults()">
-       View Results
+       onclick="adminQuestionBank()">
+       Open Question Bank
+      </button>
+
+     </div>
+
+     <div class="panel">
+
+      <h2>🎯 Student Analysis</h2>
+
+      <p>
+       Students automatically receive performance
+       analysis and recommendations after CBT.
+      </p>
+
+      <button class="btn secondary"
+       style="margin-top:20px"
+       onclick="renderReports()">
+       View Reports
       </button>
 
      </div>
@@ -2117,132 +3894,107 @@ function renderStudent(){
 
  </div>`;
 
- loadStudentStats();
+ loadAdminStats();
 }
 
-/* =========================================================
-   STUDENT STATS
-========================================================= */
-
-async function loadStudentStats(){
-
- if(!user)return;
+async function countTable(table,filters=[]){
 
  try{
 
-  const result=
-  await db
-   .from("exam_attempts")
-   .select("id,score,total_marks")
-   .eq("user_id",user.id);
+  let q=db
+   .from(table)
+   .select("*",{count:"exact",head:true});
 
-  const rows=result.data||[];
+  filters.forEach(([column,value])=>{
+   q=q.eq(column,value);
+  });
 
-  const exams=
-   document.getElementById("studentExamCount");
+  const r=await q;
 
-  if(exams)
-   exams.textContent=rows.length;
+  return r.error
+   ?0
+   :(r.count||0);
 
-  if(rows.length){
+ }catch(e){
 
-   const totalScore=
-   rows.reduce(
-    (sum,x)=>sum+Number(x.score||0),
-    0
-   );
+  return 0;
+ }
+}
 
-   const totalMarks=
-   rows.reduce(
-    (sum,x)=>sum+Number(x.total_marks||0),
-    0
-   );
+async function loadAdminStats(){
 
-   const accuracy=
-    totalMarks?
-    Math.round(
-     totalScore/totalMarks*100
-    )+"%":
-    "—";
+ const s=await countTable(
+  "user_roles",
+  [["role","student"],["is_active",true]]
+ );
 
-   const el=
-    document.getElementById(
-     "studentAccuracy"
-    );
+ const t=await countTable(
+  "user_roles",
+  [["role","tutor"],["is_active",true]]
+ );
 
-   if(el)
-    el.textContent=accuracy;
-  }
+ const sub=await countTable("subjects");
 
- }catch(e){}
+ const q=await countTable("questions");
+
+ const ids=[
+  ["adminStudentCount",s],
+  ["adminTutorCount",t],
+  ["adminSubjectCount",sub],
+  ["adminQuestionCount",q]
+ ];
+
+ ids.forEach(([id,value])=>{
+  const el=document.getElementById(id);
+  if(el)el.textContent=value;
+ });
 }
 
 /* =========================================================
-   STUDENT SUBJECTS
+   SUBJECT MANAGEMENT
 ========================================================= */
 
-async function renderStudentSubjects(){
+async function adminSubjects(){
 
  document.getElementById("app").innerHTML=`
 
  <div class="portal">
 
-  ${sidebar(`
-
-   <button
-    class="sideButton"
-    onclick="renderStudent()">
-    ← Dashboard
-   </button>
-
-   <button
-    class="sideButton active"
-    onclick="renderStudentSubjects()">
-    📚 Subjects
-   </button>
-
-   <button
-    class="sideButton"
-    onclick="renderPracticeQuestions()">
-    ❓ Practice Questions
-   </button>
-
-  `)}
+  ${adminSidebar()}
 
   <div class="main">
 
-   ${portalHeader("Subjects")}
+   ${portalHeader("Subject Management")}
 
    <main class="content">
 
-    <h1>📚 Subject Library</h1>
+    <h1>📚 Subject Management</h1>
 
     <p class="muted">
-     Choose a subject to practise.
+     Create subjects and organise your question bank.
     </p>
 
     <div class="moduleToolbar">
 
-     <input
-      id="studentSubjectSearch"
-      class="searchBox"
-      placeholder="Search subjects..."
-      oninput="filterStudentSubjects()">
+     <button class="btn primary"
+      onclick="openSubjectModal()">
+      + Add Subject
+     </button>
 
-     <button
-      class="btn secondary"
-      onclick="loadStudentSubjects()">
+     <button class="btn secondary"
+      onclick="adminSubjects()">
       ↻ Refresh
      </button>
 
     </div>
 
-    <div
-     id="studentSubjectsArea"
-     class="subjectGrid">
+    <div id="adminSubjectArea"
+     class="subjectCards">
+
      <div class="loading">
       Loading subjects...
      </div>
+
     </div>
 
    </main>
@@ -2251,138 +4003,42 @@ async function renderStudentSubjects(){
 
  </div>`;
 
- await loadStudentSubjects();
-}
+ await loadSubjects();
 
-async function loadStudentSubjects(){
-
- const area=
- document.getElementById(
-  "studentSubjectsArea"
+ const area=document.getElementById(
+  "adminSubjectArea"
  );
 
  if(!area)return;
 
- area.innerHTML=
- `<div class="loading">Loading subjects...</div>`;
-
- try{
-
-  const result=
-  await db
-   .from("subjects")
-   .select("*")
-   .order("subject_name")
-   .limit(1000);
-
-  if(result.error){
-
-   area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(result.error.message)}
-   </div>`;
-
-   return;
-  }
-
-  subjects=result.data||[];
-
-  renderStudentSubjectCards(subjects);
-
- }catch(error){
-
-  area.innerHTML=
-  `<div class="errorBox">
-   ${escapeHTML(error.message)}
-  </div>`;
- }
-}
-
-function filterStudentSubjects(){
-
- const q=
- (
-  document.getElementById(
-   "studentSubjectSearch"
-  )?.value||""
- )
- .toLowerCase()
- .trim();
-
- const rows=
- !q
- ?subjects
- :subjects.filter(s=>
-  JSON.stringify(s)
-  .toLowerCase()
-  .includes(q)
- );
-
- renderStudentSubjectCards(rows);
-}
-
-function renderStudentSubjectCards(rows){
-
- const area=
- document.getElementById(
-  "studentSubjectsArea"
- );
-
- if(!area)return;
-
- if(!rows.length){
-
-  area.innerHTML=`
-   <div class="tableEmpty"
-    style="grid-column:1/-1">
-    <h3>No subjects found</h3>
-   </div>`;
-
-  return;
- }
-
- area.innerHTML=
- rows.map(s=>`
+ area.innerHTML=subjects.map(s=>`
 
   <div class="subjectCard">
 
-   <span class="subjectCode">
-    ${escapeHTML(
-     s.subject_code||"SUBJECT"
-    )}
-   </span>
+   <div class="subjectCode">
+    ${escapeHTML(s.subject_code||"")}
+   </div>
 
    <h3>
-    ${escapeHTML(
-     s.subject_name||
-     "Unnamed Subject"
-    )}
+    ${escapeHTML(s.subject_name)}
    </h3>
 
-   <p>
-    ${escapeHTML(
-     s.description||
-     "Practice questions from this subject."
-    )}
+   <p class="muted">
+    Subject ID:
+    ${escapeHTML(s.id)}
    </p>
 
-   <div
-    style="display:flex;gap:8px;flex-wrap:wrap;margin-top:15px">
+   <div class="cardActions"
+    style="margin-top:15px">
 
-    <button
-     class="btn primary"
-     onclick='startSubjectPractice(
-      "${s.id}"
-     )'>
-     Practice
+    <button class="btn secondary"
+     onclick="openSubjectModal('${s.id}')">
+     Edit
     </button>
 
-    <button
-     class="btn secondary"
-     onclick='startSubjectPractice(
-      "${s.id}",10
-     )'>
-     10 Questions
+    <button class="btn danger"
+     onclick="deleteSubject('${s.id}')">
+     Delete
     </button>
 
    </div>
@@ -2392,110 +4048,254 @@ function renderStudentSubjectCards(rows){
  `).join("");
 }
 
+function openSubjectModal(id=null){
+
+ const existing=
+  id
+  ?subjects.find(x=>x.id===id)
+  :null;
+
+ document.body.insertAdjacentHTML(
+  "beforeend",
+  `
+
+  <div class="modal"
+   id="subjectModal">
+
+   <div class="modalBox">
+
+    <div class="modalHead">
+
+     <h2>
+      ${id?"Edit Subject":"Add Subject"}
+     </h2>
+
+     <button class="closeBtn"
+      onclick="closeSubjectModal()">
+      ✕
+     </button>
+
+    </div>
+
+    <div class="formGrid">
+
+     <div class="formGroup">
+
+      <label>Subject Name</label>
+
+      <input id="subjectName"
+       value="${escapeHTML(
+        existing?.subject_name||""
+       )}"
+       required>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Subject Code</label>
+
+      <input id="subjectCode"
+       value="${escapeHTML(
+        existing?.subject_code||""
+       )}"
+       required>
+
+     </div>
+
+    </div>
+
+    <div id="subjectMessage"></div>
+
+    <div style="
+     display:flex;
+     gap:10px;
+     margin-top:20px">
+
+     <button class="btn secondary"
+      onclick="closeSubjectModal()">
+      Cancel
+     </button>
+
+     <button class="btn primary"
+      onclick="saveSubject('${id||""}')">
+      ${id?"Save Changes":"Create Subject"}
+     </button>
+
+    </div>
+
+   </div>
+
+  </div>`
+ );
+}
+
+function closeSubjectModal(){
+
+ document.getElementById(
+  "subjectModal"
+ )?.remove();
+}
+
+async function saveSubject(id){
+
+ const name=document.getElementById(
+  "subjectName"
+ ).value.trim();
+
+ const code=document.getElementById(
+  "subjectCode"
+ ).value.trim().toUpperCase();
+
+ if(!name||!code){
+
+  alert("Enter subject name and code.");
+  return;
+ }
+
+ let result;
+
+ if(id){
+
+  result=await db
+   .from("subjects")
+   .update({
+    subject_name:name,
+    subject_code:code
+   })
+   .eq("id",id);
+
+ }else{
+
+  result=await db
+   .from("subjects")
+   .insert({
+    subject_name:name,
+    subject_code:code
+   });
+ }
+
+ if(result.error){
+
+  document.getElementById(
+   "subjectMessage"
+  ).innerHTML=`
+
+   <div class="errorBox">
+    ${escapeHTML(result.error.message)}
+   </div>`;
+
+  return;
+ }
+
+ closeSubjectModal();
+
+ await adminSubjects();
+}
+
+async function deleteSubject(id){
+
+ if(!confirm(
+  "Delete this subject? Questions belonging to it may be affected."
+ ))return;
+
+ const result=await db
+  .from("subjects")
+  .delete()
+  .eq("id",id);
+
+ if(result.error){
+
+  alert(result.error.message);
+  return;
+ }
+
+ adminSubjects();
+}
+
 /* =========================================================
-   PRACTICE QUESTIONS
+   CSV IMPORTER
 ========================================================= */
 
-async function renderPracticeQuestions(){
+function csvImporter(){
 
  document.getElementById("app").innerHTML=`
 
  <div class="portal">
 
-  ${sidebar(`
-
-   <button
-    class="sideButton"
-    onclick="renderStudent()">
-    ← Dashboard
-   </button>
-
-   <button
-    class="sideButton active"
-    onclick="renderPracticeQuestions()">
-    ❓ Practice Questions
-   </button>
-
-   <button
-    class="sideButton"
-    onclick="renderStudentSubjects()">
-    📚 Subjects
-   </button>
-
-  `)}
+  ${adminSidebar()}
 
   <div class="main">
 
-   ${portalHeader("Practice Questions")}
+   ${portalHeader("CSV Question Importer")}
 
    <main class="content">
 
-    <div class="examSetup">
+    <h1>📥 CSV Question Importer</h1>
 
-     <h1>❓ Practice Questions</h1>
+    <p class="muted">
+     Import questions, options, answers, feedback,
+     recommendations, topics and difficulty in one file.
+    </p>
 
-     <p class="muted">
-      Select a subject and the number
-      of random questions you want.
+    <div class="csvBox">
+
+     <h2>CSV Format</h2>
+
+     <p class="muted"
+      style="margin-top:8px">
+      One row represents one complete question.
+      Your CSV should contain the following columns:
      </p>
 
-     <div class="examSetupCard">
+     <div class="notice">
+      <strong>
+       subject_name, subject_code, topic,
+       question_text, option_a, option_b,
+       option_c, option_d, correct_answer,
+       feedback, recommendation, difficulty,
+       marks, exam_type, source_name,
+       source_year, status
+      </strong>
+     </div>
 
-      <div class="formGroup">
+     <div style="margin-top:18px">
 
-       <label>Subject</label>
-
-       <select id="practiceSubject">
-        <option value="">
-         Loading subjects...
-        </option>
-       </select>
-
-      </div>
-
-      <div class="examOptions">
-
-       <button
-        class="examOption active"
-        onclick="selectPracticeCount(this,10)">
-        10
-        <strong>Questions</strong>
-       </button>
-
-       <button
-        class="examOption"
-        onclick="selectPracticeCount(this,20)">
-        20
-        <strong>Questions</strong>
-       </button>
-
-       <button
-        class="examOption"
-        onclick="selectPracticeCount(this,50)">
-        50
-        <strong>Questions</strong>
-       </button>
-
-      </div>
-
-      <input
-       type="hidden"
-       id="practiceCount"
-       value="10">
-
-      <div class="notice">
-       Questions are selected randomly from
-       the subject question bank.
-      </div>
-
-      <button
-       class="btn primary"
-       style="margin-top:20px;width:100%"
-       onclick="beginPracticeFromForm()">
-       Start Practice
+      <button class="btn secondary"
+       onclick="downloadCSVTemplate()">
+       ⬇ Download CSV Template
       </button>
 
      </div>
+
+     <div id="csvDrop"
+      class="csvDrop"
+      style="margin-top:20px">
+
+      <h3>
+       Drop CSV file here
+      </h3>
+
+      <p class="muted"
+       style="margin:10px 0 18px">
+       or choose a CSV file from your device
+      </p>
+
+      <input
+       id="csvFile"
+       type="file"
+       accept=".csv,text/csv"
+       onchange="handleCSVFile(event)">
+
+     </div>
+
+     <div id="csvImportStats"></div>
+
+     <div id="csvPreview"></div>
+
+     <div id="csvImportActions"></div>
+
+     <div id="csvProgress"></div>
 
     </div>
 
@@ -2505,1218 +4305,1500 @@ async function renderPracticeQuestions(){
 
  </div>`;
 
- await loadPracticeSubjects();
-}
+ const drop=document.getElementById("csvDrop");
 
-async function loadPracticeSubjects(){
-
- const select=
- document.getElementById(
-  "practiceSubject"
+ drop.addEventListener(
+  "dragover",
+  e=>{
+   e.preventDefault();
+   drop.classList.add("drag");
+  }
  );
 
- if(!select)return;
-
- try{
-
-  const result=
-  await db
-   .from("subjects")
-   .select("id,subject_name,subject_code")
-   .order("subject_name")
-   .limit(1000);
-
-  if(result.error){
-
-   select.innerHTML=
-   `<option value="">
-    ${escapeHTML(result.error.message)}
-   </option>`;
-
-   return;
+ drop.addEventListener(
+  "dragleave",
+  ()=>{
+   drop.classList.remove("drag");
   }
+ );
 
-  subjects=result.data||[];
+ drop.addEventListener(
+  "drop",
+  e=>{
+   e.preventDefault();
+   drop.classList.remove("drag");
 
-  if(!subjects.length){
+   const file=e.dataTransfer.files[0];
 
-   select.innerHTML=
-   `<option value="">
-    No subjects available
-   </option>`;
-
-   return;
+   if(file){
+    processCSVFile(file);
+   }
   }
+ );
+}
 
-  select.innerHTML=
-   `<option value="">
-    Select a subject
-   </option>`+
-   subjects.map(s=>
-    `<option value="${s.id}">
-     ${escapeHTML(
-      s.subject_name
-     )} ${
-      s.subject_code
-      ?"("+escapeHTML(s.subject_code)+")"
-      :""
-     }
-    </option>`
-   ).join("");
+function downloadCSVTemplate(){
 
- }catch(error){
+ const header=
+ `subject_name,subject_code,topic,question_text,option_a,option_b,option_c,option_d,correct_answer,feedback,recommendation,difficulty,marks,exam_type,source_name,source_year,status`;
 
-  select.innerHTML=
-   `<option value="">
-    Unable to load subjects
-   </option>`;
+ const example=
+ `General Knowledge,GK,Geography,"What is the capital of Nigeria?","Lagos","Abuja","Kano","Benin City",B,"Correct. Abuja is the capital of Nigeria.","Revise Nigerian geography and major cities.",easy,1,CBT,PHILMYSCHOOL,2026,published`;
+
+ const csv=header+"\n"+example;
+
+ const blob=new Blob(
+  [csv],
+  {type:"text/csv;charset=utf-8"}
+ );
+
+ const url=URL.createObjectURL(blob);
+
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="PHILMYSCHOOL_question_template.csv";
+
+ a.click();
+
+ URL.revokeObjectURL(url);
+}
+
+function handleCSVFile(event){
+
+ const file=event.target.files[0];
+
+ if(file)processCSVFile(file);
+}
+
+function processCSVFile(file){
+
+ if(!file.name.toLowerCase().endsWith(".csv")){
+
+  alert("Please select a CSV file.");
+  return;
  }
+
+ const reader=new FileReader();
+
+ reader.onload=function(e){
+
+  try{
+
+   const text=e.target.result;
+
+   const rows=parseCSV(text);
+
+   if(!rows.length){
+
+    alert("The CSV file is empty.");
+    return;
+   }
+
+   window.csvRows=rows;
+
+   showCSVPreview(rows);
+
+  }catch(error){
+
+   console.error(error);
+
+   alert(
+    "Could not read CSV:\n\n"+
+    error.message
+   );
+  }
+ };
+
+ reader.readAsText(file);
 }
 
-let selectedPracticeCount=10;
+/*
+ Robust CSV parser supporting:
+ - commas
+ - quoted questions
+ - commas inside feedback
+ - commas inside recommendations
+ - escaped quotes
+*/
 
-function selectPracticeCount(button,count){
+function parseCSV(text){
 
- selectedPracticeCount=count;
+ const rows=[];
+ let row=[];
+ let cell="";
+ let quoted=false;
 
- document.getElementById(
-  "practiceCount"
- ).value=count;
+ for(let i=0;i<text.length;i++){
 
- document
- .querySelectorAll(".examOption")
- .forEach(x=>
-  x.classList.remove("active")
+  const char=text[i];
+  const next=text[i+1];
+
+  if(char==='"'){
+
+   if(quoted&&next==='"'){
+
+    cell+='"';
+    i++;
+
+   }else{
+
+    quoted=!quoted;
+   }
+
+   continue;
+  }
+
+  if(char===","&&!quoted){
+
+   row.push(cell.trim());
+   cell="";
+   continue;
+  }
+
+  if(
+   (char==="\n"||char==="\r")&&!quoted
+  ){
+
+   if(char==="\r"&&next==="\n")i++;
+
+   row.push(cell.trim());
+
+   if(row.some(x=>x!=="")){
+    rows.push(row);
+   }
+
+   row=[];
+   cell="";
+
+   continue;
+  }
+
+  cell+=char;
+ }
+
+ if(cell.length||row.length){
+
+  row.push(cell.trim());
+
+  if(row.some(x=>x!=="")){
+   rows.push(row);
+  }
+ }
+
+ if(!rows.length)return[];
+
+ const headers=rows[0].map(
+  h=>String(h)
+   .trim()
+   .toLowerCase()
  );
 
- button.classList.add("active");
+ return rows.slice(1).map(values=>{
+
+  const obj={};
+
+  headers.forEach((h,i)=>{
+   obj[h]=values[i]??"";
+  });
+
+  return obj;
+ });
 }
 
-async function beginPracticeFromForm(){
+function showCSVPreview(rows){
 
- const subjectId=
- document.getElementById(
-  "practiceSubject"
- ).value;
+ const required=[
+  "subject_name",
+  "subject_code",
+  "topic",
+  "question_text",
+  "option_a",
+  "option_b",
+  "option_c",
+  "option_d",
+  "correct_answer"
+ ];
 
- const count=
- Number(
-  document.getElementById(
-   "practiceCount"
-  ).value||10
+ const first=rows[0];
+
+ const missing=
+  required.filter(x=>
+   !(x in first)
+  );
+
+ const stats=document.getElementById(
+  "csvImportStats"
  );
 
- if(!subjectId){
+ if(missing.length){
 
-  alert("Please select a subject.");
+  stats.innerHTML=`
+
+   <div class="errorBox">
+
+    <strong>
+     Missing required CSV columns:
+    </strong>
+
+    <br><br>
+
+    ${missing.join(", ")}
+
+   </div>`;
 
   return;
  }
 
- await startSubjectPractice(
-  subjectId,
-  count
- );
-}
+ stats.innerHTML=`
 
-/* =========================================================
-   RANDOM SUBJECT PRACTICE
-========================================================= */
+  <div class="csvStats">
 
-async function startSubjectPractice(
- subjectId,
- count=10
-){
-
- if(examState.active){
-
-  if(!confirm(
-   "You already have an active examination. Start another one?"
-  ))return;
-
-  stopExamTimer();
- }
-
- const subject=
- subjects.find(
-  x=>x.id===subjectId
- );
-
- try{
-
-  const result=
-  await db.rpc(
-   "get_random_subject_questions",
-   {
-    p_subject_id:subjectId,
-    p_question_count:count
-   }
-  );
-
-  if(result.error){
-
-   alert(
-    "Could not load questions:\n\n"+
-    result.error.message
-   );
-
-   return;
-  }
-
-  const questions=result.data||[];
-
-  if(!questions.length){
-
-   alert(
-    "There are no questions available for this subject yet."
-   );
-
-   return;
-  }
-
-  examState={
-   active:true,
-   exam:{
-    id:null,
-    title:"Subject Practice"
-   },
-   subject:
-    subject||
-    {
-     id:subjectId,
-     subject_name:"Subject"
-    },
-   questions:questions,
-   answers:{},
-   current:0,
-   startedAt:new Date(),
-   endAt:null,
-   timer:null,
-   submitted:false
-  };
-
-  renderActiveExam();
-
- }catch(error){
-
-  alert(
-   "Practice could not start:\n\n"+
-   error.message
-  );
- }
-}
-
-/* =========================================================
-   ACTIVE EXAM
-========================================================= */
-
-function renderActiveExam(){
-
- if(!examState.active)return;
-
- const q=
- examState.questions[
-  examState.current
- ];
-
- const total=
- examState.questions.length;
-
- const subjectName=
- examState.subject?.subject_name||
- "Practice";
-
- document.getElementById("app").innerHTML=`
-
- <div class="examTop">
-
-  <div class="examTopInner">
-
-   <strong>
-    ${escapeHTML(subjectName)}
-   </strong>
-
-   <span class="muted">
-    ${examState.current+1} / ${total}
-   </span>
-
-   <div class="examTimer"
-    id="examTimer">
-    Practice
+   <div class="stat">
+    <small>Rows</small>
+    <strong>${rows.length}</strong>
    </div>
 
-  </div>
+   <div class="stat">
+    <small>Subjects</small>
+    <strong>
+     ${new Set(
+      rows.map(x=>x.subject_code)
+     ).size}
+    </strong>
+   </div>
+
+   <div class="stat">
+    <small>Topics</small>
+    <strong>
+     ${new Set(
+      rows.map(x=>x.topic)
+     ).size}
+    </strong>
+   </div>
+
+   <div class="stat">
+    <small>Ready</small>
+    <strong style="color:var(--green)">
+     ✓
+    </strong>
+   </div>
+
+  </div>`;
+
+ const preview=rows.slice(0,10);
+
+ document.getElementById(
+  "csvPreview"
+ ).innerHTML=`
+
+ <div class="studentTableWrap">
+
+  <table class="studentTable">
+
+   <thead>
+    <tr>
+     <th>#</th>
+     <th>Subject</th>
+     <th>Topic</th>
+     <th>Question</th>
+     <th>A</th>
+     <th>B</th>
+     <th>C</th>
+     <th>D</th>
+     <th>Answer</th>
+     <th>Difficulty</th>
+    </tr>
+   </thead>
+
+   <tbody>
+
+    ${preview.map((r,i)=>`
+
+     <tr>
+
+      <td>${i+1}</td>
+
+      <td>
+       ${escapeHTML(r.subject_name)}
+      </td>
+
+      <td>
+       ${escapeHTML(r.topic)}
+      </td>
+
+      <td>
+       ${escapeHTML(r.question_text)}
+      </td>
+
+      <td>
+       ${escapeHTML(r.option_a)}
+      </td>
+
+      <td>
+       ${escapeHTML(r.option_b)}
+      </td>
+
+      <td>
+       ${escapeHTML(r.option_c)}
+      </td>
+
+      <td>
+       ${escapeHTML(r.option_d)}
+      </td>
+
+      <td>
+       <span class="badge badgeBlue">
+        ${escapeHTML(
+         normalizeAnswer(r.correct_answer)
+        )}
+       </span>
+      </td>
+
+      <td>
+       ${escapeHTML(
+        r.difficulty||"medium"
+       )}
+      </td>
+
+     </tr>
+
+    `).join("")}
+
+   </tbody>
+
+  </table>
 
  </div>
 
- <main class="examBody">
-
-  <div class="examLayout">
-
-   <div>
-
-    <div class="questionCard">
-
-     <div class="questionNumber">
-      QUESTION ${examState.current+1}
-     </div>
-
-     <div class="questionText">
-      ${escapeHTML(
-       q.question_text||
-       q.question||
-       q.text||
-       ""
-      )}
-     </div>
-
-     ${renderQuestionOptions(q)}
-
-     <div class="examActions">
-
-      <button
-       class="btn secondary"
-       onclick="previousExamQuestion()"
-       ${examState.current===0?"disabled":""}>
-       ← Previous
-      </button>
-
-      ${
-       examState.current<
-       total-1
-       ?
-       `<button
-        class="btn primary"
-        onclick="nextExamQuestion()">
-        Next →
-       </button>`
-       :
-       `<button
-        class="btn primary"
-        onclick="confirmSubmitExam()">
-        Submit Exam
-       </button>`
-      }
-
-     </div>
-
-    </div>
-
-   </div>
-
-   <div class="questionNavigator">
-
-    <strong>Questions</strong>
-
-    <div class="questionNumbers">
-
-     ${examState.questions.map(
-      (_,i)=>`
-
-       <button
-        class="qNum
-        ${i===examState.current?"current":""}
-        ${examState.answers[i]!==undefined?"answered":""}"
-        onclick="goExamQuestion(${i})">
-        ${i+1}
-       </button>
-
-      `
-     ).join("")}
-
-    </div>
-
-    <div class="notice">
-
-     Answered:
-     <strong>
-      ${
-       Object.keys(
-        examState.answers
-       ).length
-      }
-     </strong>
-     /
-     ${total}
-
-    </div>
-
-    <button
-     class="btn danger"
-     style="width:100%;margin-top:15px"
-     onclick="confirmSubmitExam()">
-     Submit Now
-    </button>
-
-   </div>
-
-  </div>
-
- </main>`;
-
- updateExamTimer();
-}
-
-function extractOptions(q){
-
- if(q.options&&typeof q.options==="object"){
-
-  if(Array.isArray(q.options))
-   return q.options;
-
-  return [
-   q.options.A||q.options.a||"",
-   q.options.B||q.options.b||"",
-   q.options.C||q.options.c||"",
-   q.options.D||q.options.d||""
-  ];
+ ${
+  rows.length>10
+  ?`
+   <p class="muted"
+    style="margin-top:10px">
+    Showing the first 10 rows.
+    ${rows.length-10} additional rows
+    are ready for import.
+   </p>
+  `
+  :""
  }
 
- const result=[];
+ `;
 
- ["A","B","C","D","E"].forEach(letter=>{
-
-  const value=
-   q["option_"+letter.toLowerCase()]||
-   q["option_"+letter]||
-   q["choice_"+letter.toLowerCase()]||
-   q["choice_"+letter];
-
-  if(value!==undefined&&value!==null)
-   result.push(value);
- });
-
- return result;
-}
-
-function renderQuestionOptions(q){
-
- const options=
- extractOptions(q);
-
- if(!options.length){
-
-  return `
-   <div class="notice">
-    This question does not have answer
-    options configured.
-   </div>`;
- }
-
- const selected=
-  examState.answers[
-   examState.current
-  ];
-
- return options.map(
-  (option,i)=>{
-
-   const letter=
-    String.fromCharCode(
-     65+i
-    );
-
-   return `
-
-    <button
-     class="option ${
-      selected===i
-      ?"selected"
-      :""
-     }"
-     onclick="answerExamQuestion(${i})">
-
-     <span class="optionLetter">
-      ${letter}
-     </span>
-
-     <span>
-      ${escapeHTML(option)}
-     </span>
-
-    </button>`;
-
-  }
- ).join("");
-}
-
-function answerExamQuestion(index){
-
- examState.answers[
-  examState.current
- ]=index;
-
- renderActiveExam();
-}
-
-function nextExamQuestion(){
-
- if(
-  examState.current<
-  examState.questions.length-1
- ){
-
-  examState.current++;
-
-  renderActiveExam();
- }
-}
-
-function previousExamQuestion(){
-
- if(examState.current>0){
-
-  examState.current--;
-
-  renderActiveExam();
- }
-}
-
-function goExamQuestion(index){
-
- if(
-  index>=0&&
-  index<examState.questions.length
- ){
-
-  examState.current=index;
-
-  renderActiveExam();
- }
-}
-
-function confirmSubmitExam(){
-
- const unanswered=
- examState.questions.length-
- Object.keys(
-  examState.answers
- ).length;
-
- if(unanswered>0){
-
-  if(!confirm(
-   `${unanswered} question(s) are unanswered. Submit anyway?`
-  ))return;
- }
-
- submitActiveExam();
-}
-
-/* =========================================================
-   TIMER
-========================================================= */
-
-function updateExamTimer(){
-
- const el=
  document.getElementById(
-  "examTimer"
- );
+  "csvImportActions"
+ ).innerHTML=`
 
- if(!el)return;
+  <div style="
+   display:flex;
+   gap:10px;
+   flex-wrap:wrap;
+   margin-top:20px">
 
- if(!examState.active){
+   <button class="btn primary"
+    onclick="importCSVRows()">
+    🚀 Import ${rows.length} Questions
+   </button>
 
-  el.textContent="";
+   <button class="btn secondary"
+    onclick="csvImporter()">
+    Cancel
+   </button>
 
-  return;
- }
-
- if(!examState.endAt){
-
-  el.textContent="Practice";
-
-  return;
- }
-
- const remaining=
- Math.max(
-  0,
-  new Date(
-   examState.endAt
-  ).getTime()-
-  Date.now()
- );
-
- const seconds=
- Math.floor(
-  remaining/1000
- );
-
- const mins=
- Math.floor(seconds/60);
-
- const secs=
- seconds%60;
-
- el.textContent=
- `${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
-
- if(remaining<=0){
-
-  stopExamTimer();
-
-  alert(
-   "Time is up. Your examination will be submitted automatically."
-  );
-
-  submitActiveExam();
-
-  return;
- }
-
- examState.timer=
- setTimeout(
-  updateExamTimer,
-  1000
- );
-}
-
-function stopExamTimer(){
-
- if(examState.timer){
-
-  clearTimeout(
-   examState.timer
-  );
-
-  examState.timer=null;
- }
+  </div>`;
 }
 
 /* =========================================================
-   SUBMIT EXAM
+   CSV IMPORT
 ========================================================= */
 
-async function submitActiveExam(){
+async function importCSVRows(){
 
- if(
-  examState.submitted||
-  !examState.active
- )return;
+ const rows=window.csvRows||[];
 
- examState.submitted=true;
+ if(!rows.length){
 
- stopExamTimer();
+  alert("No CSV rows selected.");
+  return;
+ }
 
- let correct=0;
- let totalMarks=0;
+ const action=document.getElementById(
+  "csvImportActions"
+ );
 
- const answerRows=[];
+ action.innerHTML=`
+  <button class="btn primary" disabled>
+   Importing...
+  </button>`;
 
- examState.questions.forEach(
-  (q,index)=>{
+ const progress=document.getElementById(
+  "csvProgress"
+ );
 
-   const marks=
-    Number(q.marks||1);
+ progress.innerHTML=`
 
-   totalMarks+=marks;
+  <div style="margin-top:20px">
+   <strong id="importStatus">
+    Preparing...
+   </strong>
 
-   const chosen=
-    examState.answers[index];
+   <div class="importProgress">
+    <span id="importProgressBar"></span>
+   </div>
+  </div>`;
 
-   const correctValue=
-    q.correct_answer ??
-    q.correct_option ??
-    q.answer ??
-    q.correct_index;
+ let imported=0;
+ let failed=0;
+ const errors=[];
 
-   let isCorrect=false;
+ /*
+  Cache subjects so hundreds of rows do not
+  require repeated subject searches.
+ */
+
+ const subjectCache={};
+
+ for(let i=0;i<rows.length;i++){
+
+  const r=rows[i];
+
+  try{
+
+   const subjectName=
+    String(r.subject_name||"").trim();
+
+   const subjectCode=
+    String(r.subject_code||"")
+    .trim()
+    .toUpperCase();
+
+   const topic=
+    String(r.topic||"General").trim();
+
+   const questionText=
+    String(r.question_text||"").trim();
 
    if(
-    typeof correctValue==="number"
+    !subjectName||
+    !subjectCode||
+    !questionText||
+    !r.option_a||
+    !r.option_b||
+    !r.option_c||
+    !r.option_d||
+    !r.correct_answer
    ){
 
-    isCorrect=
-     chosen===correctValue;
-
-   }else if(
-    typeof correctValue==="string"
-   ){
-
-    const clean=
-     correctValue.trim().toUpperCase();
-
-    const chosenLetter=
-     chosen===undefined
-     ?""
-     :
-     String.fromCharCode(
-      65+chosen
-     );
-
-    isCorrect=
-     clean===chosenLetter||
-     clean===String(chosen);
+    throw new Error(
+     "Missing required question information."
+    );
    }
 
-   if(isCorrect)
-    correct+=marks;
+   /*
+    Validate answer.
+   */
 
-   answerRows.push({
-    question_id:q.id,
-    selected_answer:
-     chosen===undefined
-     ?null
-     :chosen,
-    is_correct:isCorrect,
-    marks_awarded:isCorrect?marks:0
+   const answer=
+    normalizeAnswer(r.correct_answer);
+
+   if(!["A","B","C","D"].includes(answer)){
+
+    throw new Error(
+     "correct_answer must be A, B, C or D."
+    );
+   }
+
+   /*
+    Get/create subject.
+   */
+
+   const cacheKey=subjectCode;
+
+   let subjectId=
+    subjectCache[cacheKey];
+
+   if(!subjectId){
+
+    const existing=await db
+     .from("subjects")
+     .select("id,subject_name,subject_code")
+     .eq("subject_code",subjectCode)
+     .maybeSingle();
+
+    if(existing.error){
+
+     throw existing.error;
+    }
+
+    if(existing.data){
+
+     subjectId=existing.data.id;
+
+    }else{
+
+     const created=await db
+      .from("subjects")
+      .insert({
+       subject_name:subjectName,
+       subject_code:subjectCode
+      })
+      .select("id")
+      .single();
+
+     if(created.error){
+
+      throw created.error;
+     }
+
+     subjectId=created.data.id;
+    }
+
+    subjectCache[cacheKey]=subjectId;
+   }
+
+   /*
+    Build question payload.
+   */
+
+   const payload={
+    subject_id:subjectId,
+    question_text:questionText,
+    option_a:String(r.option_a||"").trim(),
+    option_b:String(r.option_b||"").trim(),
+    option_c:String(r.option_c||"").trim(),
+    option_d:String(r.option_d||"").trim(),
+    correct_answer:answer,
+    feedback:String(r.feedback||"").trim()||null,
+    recommendation:String(r.recommendation||"").trim()||null,
+    difficulty:String(
+     r.difficulty||"medium"
+    ).trim().toLowerCase(),
+    marks:Number(r.marks||1),
+    exam_type:String(
+     r.exam_type||"CBT"
+    ).trim(),
+    source_name:String(
+     r.source_name||""
+    ).trim()||null,
+    source_year:r.source_year
+     ?Number(r.source_year)
+     :null,
+    status:String(
+     r.status||"published"
+    ).trim().toLowerCase(),
+    topic:topic
+   };
+
+   /*
+    Optional fields that may exist in your
+    questions table.
+   */
+
+   if(r.topic_id){
+    payload.topic_id=r.topic_id;
+   }
+
+   if(r.image_url){
+    payload.image_url=r.image_url;
+   }
+
+   if(r.source_type){
+    payload.source_type=r.source_type;
+   }
+
+   const inserted=await db
+    .from("questions")
+    .insert(payload);
+
+   if(inserted.error){
+
+    throw inserted.error;
+   }
+
+   imported++;
+
+  }catch(error){
+
+   failed++;
+
+   errors.push({
+    row:i+2,
+    message:error.message
    });
-
   }
+
+  const progressValue=
+   Math.round(
+    ((i+1)/rows.length)*100
+   );
+
+  const bar=document.getElementById(
+   "importProgressBar"
+  );
+
+  const status=document.getElementById(
+   "importStatus"
+  );
+
+  if(bar){
+   bar.style.width=
+    progressValue+"%";
+  }
+
+  if(status){
+
+   status.textContent=
+    `Processing ${i+1} of ${rows.length} — ${progressValue}%`;
+  }
+ }
+
+ document.getElementById(
+  "csvImportActions"
+ ).innerHTML=`
+
+  <div class="status">
+
+   ✓ Import completed.
+
+   <br><br>
+
+   <strong>
+    Successfully imported:
+    ${imported}
+   </strong>
+
+   <br>
+
+   Failed:
+   ${failed}
+
+  </div>
+
+  <button class="btn primary"
+   style="margin-top:15px"
+   onclick="adminQuestionBank()">
+   Open Question Bank
+  </button>
+
+  <button class="btn secondary"
+   style="margin-top:15px"
+   onclick="csvImporter()">
+   Import Another CSV
+  </button>`;
+
+ if(errors.length){
+
+  document.getElementById(
+   "csvPreview"
+  ).innerHTML+=`
+
+   <div class="errorBox">
+
+    <h3>
+     Rows that could not be imported
+    </h3>
+
+    <div style="margin-top:10px">
+
+     ${errors.map(e=>`
+
+      <div style="margin-top:7px">
+       Row ${e.row}:
+       ${escapeHTML(e.message)}
+      </div>
+
+     `).join("")}
+
+    </div>
+
+   </div>`;
+ }
+}
+
+/* =========================================================
+   QUESTION BANK
+========================================================= */
+
+async function adminQuestionBank(){
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${adminSidebar()}
+
+  <div class="main">
+
+   ${portalHeader("Question Bank")}
+
+   <main class="content">
+
+    <h1>❓ Question Bank</h1>
+
+    <p class="muted">
+     Manage all imported CBT questions.
+    </p>
+
+    <div class="moduleToolbar">
+
+     <input id="questionSearch"
+      class="searchBox"
+      placeholder="Search question, subject or topic..."
+      oninput="filterQuestionBank()">
+
+     <select id="questionSubjectFilter"
+      onchange="filterQuestionBank()">
+
+      <option value="">
+       All Subjects
+      </option>
+
+     </select>
+
+     <button class="btn primary"
+      onclick="openQuestionModal()">
+      + Add Question
+     </button>
+
+     <button class="btn secondary"
+      onclick="csvImporter()">
+      📥 CSV Import
+     </button>
+
+     <button class="btn secondary"
+      onclick="adminQuestionBank()">
+      ↻ Refresh
+     </button>
+
+    </div>
+
+    <div id="questionArea"
+     class="studentTableWrap">
+
+     <div class="loading">
+      Loading questions...
+     </div>
+
+    </div>
+
+   </main>
+
+  </div>
+
+ </div>`;
+
+ await loadSubjects();
+ await loadQuestionBank();
+
+ const select=document.getElementById(
+  "questionSubjectFilter"
  );
 
- const score=correct;
+ subjects.forEach(s=>{
 
- let attemptId=null;
+  select.innerHTML+=`
 
- try{
-
-  const attemptPayload={
-   user_id:user.id,
-   exam_id:examState.exam?.id||null,
-   subject_id:
-    examState.subject?.id||null,
-   score:score,
-   total_marks:totalMarks,
-   percentage:
-    totalMarks?
-    Math.round(
-     score/totalMarks*100
-    ):0,
-   started_at:
-    examState.startedAt?
-    new Date(
-     examState.startedAt
-    ).toISOString():
-    null,
-   submitted_at:
-    new Date().toISOString()
-  };
-
-  const result=
-   await db
-    .from("exam_attempts")
-    .insert(attemptPayload)
-    .select("id")
-    .maybeSingle();
-
-  if(!result.error)
-   attemptId=result.data?.id;
-
- }catch(error){
-
-  console.warn(
-   "Could not save attempt:",
-   error
-  );
- }
-
- try{
-
-  if(
-   attemptId&&
-   answerRows.length
-  ){
-
-   const rows=
-    answerRows.map(x=>({
-     ...x,
-     attempt_id:attemptId
-    }));
-
-   await db
-    .from("exam_answers")
-    .insert(rows);
-  }
-
- }catch(error){
-
-  console.warn(
-   "Could not save exam answers:",
-   error
-  );
- }
-
- const percentage=
-  totalMarks?
-  Math.round(
-   score/totalMarks*100
-  ):0;
-
- examState.active=false;
-
- renderExamResult({
-  correct:score,
-  total:totalMarks,
-  percentage:percentage,
-  answered:Object.keys(
-   examState.answers
-  ).length,
-  questions:examState.questions.length,
-  attemptId:attemptId
+   <option value="${s.id}">
+    ${escapeHTML(s.subject_name)}
+   </option>`;
  });
 }
 
-/* =========================================================
-   RESULT
-========================================================= */
+async function loadQuestionBank(){
 
-function renderExamResult(result){
-
- document.getElementById("app").innerHTML=`
-
- <div class="authPage"
-  style="display:block;padding:30px">
-
-  <div class="resultBox">
-
-   <div class="eyebrow">
-    EXAMINATION COMPLETED
-   </div>
-
-   <h1 style="margin-top:10px">
-    ${escapeHTML(
-     examState.subject?.subject_name||
-     "Practice"
-    )}
-   </h1>
-
-   <div class="resultScore">
-    ${result.percentage}%
-   </div>
-
-   <p class="muted">
-    ${
-     result.percentage>=70
-     ?"Excellent performance!"
-     :
-     result.percentage>=50
-     ?"Good attempt. Keep practising."
-     :
-     "Keep practising and try again."
-    }
-   </p>
-
-   <div class="resultGrid">
-
-    <div class="resultStat">
-     <small>Score</small>
-     <strong>
-      ${result.correct}
-     </strong>
-    </div>
-
-    <div class="resultStat">
-     <small>Total Marks</small>
-     <strong>
-      ${result.total}
-     </strong>
-    </div>
-
-    <div class="resultStat">
-     <small>Answered</small>
-     <strong>
-      ${result.answered}
-     </strong>
-    </div>
-
-   </div>
-
-   <div
-    style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:30px">
-
-    <button
-     class="btn primary"
-     onclick="renderPracticeQuestions()">
-     Practise Again
-    </button>
-
-    <button
-     class="btn secondary"
-     onclick="renderStudent()">
-     Dashboard
-    </button>
-
-    <button
-     class="btn secondary"
-     onclick="renderMyResults()">
-     My Results
-    </button>
-
-   </div>
-
-  </div>
-
- </div>`;
-
-}
-
-/* =========================================================
-   STUDENT EXAMS
-========================================================= */
-
-async function renderStudentExams(){
-
- document.getElementById("app").innerHTML=`
-
- <div class="portal">
-
-  ${sidebar(`
-
-   <button
-    class="sideButton"
-    onclick="renderStudent()">
-    ← Dashboard
-   </button>
-
-   <button
-    class="sideButton active"
-    onclick="renderStudentExams()">
-    📝 Mock Exams
-   </button>
-
-   <button
-    class="sideButton"
-    onclick="renderPracticeQuestions()">
-    ❓ Practice
-   </button>
-
-  `)}
-
-  <div class="main">
-
-   ${portalHeader("Mock Exams")}
-
-   <main class="content">
-
-    <h1>📝 Mock Examinations</h1>
-
-    <p class="muted">
-     Select an available examination.
-    </p>
-
-    <div
-     id="studentExamArea"
-     class="cardList">
-     <div class="loading">
-      Loading examinations...
-     </div>
-    </div>
-
-   </main>
-
-  </div>
-
- </div>`;
-
- await loadStudentExams();
-}
-
-async function loadStudentExams(){
-
- const area=
- document.getElementById(
-  "studentExamArea"
+ const area=document.getElementById(
+  "questionArea"
  );
 
  if(!area)return;
 
- try{
+ area.innerHTML=`
+  <div class="loading">
+   Loading question bank...
+  </div>`;
 
-  const result=
-   await db
-    .from("exams")
-    .select("*")
-    .eq("status","published")
-    .order("created_at",{ascending:false})
-    .limit(100);
+ const result=await db
+  .from("questions")
+  .select("*")
+  .order("created_at",{ascending:false})
+  .limit(5000);
 
-  if(result.error){
+ if(result.error){
 
-   area.innerHTML=
-   `<div class="errorBox">
+  area.innerHTML=`
+   <div class="errorBox">
     ${escapeHTML(result.error.message)}
    </div>`;
 
-   return;
-  }
+  return;
+ }
 
-  const exams=result.data||[];
+ questionRows=result.data||[];
 
-  if(!exams.length){
+ renderQuestionBank(questionRows);
+}
 
-   area.innerHTML=`
+function filterQuestionBank(){
 
-    <div class="dataCard">
+ const search=
+  document.getElementById(
+   "questionSearch"
+  )?.value.toLowerCase().trim()||"";
 
-     <h3>No published examinations yet</h3>
+ const subject=
+  document.getElementById(
+   "questionSubjectFilter"
+  )?.value||"";
 
-     <p class="dataMeta">
-      You can still practise questions
-      directly by subject.
-     </p>
+ const rows=questionRows.filter(q=>{
 
-     <button
-      class="btn primary"
-      style="margin-top:15px"
-      onclick="renderPracticeQuestions()">
-      Practise by Subject
+  const text=JSON.stringify(q)
+   .toLowerCase();
+
+  const matchesSearch=
+   !search||
+   text.includes(search);
+
+  const matchesSubject=
+   !subject||
+   q.subject_id===subject;
+
+  return matchesSearch&&matchesSubject;
+ });
+
+ renderQuestionBank(rows);
+}
+
+function renderQuestionBank(rows){
+
+ const area=document.getElementById(
+  "questionArea"
+ );
+
+ if(!area)return;
+
+ if(!rows.length){
+
+  area.innerHTML=`
+
+   <div class="tableEmpty">
+
+    <h3>No questions found.</h3>
+
+    <p style="margin-top:8px">
+     Import questions using CSV
+     or add one manually.
+    </p>
+
+   </div>`;
+
+  return;
+ }
+
+ area.innerHTML=`
+
+ <table class="studentTable">
+
+  <thead>
+
+   <tr>
+
+    <th>#</th>
+    <th>Question</th>
+    <th>Subject</th>
+    <th>Topic</th>
+    <th>Answer</th>
+    <th>Difficulty</th>
+    <th>Status</th>
+    <th>Actions</th>
+
+   </tr>
+
+  </thead>
+
+  <tbody>
+
+   ${rows.map((q,i)=>{
+
+    const subject=
+     subjects.find(
+      s=>s.id===q.subject_id
+     );
+
+    return `
+
+     <tr>
+
+      <td>${i+1}</td>
+
+      <td style="max-width:350px">
+       ${escapeHTML(
+        q.question_text
+       )}
+      </td>
+
+      <td>
+       ${escapeHTML(
+        subject?.subject_name||
+        "—"
+       )}
+      </td>
+
+      <td>
+       ${escapeHTML(
+        q.topic||
+        q.topic_name||
+        "General"
+       )}
+      </td>
+
+      <td>
+       <span class="badge badgeGreen">
+        ${escapeHTML(
+         normalizeAnswer(
+          q.correct_answer
+         )
+        )}
+       </span>
+      </td>
+
+      <td>
+       ${escapeHTML(
+        q.difficulty||
+        "medium"
+       )}
+      </td>
+
+      <td>
+       <span class="badge ${
+        q.status==="published"
+        ?"badgeGreen"
+        :"badgeRed"
+       }">
+        ${escapeHTML(
+         q.status||"draft"
+        )}
+       </span>
+      </td>
+
+      <td>
+
+       <div style="
+        display:flex;
+        gap:6px;
+        flex-wrap:wrap">
+
+        <button
+         class="btn secondary"
+         style="padding:7px 10px"
+         onclick="openQuestionModal('${q.id}')">
+         Edit
+        </button>
+
+        <button
+         class="btn danger"
+         style="padding:7px 10px"
+         onclick="deleteQuestion('${q.id}')">
+         Delete
+        </button>
+
+       </div>
+
+      </td>
+
+     </tr>`;
+   }).join("")}
+
+  </tbody>
+
+ </table>`;
+}
+
+/* =========================================================
+   QUESTION MANUAL FORM
+========================================================= */
+
+function openQuestionModal(id=null){
+
+ const existing=id
+  ?questionRows.find(
+   q=>q.id===id
+  )
+  :null;
+
+ document.body.insertAdjacentHTML(
+  "beforeend",
+  `
+
+  <div class="modal"
+   id="questionModal">
+
+   <div class="modalBox">
+
+    <div class="modalHead">
+
+     <h2>
+      ${id?"Edit":"Add"} Question
+     </h2>
+
+     <button class="closeBtn"
+      onclick="closeQuestionModal()">
+      ✕
      </button>
-
-    </div>`;
-
-   return;
-  }
-
-  area.innerHTML=
-  exams.map(e=>`
-
-   <div class="dataCard">
-
-    <h3>
-     ${escapeHTML(
-      e.title||"Untitled Exam"
-     )}
-    </h3>
-
-    <div class="dataMeta">
-
-     Type:
-     ${escapeHTML(
-      e.exam_type||"Mock"
-     )}
-     <br>
-
-     Duration:
-     ${escapeHTML(
-      e.duration_minutes||0
-     )}
-     minutes
-     <br>
-
-     Questions:
-     ${escapeHTML(
-      e.total_questions||0
-     )}
-     <br>
-
-     Access:
-     ${escapeHTML(
-      e.access_level||"free"
-     )}
 
     </div>
 
-    <div class="cardActions">
+    <div class="formGrid">
 
-     <button
-      class="btn primary"
-      onclick='startExam("${e.id}")'>
-      Start Examination
+     <div class="formGroup">
+
+      <label>Subject</label>
+
+      <select id="qSubject" required>
+
+       <option value="">
+        Select Subject
+       </option>
+
+       ${subjects.map(s=>`
+
+        <option
+         value="${s.id}"
+         ${
+          existing?.subject_id===s.id
+          ?"selected"
+          :""
+         }>
+
+         ${escapeHTML(
+          s.subject_name
+         )}
+
+        </option>
+
+       `).join("")}
+
+      </select>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Topic</label>
+
+      <input id="qTopic"
+       value="${escapeHTML(
+        existing?.topic||""
+       )}"
+       placeholder="e.g. Geography">
+
+     </div>
+
+     <div class="formGroup full">
+
+      <label>Question</label>
+
+      <textarea id="qText"
+       required>${escapeHTML(
+        existing?.question_text||""
+       )}</textarea>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Option A</label>
+
+      <input id="qA"
+       value="${escapeHTML(
+        existing?.option_a||""
+       )}"
+       required>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Option B</label>
+
+      <input id="qB"
+       value="${escapeHTML(
+        existing?.option_b||""
+       )}"
+       required>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Option C</label>
+
+      <input id="qC"
+       value="${escapeHTML(
+        existing?.option_c||""
+       )}"
+       required>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Option D</label>
+
+      <input id="qD"
+       value="${escapeHTML(
+        existing?.option_d||""
+       )}"
+       required>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Correct Answer</label>
+
+      <select id="qAnswer">
+
+       ${["A","B","C","D"].map(x=>`
+
+        <option
+         ${
+          normalizeAnswer(
+           existing?.correct_answer
+          )===x
+          ?"selected"
+          :""
+         }>
+         ${x}
+        </option>
+
+       `).join("")}
+
+      </select>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Difficulty</label>
+
+      <select id="qDifficulty">
+
+       ${["easy","medium","hard"].map(x=>`
+
+        <option
+         ${
+          (existing?.difficulty||"medium")===x
+          ?"selected"
+          :""
+         }>
+         ${x}
+        </option>
+
+       `).join("")}
+
+      </select>
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Marks</label>
+
+      <input id="qMarks"
+       type="number"
+       min="1"
+       value="${Number(
+        existing?.marks||1
+       )}">
+
+     </div>
+
+     <div class="formGroup">
+
+      <label>Status</label>
+
+      <select id="qStatus">
+
+       <option
+        ${
+         (existing?.status||"published")
+         ==="published"
+         ?"selected"
+         :""
+        }>
+        published
+       </option>
+
+       <option
+        ${
+         existing?.status==="draft"
+         ?"selected"
+         :""
+        }>
+        draft
+       </option>
+
+      </select>
+
+     </div>
+
+     <div class="formGroup full">
+
+      <label>Feedback</label>
+
+      <textarea id="qFeedback"
+       placeholder="Feedback shown after answering">${escapeHTML(
+        existing?.feedback||""
+       )}</textarea>
+
+     </div>
+
+     <div class="formGroup full">
+
+      <label>Recommendation</label>
+
+      <textarea id="qRecommendation"
+       placeholder="What should the student study?">${escapeHTML(
+        existing?.recommendation||""
+       )}</textarea>
+
+     </div>
+
+    </div>
+
+    <div id="questionMessage"></div>
+
+    <div style="
+     display:flex;
+     gap:10px;
+     margin-top:20px">
+
+     <button class="btn secondary"
+      onclick="closeQuestionModal()">
+      Cancel
+     </button>
+
+     <button class="btn primary"
+      onclick="saveQuestion('${id||""}')">
+      ${id?"Save Changes":"Create Question"}
      </button>
 
     </div>
 
    </div>
 
-  `).join("");
-
- }catch(error){
-
-  area.innerHTML=
-  `<div class="errorBox">
-   ${escapeHTML(error.message)}
-  </div>`;
- }
+  </div>`
+ );
 }
 
-/* =========================================================
-   START DATABASE EXAM
-========================================================= */
+function closeQuestionModal(){
 
-async function startExam(examId){
+ document.getElementById(
+  "questionModal"
+ )?.remove();
+}
 
- try{
+async function saveQuestion(id){
 
-  const examResult=
-  await db
-   .from("exams")
-   .select("*")
-   .eq("id",examId)
-   .maybeSingle();
+ const payload={
+  subject_id:
+   document.getElementById(
+    "qSubject"
+   ).value,
 
-  if(examResult.error){
+  topic:
+   document.getElementById(
+    "qTopic"
+   ).value.trim(),
 
-   alert(
-    examResult.error.message
-   );
+  question_text:
+   document.getElementById(
+    "qText"
+   ).value.trim(),
 
-   return;
-  }
+  option_a:
+   document.getElementById(
+    "qA"
+   ).value.trim(),
 
-  const exam=examResult.data;
+  option_b:
+   document.getElementById(
+    "qB"
+   ).value.trim(),
 
-  if(!exam){
+  option_c:
+   document.getElementById(
+    "qC"
+   ).value.trim(),
 
-   alert("Examination not found.");
+  option_d:
+   document.getElementById(
+    "qD"
+   ).value.trim(),
 
-   return;
-  }
+  correct_answer:
+   document.getElementById(
+    "qAnswer"
+   ).value,
 
-  const subjectId=
-   exam.subject_id||
-   null;
+  difficulty:
+   document.getElementById(
+    "qDifficulty"
+   ).value,
 
-  let subject=null;
+  marks:Number(
+   document.getElementById(
+    "qMarks"
+   ).value||1
+  ),
 
-  if(subjectId){
+  status:
+   document.getElementById(
+    "qStatus"
+   ).value,
 
-   const sr=
-    await db
-     .from("subjects")
-     .select("*")
-     .eq("id",subjectId)
-     .maybeSingle();
+  feedback:
+   document.getElementById(
+    "qFeedback"
+   ).value.trim()||null,
 
-   subject=sr.data||null;
-  }
+  recommendation:
+   document.getElementById(
+    "qRecommendation"
+   ).value.trim()||null
+ };
 
-  const count=
-   Number(
-    exam.total_questions||10
-   );
-
-  let questions=[];
-
-  if(subjectId){
-
-   const qr=
-    await db.rpc(
-     "get_random_subject_questions",
-     {
-      p_subject_id:subjectId,
-      p_question_count:count
-     }
-   );
-
-   if(qr.error){
-
-    alert(
-     "Could not load examination questions:\n\n"+
-     qr.error.message
-    );
-
-    return;
-   }
-
-   questions=qr.data||[];
-
-  }else{
-
-   const qr=
-    await db
-     .from("questions")
-     .select("*")
-     .eq("status","published")
-     .limit(count);
-
-   if(qr.error){
-
-    alert(
-     qr.error.message
-    );
-
-    return;
-   }
-
-   questions=qr.data||[];
-  }
-
-  if(!questions.length){
-
-   alert(
-    "No questions are available for this examination."
-   );
-
-   return;
-  }
-
-  examState={
-   active:true,
-   exam:exam,
-   subject:subject,
-   questions:questions,
-   answers:{},
-   current:0,
-   startedAt:new Date(),
-   endAt:
-    exam.duration_minutes?
-    Date.now()+
-    Number(
-     exam.duration_minutes
-    )*60000:
-    null,
-   timer:null,
-   submitted:false
-  };
-
-  renderActiveExam();
-
- }catch(error){
+ if(
+  !payload.subject_id||
+  !payload.question_text||
+  !payload.option_a||
+  !payload.option_b||
+  !payload.option_c||
+  !payload.option_d
+ ){
 
   alert(
-   "Unable to start exam:\n\n"+
-   error.message
+   "Subject, question and all four options are required."
   );
+
+  return;
  }
+
+ let result;
+
+ if(id){
+
+  result=await db
+   .from("questions")
+   .update(payload)
+   .eq("id",id);
+
+ }else{
+
+  payload.created_by=user.id;
+
+  result=await db
+   .from("questions")
+   .insert(payload);
+ }
+
+ if(result.error){
+
+  document.getElementById(
+   "questionMessage"
+  ).innerHTML=`
+
+   <div class="errorBox">
+    ${escapeHTML(
+     result.error.message
+    )}
+   </div>`;
+
+  return;
+ }
+
+ closeQuestionModal();
+
+ await adminQuestionBank();
+}
+
+async function deleteQuestion(id){
+
+ if(!confirm(
+  "Delete this question permanently?"
+ ))return;
+
+ const result=await db
+  .from("questions")
+  .delete()
+  .eq("id",id);
+
+ if(result.error){
+
+  alert(result.error.message);
+  return;
+ }
+
+ await adminQuestionBank();
 }
 
 /* =========================================================
-   MY RESULTS
+   STUDENT MANAGEMENT
 ========================================================= */
 
-async function renderMyResults(){
+async function renderStudentManagement(){
 
  document.getElementById("app").innerHTML=`
 
  <div class="portal">
 
-  ${sidebar(`
-
-   <button
-    class="sideButton"
-    onclick="renderStudent()">
-    ← Dashboard
-   </button>
-
-   <button
-    class="sideButton active"
-    onclick="renderMyResults()">
-    📈 My Results
-   </button>
-
-  `)}
+  ${adminSidebar()}
 
   <div class="main">
 
-   ${portalHeader("My Results")}
+   ${portalHeader("Student Management")}
 
    <main class="content">
 
-    <h1>📈 My Results</h1>
+    <h1>Student Management 👨‍🎓</h1>
 
     <p class="muted">
-     Your examination history.
+     View registered PHILMYSCHOOL students.
     </p>
 
-    <div
-     id="myResultsArea"
-     class="cardList">
+    <div class="managementHeader">
+
+     <div>
+      <h2>Registered Students</h2>
+     </div>
+
+     <div style="
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap">
+
+      <input
+       id="studentSearch"
+       class="searchBox"
+       placeholder="Search name, email or phone..."
+       oninput="filterStudents()">
+
+      <button class="btn secondary"
+       onclick="loadStudents()">
+       ↻ Refresh
+      </button>
+
+     </div>
+
+    </div>
+
+    <div id="studentManagementArea"
+     class="studentTableWrap">
 
      <div class="loading">
-      Loading results...
+      Loading students...
      </div>
 
     </div>
@@ -3727,111 +5809,332 @@ async function renderMyResults(){
 
  </div>`;
 
- await loadMyResults();
+ await loadStudents();
 }
 
-async function loadMyResults(){
+async function loadStudents(){
 
- const area=
- document.getElementById(
-  "myResultsArea"
+ const area=document.getElementById(
+  "studentManagementArea"
  );
 
  if(!area)return;
 
- try{
+ const rolesResult=await db
+  .from("user_roles")
+  .select(
+   "id,user_id,role,is_active,created_at"
+  )
+  .eq("role","student")
+  .order(
+   "created_at",
+   {ascending:false}
+  );
 
-  const result=
-   await db
-    .from("exam_attempts")
-    .select("*")
-    .eq("user_id",user.id)
-    .order("submitted_at",{ascending:false})
-    .limit(100);
+ if(rolesResult.error){
 
-  if(result.error){
-
-   area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(result.error.message)}
+  area.innerHTML=`
+   <div class="errorBox">
+    ${escapeHTML(
+     rolesResult.error.message
+    )}
    </div>`;
 
-   return;
-  }
+  return;
+ }
 
-  const rows=result.data||[];
+ const roles=rolesResult.data||[];
 
-  if(!rows.length){
+ const ids=roles
+  .map(x=>x.user_id)
+  .filter(Boolean);
 
-   area.innerHTML=`
+ if(!ids.length){
 
-    <div class="dataCard">
-     <h3>No examination results yet.</h3>
+  allStudents=[];
 
-     <button
-      class="btn primary"
-      style="margin-top:15px"
-      onclick="renderPracticeQuestions()">
-      Start Practising
-     </button>
-    </div>`;
+  area.innerHTML=`
+   <div class="tableEmpty">
+    <h3>No students yet</h3>
+   </div>`;
 
-   return;
-  }
+  return;
+ }
 
-  area.innerHTML=
-   rows.map(r=>`
+ const profilesResult=await db
+  .from("profiles")
+  .select("*")
+  .in("id",ids);
 
-    <div class="dataCard">
+ if(profilesResult.error){
 
-     <h3>
-      ${escapeHTML(
-       r.exam_title||
-       r.title||
-       "Examination Attempt"
-      )}
-     </h3>
+  area.innerHTML=`
+   <div class="errorBox">
+    ${escapeHTML(
+     profilesResult.error.message
+    )}
+   </div>`;
 
-     <div class="dataMeta">
+  return;
+ }
 
-      Score:
-      <strong>
+ allStudents=roles.map(r=>{
+
+  const p=
+   (profilesResult.data||[])
+   .find(
+    x=>x.id===r.user_id
+   )||{};
+
+  return {
+   ...p,
+   user_id:r.user_id,
+   role:r.role,
+   is_active:r.is_active
+  };
+ });
+
+ renderStudentTable(allStudents);
+}
+
+function filterStudents(){
+
+ const search=
+  document.getElementById(
+   "studentSearch"
+  )?.value.toLowerCase().trim()||"";
+
+ const rows=
+  !search
+  ?allStudents
+  :allStudents.filter(s=>
+   [
+    s.first_name,
+    s.last_name,
+    s.display_name,
+    s.email,
+    s.phone
+   ]
+   .filter(Boolean)
+   .join(" ")
+   .toLowerCase()
+   .includes(search)
+  );
+
+ renderStudentTable(rows);
+}
+
+function renderStudentTable(students){
+
+ const area=document.getElementById(
+  "studentManagementArea"
+ );
+
+ if(!students.length){
+
+  area.innerHTML=`
+   <div class="tableEmpty">
+    <h3>No students found</h3>
+   </div>`;
+
+  return;
+ }
+
+ area.innerHTML=`
+
+ <table class="studentTable">
+
+  <thead>
+
+   <tr>
+    <th>#</th>
+    <th>Student</th>
+    <th>Phone</th>
+    <th>Location</th>
+    <th>Status</th>
+    <th>Action</th>
+   </tr>
+
+  </thead>
+
+  <tbody>
+
+   ${students.map((s,i)=>{
+
+    const name=
+     s.display_name||
+     `${s.first_name||""} ${s.last_name||""}`
+     .trim()||
+     "Unnamed Student";
+
+    const active=
+     s.is_active!==false;
+
+    return `
+
+     <tr>
+
+      <td>${i+1}</td>
+
+      <td>
+
+       <div class="studentName">
+        ${escapeHTML(name)}
+       </div>
+
+       <div class="studentEmail">
+        ${escapeHTML(
+         s.email||"No email"
+        )}
+       </div>
+
+      </td>
+
+      <td>
+       ${escapeHTML(s.phone||"—")}
+      </td>
+
+      <td>
        ${escapeHTML(
-        r.score??0
+        [
+         s.state,
+         s.lga
+        ]
+        .filter(Boolean)
+        .join(", ")||"—"
        )}
-      </strong>
-      /
-      ${escapeHTML(
-       r.total_marks??0
-      )}
-      <br>
+      </td>
 
-      Percentage:
-      <strong>
-       ${escapeHTML(
-        r.percentage??0
-       )}%
-      </strong>
-      <br>
+      <td>
 
-      Submitted:
-      ${dateTimeText(
-       r.submitted_at
-      )}
+       <span class="badge ${
+        active
+        ?"badgeGreen"
+        :"badgeRed"
+       }">
+
+        ${active
+         ?"Active"
+         :"Inactive"}
+
+       </span>
+
+      </td>
+
+      <td>
+
+       <button
+        class="btn secondary"
+        style="padding:7px 11px"
+        onclick="viewStudent('${s.id||s.user_id}')">
+
+        View
+
+       </button>
+
+      </td>
+
+     </tr>`;
+   }).join("")}
+
+  </tbody>
+
+ </table>`;
+}
+
+function viewStudent(id){
+
+ const s=allStudents.find(
+  x=>x.id===id||x.user_id===id
+ );
+
+ if(!s){
+
+  alert("Student not found.");
+  return;
+ }
+
+ const name=
+  s.display_name||
+  `${s.first_name||""} ${s.last_name||""}`
+  .trim()||
+  "Student";
+
+ document.getElementById("app").innerHTML=`
+
+ <div class="portal">
+
+  ${adminSidebar()}
+
+  <div class="main">
+
+   ${portalHeader("Student Details")}
+
+   <main class="content">
+
+    <h1>Student Details</h1>
+
+    <p class="muted">
+     ${escapeHTML(name)}
+    </p>
+
+    <div class="panel"
+     style="margin-top:20px">
+
+     <div class="detailGrid">
+
+      ${[
+       ["First Name",s.first_name],
+       ["Last Name",s.last_name],
+       ["Email",s.email],
+       ["Phone",s.phone],
+       ["Gender",s.gender],
+       ["Date of Birth",s.date_of_birth],
+       ["State",s.state],
+       ["LGA",s.lga],
+       ["Country",s.country],
+       ["Account Status",s.account_status],
+       ["Onboarding",
+        s.onboarding_completed
+        ?"Completed"
+        :"Not completed"],
+       ["Created",dateText(s.created_at)]
+      ].map(x=>`
+
+       <div class="detailItem">
+
+        <small>
+         ${escapeHTML(x[0])}
+        </small>
+
+        <strong>
+         ${escapeHTML(
+          x[1]??"—"
+         )}
+        </strong>
+
+       </div>
+
+      `).join("")}
 
      </div>
 
+     <button
+      class="btn primary"
+      style="margin-top:20px"
+      onclick="renderStudentManagement()">
+
+      ← Back to Students
+
+     </button>
+
     </div>
 
-   `).join("");
+   </main>
 
- }catch(error){
+  </div>
 
-  area.innerHTML=
-  `<div class="errorBox">
-   ${escapeHTML(error.message)}
-  </div>`;
- }
+ </div>`;
 }
 
 /* =========================================================
@@ -3842,58 +6145,39 @@ function renderTutor(){
 
  const nav=sidebar(`
 
- <button
-  class="sideButton active"
+ <button class="sideButton active"
   onclick="renderTutor()">
   📊 Dashboard
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('My Tutor Services')">
   📚 My Services
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Tutor Bookings')">
   📅 Bookings
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('My Students')">
   👨‍🎓 My Students
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Tutor Availability')">
   🗓 Availability
  </button>
 
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Tutor Messages')">
   💬 Messages
  </button>
 
- <button
-  class="sideButton"
-  onclick="featurePage('Tutor Materials')">
-  📎 Materials
- </button>
-
- <button
-  class="sideButton"
+ <button class="sideButton"
   onclick="featurePage('Tutor Earnings')">
   💰 Earnings
- </button>
-
- <button
-  class="sideButton"
-  onclick="featurePage('Withdrawals')">
-  🏦 Withdrawals
  </button>
 
  `);
@@ -3948,12 +6232,6 @@ function renderTutor(){
       <p>
        Create and manage tutoring services.
       </p>
-      <button
-       class="btn primary"
-       style="margin-top:20px"
-       onclick="featurePage('My Tutor Services')">
-       Manage Services
-      </button>
      </div>
 
      <div class="panel">
@@ -3961,12 +6239,6 @@ function renderTutor(){
       <p>
        View upcoming lessons and bookings.
       </p>
-      <button
-       class="btn secondary"
-       style="margin-top:20px"
-       onclick="featurePage('Tutor Bookings')">
-       View Bookings
-      </button>
      </div>
 
      <div class="panel">
@@ -3974,12 +6246,6 @@ function renderTutor(){
       <p>
        Communicate with students.
       </p>
-      <button
-       class="btn secondary"
-       style="margin-top:20px"
-       onclick="featurePage('Tutor Messages')">
-       Open Messages
-      </button>
      </div>
 
      <div class="panel">
@@ -3987,12 +6253,6 @@ function renderTutor(){
       <p>
        Track tutoring income and withdrawals.
       </p>
-      <button
-       class="btn secondary"
-       style="margin-top:20px"
-       onclick="featurePage('Tutor Earnings')">
-       View Earnings
-      </button>
      </div>
 
     </div>
@@ -4005,1623 +6265,7 @@ function renderTutor(){
 }
 
 /* =========================================================
-   ADMIN SIDEBAR
-========================================================= */
-
-function adminSidebar(){
-
- return sidebar(`
-
- <button
-  class="sideButton active"
-  onclick="renderAdmin()">
-  📊 Dashboard
- </button>
-
- <button
-  class="sideButton"
-  onclick="renderStudentManagement()">
-  👨‍🎓 Students
- </button>
-
- <button
-  class="sideButton"
-  onclick="renderTutors()">
-  👨‍🏫 Tutors
- </button>
-
- <button
-  class="sideButton"
-  onclick="renderSubjectManagement()">
-  📚 Subjects
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('exams')">
-  📝 Exams
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('questions')">
-  ❓ Question Bank
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('materials')">
-  📖 Materials
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('scholarships')">
-  🎓 Scholarships
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('subscriptions')">
-  💳 Subscriptions
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('transactions')">
-  💰 Transactions
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('withdrawals')">
-  🏦 Withdrawals
- </button>
-
- <button
-  class="sideButton"
-  onclick="adminModule('reports')">
-  📊 Reports
- </button>
-
- `);
-}
-
-/* =========================================================
-   ADMIN DASHBOARD
-========================================================= */
-
-function renderAdmin(){
-
- document.getElementById("app").innerHTML=`
-
- <div class="portal">
-
-  ${adminSidebar()}
-
-  <div class="main">
-
-   ${portalHeader("Admin Dashboard")}
-
-   <main class="content">
-
-    <h1>PHILMYSCHOOL Admin 🛡️</h1>
-
-    <p class="muted">
-     Manage the entire PHILMYSCHOOL ecosystem.
-    </p>
-
-    <div class="status">
-     ✓ Supabase connection configured.
-    </div>
-
-    <div class="stats">
-
-     <div class="stat">
-      <small>Students</small>
-      <strong id="adminStudentCount">—</strong>
-     </div>
-
-     <div class="stat">
-      <small>Tutors</small>
-      <strong id="adminTutorCount">—</strong>
-     </div>
-
-     <div class="stat">
-      <small>Subjects</small>
-      <strong id="adminSubjectCount">—</strong>
-     </div>
-
-     <div class="stat">
-      <small>Questions</small>
-      <strong id="adminQuestionCount">—</strong>
-     </div>
-
-    </div>
-
-    <div class="panelGrid">
-
-     <div class="panel">
-
-      <h2>📚 Subject Management</h2>
-
-      <p>
-       Manage your subject library.
-       The system can hold hundreds of subjects.
-      </p>
-
-      <button
-       class="btn primary"
-       style="margin-top:20px"
-       onclick="renderSubjectManagement()">
-       Manage Subjects
-      </button>
-
-     </div>
-
-     <div class="panel">
-
-      <h2>❓ Question Bank</h2>
-
-      <p>
-       Add and manage questions used by
-       the random question system.
-      </p>
-
-      <button
-       class="btn primary"
-       style="margin-top:20px"
-       onclick="adminModule('questions')">
-       Open Question Bank
-      </button>
-
-     </div>
-
-     <div class="panel">
-
-      <h2>📝 Examination System</h2>
-
-      <p>
-       Create examinations and control
-       duration, questions and access.
-      </p>
-
-      <button
-       class="btn secondary"
-       style="margin-top:20px"
-       onclick="adminModule('exams')">
-       Manage Exams
-      </button>
-
-     </div>
-
-     <div class="panel">
-
-      <h2>👨‍🎓 Student Management</h2>
-
-      <p>
-       View registered students and profiles.
-      </p>
-
-      <button
-       class="btn secondary"
-       style="margin-top:20px"
-       onclick="renderStudentManagement()">
-       Open Students
-      </button>
-
-     </div>
-
-    </div>
-
-   </main>
-
-  </div>
-
- </div>`;
-
- loadAdminStats();
-}
-
-async function countTable(
- table,
- filters=[]
-){
-
- try{
-
-  let q=
-   db
-    .from(table)
-    .select("*",{count:"exact",head:true});
-
-  filters.forEach(
-   ([column,value])=>
-    q=q.eq(column,value)
-  );
-
-  const r=await q;
-
-  return r.error
-   ?0
-   :(r.count||0);
-
- }catch(e){
-
-  return 0;
- }
-}
-
-async function loadAdminStats(){
-
- const s=
- await countTable(
-  "user_roles",
-  [
-   ["role","student"],
-   ["is_active",true]
-  ]
- );
-
- const t=
- await countTable(
-  "user_roles",
-  [
-   ["role","tutor"],
-   ["is_active",true]
-  ]
- );
-
- const sub=
- await countTable("subjects");
-
- const q=
- await countTable("questions");
-
- if(
-  document.getElementById(
-   "adminStudentCount"
-  )
- )
-  document.getElementById(
-   "adminStudentCount"
-  ).textContent=s;
-
- if(
-  document.getElementById(
-   "adminTutorCount"
-  )
- )
-  document.getElementById(
-   "adminTutorCount"
-  ).textContent=t;
-
- if(
-  document.getElementById(
-   "adminSubjectCount"
-  )
- )
-  document.getElementById(
-   "adminSubjectCount"
-  ).textContent=sub;
-
- if(
-  document.getElementById(
-   "adminQuestionCount"
-  )
- )
-  document.getElementById(
-   "adminQuestionCount"
-  ).textContent=q;
-}
-
-/* =========================================================
-   SUBJECT MANAGEMENT
-========================================================= */
-
-async function renderSubjectManagement(){
-
- document.getElementById("app").innerHTML=`
-
- <div class="portal">
-
-  ${adminSidebar()}
-
-  <div class="main">
-
-   ${portalHeader("Subject Management")}
-
-   <main class="content">
-
-    <h1>📚 Subject Management</h1>
-
-    <p class="muted">
-     Build and manage the PHILMYSCHOOL
-     subject library. The interface supports
-     500+ subjects.
-    </p>
-
-    <div class="stats">
-
-     <div class="stat">
-      <small>Total Subjects</small>
-      <strong id="subjectTotal">0</strong>
-     </div>
-
-     <div class="stat">
-      <small>Question Bank</small>
-      <strong id="subjectQuestionsTotal">0</strong>
-     </div>
-
-     <div class="stat">
-      <small>Subjects With Questions</small>
-      <strong id="subjectsWithQuestions">0</strong>
-     </div>
-
-     <div class="stat">
-      <small>Empty Banks</small>
-      <strong id="emptySubjectBanks">0</strong>
-     </div>
-
-    </div>
-
-    <div class="managementHeader">
-
-     <div>
-      <h2>Subjects</h2>
-      <p class="muted">
-       Add as many subjects as your database allows.
-      </p>
-     </div>
-
-     <div
-      style="display:flex;gap:10px;flex-wrap:wrap">
-
-      <input
-       id="adminSubjectSearch"
-       class="searchBox"
-       placeholder="Search subject name or code..."
-       oninput="filterAdminSubjects()">
-
-      <button
-       class="btn primary"
-       onclick="openSubjectForm()">
-       + Add Subject
-      </button>
-
-      <button
-       class="btn secondary"
-       onclick="loadAdminSubjects()">
-       ↻ Refresh
-      </button>
-
-     </div>
-
-    </div>
-
-    <div
-     id="adminSubjectsArea"
-     class="subjectGrid">
-
-     <div
-      class="loading"
-      style="grid-column:1/-1">
-      Loading subjects...
-     </div>
-
-    </div>
-
-   </main>
-
-  </div>
-
- </div>`;
-
- await loadAdminSubjects();
-}
-
-async function loadAdminSubjects(){
-
- const area=
- document.getElementById(
-  "adminSubjectsArea"
- );
-
- if(!area)return;
-
- area.innerHTML=
- `<div
-   class="loading"
-   style="grid-column:1/-1">
-   Loading subjects...
-  </div>`;
-
- try{
-
-  const result=
-   await db
-    .from("subjects")
-    .select("*")
-    .order("subject_name")
-    .limit(2000);
-
-  if(result.error){
-
-   area.innerHTML=
-   `<div
-    class="errorBox"
-    style="grid-column:1/-1">
-    ${escapeHTML(result.error.message)}
-   </div>`;
-
-   return;
-  }
-
-  subjects=result.data||[];
-
-  if(
-   document.getElementById(
-    "subjectTotal"
-   )
-  )
-   document.getElementById(
-    "subjectTotal"
-   ).textContent=
-   subjects.length;
-
-  const ids=
-   subjects
-   .map(x=>x.id)
-   .filter(Boolean);
-
-  let questionRows=[];
-
-  if(ids.length){
-
-   const qr=
-    await db
-     .from("questions")
-     .select("id,subject_id")
-     .in("subject_id",ids)
-     .limit(50000);
-
-   questionRows=
-    qr.data||[];
-  }
-
-  if(
-   document.getElementById(
-    "subjectQuestionsTotal"
-   )
-  )
-   document.getElementById(
-    "subjectQuestionsTotal"
-   ).textContent=
-   questionRows.length;
-
-  const withQuestions=
-   new Set(
-    questionRows
-     .map(x=>x.subject_id)
-     .filter(Boolean)
-   );
-
-  if(
-   document.getElementById(
-    "subjectsWithQuestions"
-   )
-  )
-   document.getElementById(
-    "subjectsWithQuestions"
-   ).textContent=
-   withQuestions.size;
-
-  if(
-   document.getElementById(
-    "emptySubjectBanks"
-   )
-  )
-   document.getElementById(
-    "emptySubjectBanks"
-   ).textContent=
-   Math.max(
-    0,
-    subjects.length-
-    withQuestions.size
-   );
-
-  renderAdminSubjectCards(
-   subjects,
-   questionRows
-  );
-
- }catch(error){
-
-  area.innerHTML=
-   `<div
-    class="errorBox"
-    style="grid-column:1/-1">
-    ${escapeHTML(error.message)}
-   </div>`;
- }
-}
-
-function filterAdminSubjects(){
-
- const q=
- (
-  document.getElementById(
-   "adminSubjectSearch"
-  )?.value||""
- )
- .toLowerCase()
- .trim();
-
- const rows=
- !q
- ?subjects
- :subjects.filter(s=>
-  [
-   s.subject_name,
-   s.subject_code,
-   s.description
-  ]
-  .filter(Boolean)
-  .join(" ")
-  .toLowerCase()
-  .includes(q)
- );
-
- renderAdminSubjectCards(
-  rows,
-  []
- );
-}
-
-function renderAdminSubjectCards(
- rows,
- questionRows=[]
-){
-
- const area=
- document.getElementById(
-  "adminSubjectsArea"
- );
-
- if(!area)return;
-
- if(!rows.length){
-
-  area.innerHTML=`
-   <div
-    class="tableEmpty"
-    style="grid-column:1/-1">
-    <h3>No subjects found</h3>
-   </div>`;
-
-  return;
- }
-
- area.innerHTML=
- rows.map(s=>{
-
-  const count=
-   questionRows.length
-   ?
-   questionRows.filter(
-    q=>q.subject_id===s.id
-   ).length
-   :
-   "—";
-
-  return `
-
-   <div class="subjectCard">
-
-    <span class="subjectCode">
-     ${escapeHTML(
-      s.subject_code||"SUBJECT"
-     )}
-    </span>
-
-    <h3>
-     ${escapeHTML(
-      s.subject_name||
-      "Unnamed Subject"
-     )}
-    </h3>
-
-    <p>
-     ${escapeHTML(
-      s.description||
-      "No description."
-     )}
-    </p>
-
-    <div
-     style="margin-top:12px"
-     class="dataMeta">
-
-     Question Bank:
-     <strong>${count}</strong>
-
-    </div>
-
-    <div class="cardActions">
-
-     <button
-      class="btn primary"
-      onclick='openSubjectForm("${s.id}")'>
-      Edit
-     </button>
-
-     <button
-      class="btn secondary"
-      onclick='viewSubjectQuestions("${s.id}")'>
-      Questions
-     </button>
-
-     <button
-      class="btn danger"
-      onclick='deleteSubject("${s.id}")'>
-      Delete
-     </button>
-
-    </div>
-
-   </div>`;
-
- }).join("");
-}
-
-/* =========================================================
-   SUBJECT FORM
-========================================================= */
-
-function openSubjectForm(id=null){
-
- const existing=
-  id?
-  subjects.find(x=>x.id===id):
-  null;
-
- document.body.insertAdjacentHTML(
-  "beforeend",
-  `
-
-  <div
-   class="modal"
-   id="subjectModal">
-
-   <div class="modalBox">
-
-    <div class="modalHead">
-
-     <h2>
-      ${id?"Edit Subject":"Add Subject"}
-     </h2>
-
-     <button
-      class="closeBtn"
-      onclick="closeSubjectModal()">
-      ✕
-     </button>
-
-    </div>
-
-    <div class="formGrid">
-
-     <div class="formGroup">
-
-      <label>Subject Name</label>
-
-      <input
-       id="subjectName"
-       value="${escapeHTML(
-        existing?.subject_name||""
-       )}"
-       placeholder="e.g. Mathematics"
-       required>
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Subject Code</label>
-
-      <input
-       id="subjectCode"
-       value="${escapeHTML(
-        existing?.subject_code||""
-       )}"
-       placeholder="e.g. MATH"
-       required>
-
-     </div>
-
-     <div class="formGroup full">
-
-      <label>Description</label>
-
-      <textarea
-       id="subjectDescription"
-       placeholder="Subject description">${escapeHTML(
-        existing?.description||""
-       )}</textarea>
-
-     </div>
-
-    </div>
-
-    <div
-     id="subjectFormMessage">
-    </div>
-
-    <div
-     style="display:flex;gap:10px;margin-top:20px">
-
-     <button
-      class="btn secondary"
-      onclick="closeSubjectModal()">
-      Cancel
-     </button>
-
-     <button
-      class="btn primary"
-      onclick='saveSubject(
-       ${id?`"${id}"`:"null"}
-      )'>
-      ${id?"Save Changes":"Create Subject"}
-     </button>
-
-    </div>
-
-   </div>
-
-  </div>`
- );
-}
-
-function closeSubjectModal(){
-
- document
-  .getElementById(
-   "subjectModal"
-  )
-  ?.remove();
-}
-
-async function saveSubject(id=null){
-
- const name=
- document.getElementById(
-  "subjectName"
- ).value.trim();
-
- const code=
- document.getElementById(
-  "subjectCode"
- ).value.trim();
-
- const description=
- document.getElementById(
-  "subjectDescription"
- ).value.trim();
-
- if(!name||!code){
-
-  alert(
-   "Subject name and subject code are required."
-  );
-
-  return;
- }
-
- const payload={
-  subject_name:name,
-  subject_code:code.toUpperCase(),
-  description:description||null
- };
-
- try{
-
-  let result;
-
-  if(id){
-
-   result=
-    await db
-     .from("subjects")
-     .update(payload)
-     .eq("id",id);
-
-  }else{
-
-   result=
-    await db
-     .from("subjects")
-     .insert(payload);
-  }
-
-  if(result.error){
-
-   const box=
-    document.getElementById(
-     "subjectFormMessage"
-    );
-
-   if(box){
-
-    box.innerHTML=
-    `<div class="authMessage error show">
-     ${escapeHTML(
-      result.error.message
-     )}
-    </div>`;
-   }
-
-   return;
-  }
-
-  closeSubjectModal();
-
-  await loadAdminSubjects();
-
- }catch(error){
-
-  alert(
-   "Subject could not be saved:\n\n"+
-   error.message
-  );
- }
-}
-
-async function deleteSubject(id){
-
- if(!confirm(
-  "Delete this subject? Questions linked to it may also be affected by your database rules."
- ))return;
-
- try{
-
-  const result=
-   await db
-    .from("subjects")
-    .delete()
-    .eq("id",id);
-
-  if(result.error){
-
-   alert(
-    "Could not delete subject:\n\n"+
-    result.error.message
-   );
-
-   return;
-  }
-
-  await loadAdminSubjects();
-
- }catch(error){
-
-  alert(error.message);
- }
-}
-
-/* =========================================================
-   SUBJECT QUESTIONS
-========================================================= */
-
-async function viewSubjectQuestions(
- subjectId
-){
-
- const subject=
-  subjects.find(
-   x=>x.id===subjectId
-  );
-
- document.getElementById("app").innerHTML=`
-
- <div class="portal">
-
-  ${adminSidebar()}
-
-  <div class="main">
-
-   ${portalHeader(
-    subject?.subject_name||
-    "Subject Questions"
-   )}
-
-   <main class="content">
-
-    <h1>
-     ❓ ${escapeHTML(
-      subject?.subject_name||
-      "Subject Questions"
-     )}
-    </h1>
-
-    <p class="muted">
-     Questions assigned to this subject.
-    </p>
-
-    <div class="moduleToolbar">
-
-     <button
-      class="btn primary"
-      onclick='openQuestionForm(
-       null,
-       "${subjectId}"
-      )'>
-      + Add Question
-     </button>
-
-     <button
-      class="btn secondary"
-      onclick="renderSubjectManagement()">
-      ← Back to Subjects
-     </button>
-
-    </div>
-
-    <div
-     id="subjectQuestionsArea"
-     class="cardList">
-
-     <div class="loading">
-      Loading questions...
-     </div>
-
-    </div>
-
-   </main>
-
-  </div>
-
- </div>`;
-
- await loadSubjectQuestions(
-  subjectId
- );
-}
-
-async function loadSubjectQuestions(
- subjectId
-){
-
- const area=
- document.getElementById(
-  "subjectQuestionsArea"
- );
-
- if(!area)return;
-
- try{
-
-  const result=
-   await db
-    .from("questions")
-    .select("*")
-    .eq("subject_id",subjectId)
-    .order("created_at",{ascending:false})
-    .limit(1000);
-
-  if(result.error){
-
-   area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(result.error.message)}
-   </div>`;
-
-   return;
-  }
-
-  const rows=result.data||[];
-
-  if(!rows.length){
-
-   area.innerHTML=`
-    <div class="dataCard">
-     <h3>No questions in this subject yet.</h3>
-     <button
-      class="btn primary"
-      style="margin-top:15px"
-      onclick='openQuestionForm(
-       null,
-       "${subjectId}"
-      )'>
-      Add First Question
-     </button>
-    </div>`;
-
-   return;
-  }
-
-  area.innerHTML=
-   rows.map((q,i)=>`
-
-    <div class="questionAdminCard">
-
-     <div class="qText">
-
-      <strong>
-       ${i+1}.
-      </strong>
-
-      ${escapeHTML(
-       q.question_text||""
-      )}
-
-     </div>
-
-     <div class="dataMeta">
-
-      Difficulty:
-      ${escapeHTML(
-       q.difficulty||"medium"
-      )}
-      <br>
-
-      Marks:
-      ${escapeHTML(
-       q.marks??1
-      )}
-      <br>
-
-      Status:
-      ${escapeHTML(
-       q.status||"draft"
-      )}
-
-     </div>
-
-     <div class="cardActions">
-
-      <button
-       class="btn secondary"
-       onclick='openQuestionForm(
-        "${q.id}",
-        "${subjectId}"
-       )'>
-       Edit
-      </button>
-
-      <button
-       class="btn danger"
-       onclick='deleteQuestion(
-        "${q.id}",
-        "${subjectId}"
-       )'>
-       Delete
-      </button>
-
-     </div>
-
-    </div>
-
-   `).join("");
-
- }catch(error){
-
-  area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(error.message)}
-   </div>`;
- }
-}
-
-/* =========================================================
-   QUESTION FORM
-========================================================= */
-
-async function openQuestionForm(
- id=null,
- subjectId=null
-){
-
- let existing=null;
-
- if(id){
-
-  const found=
-   currentModuleRows.find(
-    x=>x.id===id
-   );
-
-  if(found)
-   existing=found;
-
-  if(!existing){
-
-   const r=
-    await db
-     .from("questions")
-     .select("*")
-     .eq("id",id)
-     .maybeSingle();
-
-   existing=r.data||null;
-  }
- }
-
- document.body.insertAdjacentHTML(
-  "beforeend",
-  `
-
-  <div
-   class="modal"
-   id="questionModal">
-
-   <div class="modalBox">
-
-    <div class="modalHead">
-
-     <h2>
-      ${id?"Edit":"Add"} Question
-     </h2>
-
-     <button
-      class="closeBtn"
-      onclick="closeQuestionModal()">
-      ✕
-     </button>
-
-    </div>
-
-    <div class="formGrid">
-
-     <div class="formGroup full">
-
-      <label>Question</label>
-
-      <textarea
-       id="qQuestion"
-       required
-       placeholder="Enter the question">${escapeHTML(
-        existing?.question_text||""
-       )}</textarea>
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Option A</label>
-
-      <input
-       id="qA"
-       value="${escapeHTML(
-        existing?.option_a||
-        existing?.options?.A||
-        ""
-       )}">
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Option B</label>
-
-      <input
-       id="qB"
-       value="${escapeHTML(
-        existing?.option_b||
-        existing?.options?.B||
-        ""
-       )}">
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Option C</label>
-
-      <input
-       id="qC"
-       value="${escapeHTML(
-        existing?.option_c||
-        existing?.options?.C||
-        ""
-       )}">
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Option D</label>
-
-      <input
-       id="qD"
-       value="${escapeHTML(
-        existing?.option_d||
-        existing?.options?.D||
-        ""
-       )}">
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Correct Answer</label>
-
-      <select id="qCorrect">
-
-       <option value="">Select answer</option>
-
-       <option value="0"
-        ${
-         existing?.correct_answer===0||
-         existing?.correct_option==="A"
-         ?"selected":""
-        }>
-        A
-       </option>
-
-       <option value="1"
-        ${
-         existing?.correct_answer===1||
-         existing?.correct_option==="B"
-         ?"selected":""
-        }>
-        B
-       </option>
-
-       <option value="2"
-        ${
-         existing?.correct_answer===2||
-         existing?.correct_option==="C"
-         ?"selected":""
-        }>
-        C
-       </option>
-
-       <option value="3"
-        ${
-         existing?.correct_answer===3||
-         existing?.correct_option==="D"
-         ?"selected":""
-        }>
-        D
-       </option>
-
-      </select>
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Difficulty</label>
-
-      <select id="qDifficulty">
-
-       <option value="easy"
-        ${
-         (existing?.difficulty||"medium")==="easy"
-         ?"selected":""
-        }>
-        Easy
-       </option>
-
-       <option value="medium"
-        ${
-         (existing?.difficulty||"medium")==="medium"
-         ?"selected":""
-        }>
-        Medium
-       </option>
-
-       <option value="hard"
-        ${
-         existing?.difficulty==="hard"
-         ?"selected":""
-        }>
-        Hard
-       </option>
-
-      </select>
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Marks</label>
-
-      <input
-       id="qMarks"
-       type="number"
-       min="1"
-       value="${escapeHTML(
-        existing?.marks??1
-       )}">
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Status</label>
-
-      <select id="qStatus">
-
-       <option value="draft"
-        ${
-         (existing?.status||"draft")==="draft"
-         ?"selected":""
-        }>
-        Draft
-       </option>
-
-       <option value="published"
-        ${
-         existing?.status==="published"
-         ?"selected":""
-        }>
-        Published
-       </option>
-
-      </select>
-
-     </div>
-
-     <div class="formGroup">
-
-      <label>Exam Type</label>
-
-      <input
-       id="qExamType"
-       value="${escapeHTML(
-        existing?.exam_type||"CBT"
-       )}">
-
-     </div>
-
-     <div class="formGroup full">
-
-      <label>Explanation</label>
-
-      <textarea
-       id="qExplanation"
-       placeholder="Optional explanation">${escapeHTML(
-        existing?.explanation||""
-       )}</textarea>
-
-     </div>
-
-    </div>
-
-    <div
-     id="questionFormMessage">
-    </div>
-
-    <div
-     style="display:flex;gap:10px;margin-top:20px">
-
-     <button
-      class="btn secondary"
-      onclick="closeQuestionModal()">
-      Cancel
-     </button>
-
-     <button
-      class="btn primary"
-      onclick='saveQuestion(
-       ${id?`"${id}"`:"null"},
-       "${subjectId||existing?.subject_id||""}"
-      )'>
-      ${id?"Save Changes":"Create Question"}
-     </button>
-
-    </div>
-
-   </div>
-
-  </div>`
- );
-}
-
-function closeQuestionModal(){
-
- document
-  .getElementById(
-   "questionModal"
-  )
-  ?.remove();
-}
-
-async function saveQuestion(
- id,
- subjectId
-){
-
- const question=
- document.getElementById(
-  "qQuestion"
- ).value.trim();
-
- const optionA=
- document.getElementById(
-  "qA"
- ).value.trim();
-
- const optionB=
- document.getElementById(
-  "qB"
- ).value.trim();
-
- const optionC=
- document.getElementById(
-  "qC"
- ).value.trim();
-
- const optionD=
- document.getElementById(
-  "qD"
- ).value.trim();
-
- const correct=
- document.getElementById(
-  "qCorrect"
- ).value;
-
- const difficulty=
- document.getElementById(
-  "qDifficulty"
- ).value;
-
- const marks=
- Number(
-  document.getElementById(
-   "qMarks"
-  ).value||1
- );
-
- const status=
- document.getElementById(
-  "qStatus"
- ).value;
-
- const examType=
- document.getElementById(
-  "qExamType"
- ).value.trim();
-
- const explanation=
- document.getElementById(
-  "qExplanation"
- ).value.trim();
-
- if(!question){
-
-  alert("Question text is required.");
-
-  return;
- }
-
- if(!subjectId){
-
-  alert(
-   "A subject is required for this question."
-  );
-
-  return;
- }
-
- const payload={
-  question_text:question,
-  subject_id:subjectId,
-  option_a:optionA,
-  option_b:optionB,
-  option_c:optionC,
-  option_d:optionD,
-  correct_answer:
-   correct===""?
-   null:
-   Number(correct),
-  difficulty:difficulty,
-  marks:marks,
-  status:status,
-  exam_type:examType||null,
-  explanation:explanation||null
- };
-
- try{
-
-  let result;
-
-  if(id){
-
-   result=
-    await db
-     .from("questions")
-     .update(payload)
-     .eq("id",id);
-
-  }else{
-
-   payload.created_by=
-    user.id;
-
-   result=
-    await db
-     .from("questions")
-     .insert(payload);
-  }
-
-  if(result.error){
-
-   const box=
-    document.getElementById(
-     "questionFormMessage"
-    );
-
-   if(box){
-
-    box.innerHTML=
-     `<div
-      class="authMessage error show">
-      ${escapeHTML(
-       result.error.message
-      )}
-     </div>`;
-   }
-
-   return;
-  }
-
-  closeQuestionModal();
-
-  await viewSubjectQuestions(
-   subjectId
-  );
-
- }catch(error){
-
-  alert(
-   "Question could not be saved:\n\n"+
-   error.message
-  );
- }
-}
-
-async function deleteQuestion(
- id,
- subjectId
-){
-
- if(!confirm(
-  "Delete this question?"
- ))return;
-
- try{
-
-  const result=
-   await db
-    .from("questions")
-    .delete()
-    .eq("id",id);
-
-  if(result.error){
-
-   alert(
-    "Delete failed:\n\n"+
-    result.error.message
-   );
-
-   return;
-  }
-
-  await viewSubjectQuestions(
-   subjectId
-  );
-
- }catch(error){
-
-  alert(error.message);
- }
-}
-
-/* =========================================================
-   GENERIC ADMIN MODULES
+   ADMIN GENERIC MODULES
 ========================================================= */
 
 const MODULES={
@@ -5630,7 +6274,6 @@ const MODULES={
   title:"Exams",
   icon:"📝",
   table:"exams",
-
   columns:[
    ["title","Title"],
    ["exam_type","Exam Type"],
@@ -5641,15 +6284,13 @@ const MODULES={
    ["price","Price"],
    ["status","Status"]
   ],
-
   fields:[
    ["title","Title","text",true],
    ["slug","Slug","text",true],
    ["description","Description","textarea",false],
-   ["subject_id","Subject ID","text",false],
    ["exam_type","Exam Type","text",true],
    ["mode","Mode","text",false],
-   ["duration_minutes","Duration (minutes)","number",true],
+   ["duration_minutes","Duration","number",true],
    ["total_questions","Total Questions","number",false],
    ["total_marks","Total Marks","number",false],
    ["pass_mark","Pass Mark","number",false],
@@ -5661,11 +6302,8 @@ const MODULES={
    ["access_level","Access Level","text",false],
    ["price","Price","number",false],
    ["currency","Currency","text",false],
-   ["status","Status","text",false],
-   ["start_at","Start At","datetime-local",false],
-   ["end_at","End At","datetime-local",false]
+   ["status","Status","text",false]
   ],
-
   defaults:{
    mode:"mock",
    access_level:"free",
@@ -5675,46 +6313,7 @@ const MODULES={
    randomize_questions:true,
    randomize_options:true,
    allow_back_navigation:true,
-   show_result_immediately:true,
-   total_questions:0,
-   total_marks:0
-  }
- },
-
- questions:{
-  title:"Question Bank",
-  icon:"❓",
-  table:"questions",
-
-  columns:[
-   ["question_text","Question"],
-   ["subject_id","Subject"],
-   ["exam_type","Exam Type"],
-   ["difficulty","Difficulty"],
-   ["marks","Marks"],
-   ["status","Status"]
-  ],
-
-  fields:[
-   ["question_text","Question","textarea",true],
-   ["subject_id","Subject ID","text",false],
-   ["topic_id","Topic ID","text",false],
-   ["exam_type","Exam Type","text",false],
-   ["explanation","Explanation","textarea",false],
-   ["image_url","Image URL","text",false],
-   ["difficulty","Difficulty","text",false],
-   ["marks","Marks","number",false],
-   ["source_type","Source Type","text",false],
-   ["source_name","Source Name","text",false],
-   ["source_year","Source Year","number",false],
-   ["status","Status","text",false]
-  ],
-
-  defaults:{
-   difficulty:"medium",
-   marks:1,
-   source_type:"original",
-   status:"draft"
+   show_result_immediately:true
   }
  },
 
@@ -5722,14 +6321,12 @@ const MODULES={
   title:"Materials",
   icon:"📚",
   table:"materials",
-
   columns:[
    ["title","Title"],
    ["subject","Subject"],
    ["file_type","File Type"],
    ["status","Status"]
   ],
-
   fields:[
    ["title","Title","text",true],
    ["description","Description","textarea",false],
@@ -5738,7 +6335,6 @@ const MODULES={
    ["file_type","File Type","text",false],
    ["status","Status","text",false]
   ],
-
   defaults:{
    status:"published"
   }
@@ -5748,7 +6344,6 @@ const MODULES={
   title:"Scholarships",
   icon:"🎓",
   table:"scholarships",
-
   columns:[
    ["opportunity_id","Opportunity ID"],
    ["education_level","Education Level"],
@@ -5756,7 +6351,6 @@ const MODULES={
    ["minimum_grade","Minimum Grade"],
    ["funding_details","Funding Details"]
   ],
-
   fields:[
    ["opportunity_id","Opportunity ID","text",true],
    ["education_level","Education Level","text",false],
@@ -5766,7 +6360,6 @@ const MODULES={
    ["minimum_grade","Minimum Grade","text",false],
    ["funding_details","Funding Details","textarea",false]
   ],
-
   defaults:{}
  },
 
@@ -5774,7 +6367,6 @@ const MODULES={
   title:"Subscriptions",
   icon:"💳",
   table:"subscriptions",
-
   columns:[
    ["student_id","Student ID"],
    ["plan_id","Plan ID"],
@@ -5782,7 +6374,6 @@ const MODULES={
    ["current_period_end","Period End"],
    ["provider","Provider"]
   ],
-
   fields:[
    ["student_id","Student Profile ID","text",true],
    ["plan_id","Subscription Plan ID","text",true],
@@ -5791,10 +6382,8 @@ const MODULES={
    ["current_period_end","Period End","datetime-local",false],
    ["cancelled_at","Cancelled At","datetime-local",false],
    ["auto_renew","Auto Renew","checkbox",false],
-   ["provider","Provider","text",false],
-   ["provider_subscription_id","Provider Subscription ID","text",false]
+   ["provider","Provider","text",false]
   ],
-
   defaults:{
    status:"active",
    auto_renew:true
@@ -5805,7 +6394,6 @@ const MODULES={
   title:"Transactions",
   icon:"💰",
   table:"transactions",
-
   columns:[
    ["user_id","User"],
    ["transaction_type","Type"],
@@ -5815,7 +6403,6 @@ const MODULES={
    ["status","Status"],
    ["created_at","Date"]
   ],
-
   fields:[
    ["user_id","User Profile ID","text",false],
    ["payment_id","Payment ID","text",false],
@@ -5824,14 +6411,11 @@ const MODULES={
    ["amount","Amount","number",true],
    ["currency","Currency","text",false],
    ["status","Status","text",false],
-   ["description","Description","textarea",false],
-   ["metadata","Metadata JSON","textarea",false]
+   ["description","Description","textarea",false]
   ],
-
   defaults:{
    currency:"NGN",
-   status:"pending",
-   metadata:"{}"
+   status:"pending"
   }
  },
 
@@ -5839,7 +6423,6 @@ const MODULES={
   title:"Withdrawals",
   icon:"🏦",
   table:"withdrawals",
-
   columns:[
    ["tutor_id","Tutor"],
    ["amount","Amount"],
@@ -5849,18 +6432,16 @@ const MODULES={
    ["status","Status"],
    ["created_at","Date"]
   ],
-
   fields:[
    ["tutor_id","Tutor Profile ID","text",true],
    ["amount","Amount","number",true],
    ["currency","Currency","text",false],
    ["bank_name","Bank Name","text",false],
    ["account_name","Account Name","text",false],
-   ["account_number_last4","Account Last 4 Digits","text",false],
+   ["account_number_last4","Account Last 4","text",false],
    ["status","Status","text",false],
    ["processed_at","Processed At","datetime-local",false]
   ],
-
   defaults:{
    currency:"NGN",
    status:"pending"
@@ -5868,24 +6449,11 @@ const MODULES={
  }
 };
 
-/* =========================================================
-   ADMIN MODULE
-========================================================= */
-
 async function adminModule(module){
-
- if(module==="reports"){
-
-  renderReports();
-
-  return;
- }
 
  const cfg=MODULES[module];
 
  if(!cfg)return;
-
- currentModuleName=module;
 
  document.getElementById("app").innerHTML=`
 
@@ -5912,31 +6480,19 @@ async function adminModule(module){
 
     <div class="moduleToolbar">
 
-     <input
-      id="moduleSearch"
-      class="searchBox"
-      placeholder="Search..."
-      oninput="filterModuleRows()">
-
-     <button
-      class="btn primary"
+     <button class="btn primary"
       onclick="openModuleForm('${module}')">
       + Add
-      ${escapeHTML(
-       cfg.title.replace(/s$/,"")
-      )}
      </button>
 
-     <button
-      class="btn secondary"
+     <button class="btn secondary"
       onclick="loadModule('${module}')">
       ↻ Refresh
      </button>
 
     </div>
 
-    <div
-     id="moduleArea"
+    <div id="moduleArea"
      class="studentTableWrap">
 
      <div class="loading">
@@ -5958,127 +6514,54 @@ async function loadModule(module){
 
  const cfg=MODULES[module];
 
- const area=
- document.getElementById(
+ const area=document.getElementById(
   "moduleArea"
  );
 
  if(!area)return;
 
- currentModuleName=module;
+ const result=await db
+  .from(cfg.table)
+  .select("*")
+  .order(
+   "created_at",
+   {ascending:false}
+  )
+  .limit(500);
 
- area.innerHTML=
- `<div class="loading">
-  Loading ${escapeHTML(
-   cfg.title
-  )}...
- </div>`;
+ if(result.error){
 
- try{
-
-  const result=
-   await db
-    .from(cfg.table)
-    .select("*")
-    .order("created_at",{
-     ascending:false
-    })
-    .limit(1000);
-
-  if(result.error){
-
-   area.innerHTML=
-   `<div class="errorBox">
-    <strong>
-     Could not load
-     ${escapeHTML(cfg.title)}.
-    </strong>
-
-    <br><br>
-
+  area.innerHTML=`
+   <div class="errorBox">
     ${escapeHTML(
      result.error.message
     )}
    </div>`;
 
-   return;
-  }
-
-  currentModuleRows=
-   result.data||[];
-
-  renderModuleTable(
-   module,
-   currentModuleRows
-  );
-
- }catch(error){
-
-  area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(error.message)}
-   </div>`;
+  return;
  }
-}
 
-function filterModuleRows(){
-
- const q=
- (
-  document.getElementById(
-   "moduleSearch"
-  )?.value||""
- )
- .toLowerCase()
- .trim();
-
- const rows=
- !q
- ?currentModuleRows
- :currentModuleRows.filter(
-  row=>
-   JSON.stringify(row)
-   .toLowerCase()
-   .includes(q)
- );
+ currentModuleRows=result.data||[];
 
  renderModuleTable(
-  currentModuleName,
-  rows
+  module,
+  currentModuleRows
  );
 }
 
-function renderModuleTable(
- module,
- rows
-){
+function renderModuleTable(module,rows){
 
  const cfg=MODULES[module];
 
- const area=
- document.getElementById(
+ const area=document.getElementById(
   "moduleArea"
  );
-
- if(!area)return;
 
  if(!rows.length){
 
   area.innerHTML=`
-
    <div class="tableEmpty">
-
-    <h3>
-     No ${escapeHTML(
-      cfg.title.toLowerCase()
-     )} found
-    </h3>
-
-    <p style="margin-top:8px">
-     Click + Add to create
-     the first record.
-    </p>
-
+    <h3>No records found.</h3>
    </div>`;
 
   return;
@@ -6089,20 +6572,15 @@ function renderModuleTable(
  <table class="studentTable">
 
   <thead>
-
    <tr>
 
     ${cfg.columns.map(
-     c=>
-      `<th>
-       ${escapeHTML(c[1])}
-      </th>`
+     c=>`<th>${escapeHTML(c[1])}</th>`
     ).join("")}
 
     <th>Actions</th>
 
    </tr>
-
   </thead>
 
   <tbody>
@@ -6113,58 +6591,53 @@ function renderModuleTable(
 
      ${cfg.columns.map(c=>{
 
-      let v=row[c[0]];
+      let value=row[c[0]];
 
       if(
-       c[0].includes("at")||
-       c[0]==="created_at"
-      )
-       v=dateTimeText(v);
-
-      if(Array.isArray(v))
-       v=v.join(", ");
+       String(c[0]).includes("at")
+      ){
+       value=dateText(value);
+      }
 
       if(
-       typeof v==="object"&&
-       v!==null
-      )
-       v=safeJSON(v);
+       Array.isArray(value)
+      ){
+       value=value.join(", ");
+      }
+
+      if(
+       typeof value==="object"&&
+       value!==null
+      ){
+       value=safeJSON(value);
+      }
 
       return `
        <td>
-        ${escapeHTML(
-         v??"—"
-        )}
+        ${escapeHTML(value??"—")}
        </td>`;
 
      }).join("")}
 
      <td>
 
-      <div
-       style="display:flex;gap:6px;flex-wrap:wrap">
+      <button
+       class="btn secondary"
+       style="padding:7px 10px"
+       onclick="openModuleForm('${module}','${row.id}')">
 
-       <button
-        class="btn secondary"
-        style="padding:7px 10px"
-        onclick='editModuleRecord(
-         "${module}",
-         "${row.id}"
-        )'>
-        Edit
-       </button>
+       Edit
 
-       <button
-        class="btn danger"
-        style="padding:7px 10px"
-        onclick='deleteModuleRecord(
-         "${module}",
-         "${row.id}"
-        )'>
-        Delete
-       </button>
+      </button>
 
-      </div>
+      <button
+       class="btn danger"
+       style="padding:7px 10px"
+       onclick="deleteModuleRecord('${module}','${row.id}')">
+
+       Delete
+
+      </button>
 
      </td>
 
@@ -6177,43 +6650,29 @@ function renderModuleTable(
  </table>`;
 }
 
-/* =========================================================
-   MODULE FORM
-========================================================= */
-
-function openModuleForm(
- module,
- id=null
-){
+function openModuleForm(module,id=null){
 
  const cfg=MODULES[module];
 
  const existing=
-  id?
-  currentModuleRows.find(
+  id
+  ?currentModuleRows.find(
    x=>x.id===id
-  ):
-  null;
+  )
+  :null;
 
- const fields=
-  cfg.fields.map(f=>{
+ const fields=cfg.fields.map(
+  f=>{
 
-   const [
-    key,
-    label,
-    type,
-    required
-   ]=f;
+   const key=f[0];
+   const label=f[1];
+   const type=f[2];
+   const required=f[3];
 
    let value=
-    existing?.[key];
-
-   if(
-    value===undefined||
-    value===null
-   )
-    value=
-     cfg.defaults?.[key]??"";
+    existing?.[key]||
+    cfg.defaults?.[key]||
+    "";
 
    if(type==="checkbox"){
 
@@ -6226,7 +6685,11 @@ function openModuleForm(
        <input
         type="checkbox"
         id="field_${key}"
-        ${value?"checked":""}
+        ${
+         value
+         ?"checked"
+         :""
+        }
         style="width:auto">
 
        ${escapeHTML(label)}
@@ -6248,11 +6711,11 @@ function openModuleForm(
 
       <textarea
        id="field_${key}"
-       ${required?"required":""}>${escapeHTML(
-        typeof value==="object"
-        ?safeJSON(value)
-        :value
-       )}</textarea>
+       ${
+        required
+        ?"required"
+        :""
+       }>${escapeHTML(value)}</textarea>
 
      </div>`;
    }
@@ -6268,23 +6731,22 @@ function openModuleForm(
      <input
       id="field_${key}"
       type="${type}"
-      value="${escapeHTML(
-       type==="datetime-local"&&value
-       ?String(value).slice(0,16)
-       :value
-      )}"
-      ${required?"required":""}>
+      value="${escapeHTML(value)}"
+      ${
+       required
+       ?"required"
+       :""
+      }>
 
     </div>`;
-
-  }).join("");
+  }
+ ).join("");
 
  document.body.insertAdjacentHTML(
   "beforeend",
   `
 
-  <div
-   class="modal"
+  <div class="modal"
    id="moduleModal">
 
    <div class="modalBox">
@@ -6305,17 +6767,15 @@ function openModuleForm(
     </div>
 
     <div class="formGrid">
-
      ${fields}
-
     </div>
 
-    <div
-     id="moduleFormMessage">
-    </div>
+    <div id="moduleFormMessage"></div>
 
-    <div
-     style="display:flex;gap:10px;margin-top:20px">
+    <div style="
+     display:flex;
+     gap:10px;
+     margin-top:20px">
 
      <button
       class="btn secondary"
@@ -6325,11 +6785,12 @@ function openModuleForm(
 
      <button
       class="btn primary"
-      onclick='saveModuleRecord(
-       "${module}",
-       "${id||""}"
-      )'>
-      ${id?"Save Changes":"Create Record"}
+      onclick="saveModuleRecord('${module}','${id||""}')">
+
+      ${id
+       ?"Save Changes"
+       :"Create Record"}
+
      </button>
 
     </div>
@@ -6340,57 +6801,33 @@ function openModuleForm(
  );
 }
 
-function editModuleRecord(
- module,
- id
-){
-
- openModuleForm(
-  module,
-  id
- );
-}
-
 function closeModal(){
 
- document
-  .getElementById(
-   "moduleModal"
-  )
-  ?.remove();
+ document.getElementById(
+  "moduleModal"
+ )?.remove();
 }
 
-/* =========================================================
-   SAVE MODULE
-========================================================= */
-
-async function saveModuleRecord(
- module,
- id
-){
+async function saveModuleRecord(module,id){
 
  const cfg=MODULES[module];
 
  const payload={};
 
- for(
-  const f of cfg.fields
- ){
+ for(const f of cfg.fields){
 
   const key=f[0];
   const type=f[2];
 
-  const el=
-   document.getElementById(
-    "field_"+key
-   );
+  const el=document.getElementById(
+   "field_"+key
+  );
 
   if(!el)continue;
 
   if(type==="checkbox"){
 
    payload[key]=el.checked;
-
    continue;
   }
 
@@ -6399,745 +6836,78 @@ async function saveModuleRecord(
   if(value===""){
 
    payload[key]=null;
-
    continue;
   }
 
   if(type==="number"){
 
    payload[key]=Number(value);
-
    continue;
   }
-
-  if(
-   key==="eligible_states"||
-   key==="eligible_countries"
-  ){
-
-   payload[key]=
-    value
-    .split(",")
-    .map(x=>x.trim())
-    .filter(Boolean);
-
-   continue;
-  }
-
-  if(key==="metadata"){
-
-   try{
-
-    payload[key]=
-     JSON.parse(
-      value||"{}"
-     );
-
-   }catch(e){
-
-    showModuleMessage(
-     "Metadata must contain valid JSON.",
-     "error"
-    );
-
-    return;
-   }
-
-   continue;
-  }
-
-  if(
-   key==="created_by"||
-   key==="reviewed_by"
-  )
-   continue;
 
   payload[key]=value;
  }
 
- if(
-  (module==="exams"||
-   module==="questions")&&
-  !id
- ){
+ let result;
 
-  payload.created_by=
-   user.id;
+ if(id){
+
+  result=await db
+   .from(cfg.table)
+   .update(payload)
+   .eq("id",id);
+
+ }else{
+
+  result=await db
+   .from(cfg.table)
+   .insert(payload);
  }
 
- try{
+ if(result.error){
 
-  let result;
-
-  if(id){
-
-   result=
-    await db
-     .from(cfg.table)
-     .update(payload)
-     .eq("id",id);
-
-  }else{
-
-   result=
-    await db
-     .from(cfg.table)
-     .insert(payload);
-  }
-
-  if(result.error){
-
-   showModuleMessage(
-    result.error.message,
-    "error"
-   );
-
-   return;
-  }
-
-  closeModal();
-
-  await loadModule(module);
-
- }catch(error){
-
-  showModuleMessage(
-   error.message||
-   "Save failed.",
-   "error"
-  );
-}
-
-}
-
-function showModuleMessage(
- message,
- type
-){
-
- const box=
   document.getElementById(
    "moduleFormMessage"
-  );
+  ).innerHTML=`
 
- if(!box)return;
+   <div class="errorBox">
+    ${escapeHTML(
+     result.error.message
+    )}
+   </div>`;
 
- box.innerHTML=
- `<div
-  class="authMessage ${
-   type==="error"
-   ?"error"
-   :"success"
-  } show">
-  ${escapeHTML(message)}
- </div>`;
+  return;
+ }
+
+ closeModal();
+
+ await loadModule(module);
 }
 
-/* =========================================================
-   DELETE MODULE
-========================================================= */
-
-async function deleteModuleRecord(
- module,
- id
-){
+async function deleteModuleRecord(module,id){
 
  const cfg=MODULES[module];
 
  if(!confirm(
   `Delete this ${cfg.title.toLowerCase()} record?`
- ))
+ ))return;
+
+ const result=await db
+  .from(cfg.table)
+  .delete()
+  .eq("id",id);
+
+ if(result.error){
+
+  alert(result.error.message);
   return;
-
- try{
-
-  const result=
-   await db
-    .from(cfg.table)
-    .delete()
-    .eq("id",id);
-
-  if(result.error){
-
-   alert(
-    "Delete failed:\n\n"+
-    result.error.message
-   );
-
-   return;
-  }
-
-  await loadModule(module);
-
- }catch(error){
-
-  alert(
-   "Delete failed:\n\n"+
-   error.message
-  );
  }
+
+ await loadModule(module);
 }
 
 /* =========================================================
-   STUDENT MANAGEMENT
-========================================================= */
-
-async function renderStudentManagement(){
-
- document.getElementById("app").innerHTML=`
-
- <div class="portal">
-
-  ${adminSidebar()}
-
-  <div class="main">
-
-   ${portalHeader(
-    "Student Management"
-   )}
-
-   <main class="content">
-
-    <h1>
-     Student Management 👨‍🎓
-    </h1>
-
-    <p class="muted">
-     View registered PHILMYSCHOOL students.
-    </p>
-
-    <div class="stats">
-
-     <div class="stat">
-      <small>Total</small>
-      <strong id="totalStudents">
-       0
-      </strong>
-     </div>
-
-     <div class="stat">
-      <small>Active</small>
-      <strong id="activeStudents">
-       0
-      </strong>
-     </div>
-
-     <div class="stat">
-      <small>Inactive</small>
-      <strong id="inactiveStudents">
-       0
-      </strong>
-     </div>
-
-     <div class="stat">
-      <small>Showing</small>
-      <strong id="showingStudents">
-       0
-      </strong>
-     </div>
-
-    </div>
-
-    <div class="managementHeader">
-
-     <div>
-
-      <h2>
-       Registered Students
-      </h2>
-
-      <p class="muted">
-       Search student accounts.
-      </p>
-
-     </div>
-
-     <div
-      style="display:flex;gap:10px;flex-wrap:wrap">
-
-      <input
-       id="studentSearch"
-       class="searchBox"
-       placeholder="Search name, email or phone..."
-       oninput="filterStudents()">
-
-      <button
-       class="btn secondary"
-       onclick="loadStudents()">
-       ↻ Refresh
-      </button>
-
-     </div>
-
-    </div>
-
-    <div
-     id="studentManagementArea"
-     class="studentTableWrap">
-
-     <div class="loading">
-      Loading students...
-     </div>
-
-    </div>
-
-   </main>
-
-  </div>
-
- </div>`;
-
- await loadStudents();
-}
-
-async function loadStudents(){
-
- const area=
-  document.getElementById(
-   "studentManagementArea"
-  );
-
- if(!area)return;
-
- area.innerHTML=
- `<div class="loading">
-  Loading students...
- </div>`;
-
- try{
-
-  const rolesResult=
-   await db
-    .from("user_roles")
-    .select(
-     "id,user_id,role,is_active,created_at"
-    )
-    .eq("role","student")
-    .order("created_at",{
-     ascending:false
-    });
-
-  if(rolesResult.error){
-
-   area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(
-     rolesResult.error.message
-    )}
-   </div>`;
-
-   return;
-  }
-
-  const roles=
-   rolesResult.data||[];
-
-  const ids=
-   roles
-    .map(x=>x.user_id)
-    .filter(Boolean);
-
-  if(!ids.length){
-
-   allStudents=[];
-
-   updateStudentStats();
-
-   area.innerHTML=
-   `<div class="tableEmpty">
-    <h3>No students yet</h3>
-   </div>`;
-
-   return;
-  }
-
-  const profilesResult=
-   await db
-    .from("profiles")
-    .select("*")
-    .in("id",ids);
-
-  if(profilesResult.error){
-
-   area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(
-     profilesResult.error.message
-    )}
-   </div>`;
-
-   return;
-  }
-
-  allStudents=
-   roles.map(r=>{
-
-    const p=
-     (profilesResult.data||[])
-      .find(
-       x=>x.id===r.user_id
-      )||{};
-
-    return {
-     ...p,
-     user_id:r.user_id,
-     role:r.role,
-     is_active:r.is_active
-    };
-   });
-
-  updateStudentStats();
-
-  renderStudentTable(
-   allStudents
-  );
-
- }catch(error){
-
-  area.innerHTML=
-   `<div class="errorBox">
-    ${escapeHTML(error.message)}
-   </div>`;
- }
-}
-
-function updateStudentStats(){
-
- const total=
-  allStudents.length;
-
- const active=
-  allStudents.filter(
-   x=>x.is_active!==false
-  ).length;
-
- const el1=
-  document.getElementById(
-   "totalStudents"
-  );
-
- if(el1)el1.textContent=total;
-
- const el2=
-  document.getElementById(
-   "activeStudents"
-  );
-
- if(el2)el2.textContent=active;
-
- const el3=
-  document.getElementById(
-   "inactiveStudents"
-  );
-
- if(el3)
-  el3.textContent=
-   total-active;
-
- const el4=
-  document.getElementById(
-   "showingStudents"
-  );
-
- if(el4)
-  el4.textContent=total;
-}
-
-function filterStudents(){
-
- const search=
-  (
-   document.getElementById(
-    "studentSearch"
-   )?.value||""
-  )
-  .toLowerCase()
-  .trim();
-
- if(!search){
-
-  renderStudentTable(
-   allStudents
-  );
-
-  const el=
-   document.getElementById(
-    "showingStudents"
-   );
-
-  if(el)
-   el.textContent=
-    allStudents.length;
-
-  return;
- }
-
- const rows=
-  allStudents.filter(s=>{
-
-   const text=[
-    s.first_name,
-    s.last_name,
-    s.display_name,
-    s.email,
-    s.phone
-   ]
-   .filter(Boolean)
-   .join(" ")
-   .toLowerCase();
-
-   return text.includes(
-    search
-   );
-  });
-
- const el=
-  document.getElementById(
-   "showingStudents"
-  );
-
- if(el)
-  el.textContent=rows.length;
-
- renderStudentTable(rows);
-}
-
-function renderStudentTable(
- students
-){
-
- const area=
-  document.getElementById(
-   "studentManagementArea"
-  );
-
- if(!area)return;
-
- if(!students.length){
-
-  area.innerHTML=
-   `<div class="tableEmpty">
-    <h3>No students found</h3>
-   </div>`;
-
-  return;
- }
-
- area.innerHTML=`
-
- <table class="studentTable">
-
-  <thead>
-
-   <tr>
-    <th>#</th>
-    <th>Student</th>
-    <th>Phone</th>
-    <th>Location</th>
-    <th>Status</th>
-    <th>Action</th>
-   </tr>
-
-  </thead>
-
-  <tbody>
-
-   ${students.map(
-    (s,i)=>{
-
-     const name=
-      s.display_name||
-      `${s.first_name||""}
-       ${s.last_name||""}`
-      .trim()||
-      "Unnamed Student";
-
-     const active=
-      s.is_active!==false;
-
-     return `
-
-      <tr>
-
-       <td>${i+1}</td>
-
-       <td>
-
-        <div class="studentName">
-         ${escapeHTML(name)}
-        </div>
-
-        <div class="studentEmail">
-         ${escapeHTML(
-          s.email||
-          "No email"
-         )}
-        </div>
-
-       </td>
-
-       <td>
-        ${escapeHTML(
-         s.phone||"—"
-        )}
-       </td>
-
-       <td>
-        ${escapeHTML(
-         [
-          s.state,
-          s.lga
-         ]
-         .filter(Boolean)
-         .join(", ")||
-         "—"
-        )}
-       </td>
-
-       <td>
-
-        <span
-         class="badge ${
-          active
-          ?"badgeGreen"
-          :"badgeRed"
-         }">
-
-         ${active
-          ?"Active"
-          :"Inactive"}
-
-        </span>
-
-       </td>
-
-       <td>
-
-        <button
-         class="btn secondary"
-         style="padding:7px 11px"
-         onclick='viewStudent(
-          "${s.id||s.user_id}"
-         )'>
-         View
-        </button>
-
-       </td>
-
-      </tr>`;
-    }
-   ).join("")}
-
-  </tbody>
-
- </table>`;
-}
-
-function viewStudent(id){
-
- const s=
-  allStudents.find(
-   x=>
-    x.id===id||
-    x.user_id===id
-  );
-
- if(!s){
-
-  alert("Student not found.");
-
-  return;
- }
-
- const name=
-  s.display_name||
-  `${s.first_name||""}
-   ${s.last_name||""}`
-  .trim()||
-  "Student";
-
- document.getElementById("app").innerHTML=`
-
- <div class="portal">
-
-  ${adminSidebar()}
-
-  <div class="main">
-
-   ${portalHeader(
-    "Student Details"
-   )}
-
-   <main class="content">
-
-    <h1>Student Details</h1>
-
-    <p class="muted">
-     ${escapeHTML(name)}
-    </p>
-
-    <div
-     class="panel"
-     style="margin-top:20px">
-
-     <div class="detailGrid">
-
-      ${[
-       ["First Name",s.first_name],
-       ["Last Name",s.last_name],
-       ["Email",s.email],
-       ["Phone",s.phone],
-       ["Gender",s.gender],
-       ["Date of Birth",s.date_of_birth],
-       ["State",s.state],
-       ["LGA",s.lga],
-       ["Country",s.country],
-       ["Account Status",s.account_status],
-       [
-        "Onboarding",
-        s.onboarding_completed
-        ?"Completed"
-        :"Not completed"
-       ],
-       ["Created",dateText(s.created_at)]
-      ].map(
-       x=>`
-
-        <div class="detailItem">
-
-         <small>
-          ${escapeHTML(x[0])}
-         </small>
-
-         <strong>
-          ${escapeHTML(
-           x[1]??"—"
-          )}
-         </strong>
-
-        </div>`
-      ).join("")}
-
-     </div>
-
-     <button
-      class="btn primary"
-      style="margin-top:20px"
-      onclick="renderStudentManagement()">
-      ← Back to Students
-     </button>
-
-    </div>
-
-   </main>
-
-  </div>
-
- </div>`;
-}
-
-/* =========================================================
-   TUTOR MANAGEMENT
+   TUTORS
 ========================================================= */
 
 async function renderTutors(){
@@ -7150,9 +6920,7 @@ async function renderTutors(){
 
   <div class="main">
 
-   ${portalHeader(
-    "Tutor Management"
-   )}
+   ${portalHeader("Tutor Management")}
 
    <main class="content">
 
@@ -7178,8 +6946,7 @@ async function renderTutors(){
 
     </div>
 
-    <div
-     id="tutorArea"
+    <div id="tutorArea"
      class="studentTableWrap">
 
      <div class="loading">
@@ -7199,28 +6966,25 @@ async function renderTutors(){
 
 async function loadTutors(){
 
- const area=
-  document.getElementById(
-   "tutorArea"
+ const area=document.getElementById(
+  "tutorArea"
+ );
+
+ const roles=await db
+  .from("user_roles")
+  .select(
+   "user_id,role,is_active,created_at"
+  )
+  .eq("role","tutor")
+  .order(
+   "created_at",
+   {ascending:false}
   );
-
- if(!area)return;
-
- const roles=
-  await db
-   .from("user_roles")
-   .select(
-    "user_id,role,is_active,created_at"
-   )
-   .eq("role","tutor")
-   .order("created_at",{
-    ascending:false
-   });
 
  if(roles.error){
 
-  area.innerHTML=
-   `<div class="errorBox">
+  area.innerHTML=`
+   <div class="errorBox">
     ${escapeHTML(
      roles.error.message
     )}
@@ -7229,32 +6993,28 @@ async function loadTutors(){
   return;
  }
 
- const ids=
-  (roles.data||[])
+ const ids=(roles.data||[])
   .map(x=>x.user_id);
 
  if(!ids.length){
 
-  tutorRows=[];
-
-  area.innerHTML=
-   `<div class="tableEmpty">
-    <h3>No tutors yet</h3>
+  area.innerHTML=`
+   <div class="tableEmpty">
+    <h3>No tutors yet.</h3>
    </div>`;
 
   return;
  }
 
- const profiles=
-  await db
-   .from("profiles")
-   .select("*")
-   .in("id",ids);
+ const profiles=await db
+  .from("profiles")
+  .select("*")
+  .in("id",ids);
 
  if(profiles.error){
 
-  area.innerHTML=
-   `<div class="errorBox">
+  area.innerHTML=`
+   <div class="errorBox">
     ${escapeHTML(
      profiles.error.message
     )}
@@ -7263,45 +7023,36 @@ async function loadTutors(){
   return;
  }
 
- tutorRows=
-  (roles.data||[]).map(r=>{
+ tutorRows=(roles.data||[]).map(r=>{
 
-   const p=
-    (profiles.data||[])
-    .find(
-     x=>x.id===r.user_id
-    )||{};
+  const p=
+   (profiles.data||[])
+   .find(x=>x.id===r.user_id)||{};
 
-   return {
-    ...p,
-    user_id:r.user_id,
-    is_active:r.is_active
-   };
-  });
+  return {
+   ...p,
+   user_id:r.user_id,
+   is_active:r.is_active
+  };
+ });
 
- renderTutorTable(
-  tutorRows
- );
+ renderTutorTable(tutorRows);
 }
 
 function filterTutors(){
 
  const q=
-  (
-   document.getElementById(
-    "tutorSearch"
-   )?.value||""
-  )
-  .toLowerCase()
-  .trim();
+  document.getElementById(
+   "tutorSearch"
+  )?.value.toLowerCase().trim()||"";
 
  const rows=
   !q
   ?tutorRows
   :tutorRows.filter(t=>
    JSON.stringify(t)
-    .toLowerCase()
-    .includes(q)
+   .toLowerCase()
+   .includes(q)
   );
 
  renderTutorTable(rows);
@@ -7309,18 +7060,15 @@ function filterTutors(){
 
 function renderTutorTable(rows){
 
- const area=
-  document.getElementById(
-   "tutorArea"
-  );
-
- if(!area)return;
+ const area=document.getElementById(
+  "tutorArea"
+ );
 
  if(!rows.length){
 
-  area.innerHTML=
-   `<div class="tableEmpty">
-    <h3>No tutors found</h3>
+  area.innerHTML=`
+   <div class="tableEmpty">
+    <h3>No tutors found.</h3>
    </div>`;
 
   return;
@@ -7331,7 +7079,6 @@ function renderTutorTable(rows){
  <table class="studentTable">
 
   <thead>
-
    <tr>
     <th>Tutor</th>
     <th>Email</th>
@@ -7339,7 +7086,6 @@ function renderTutorTable(rows){
     <th>State</th>
     <th>Status</th>
    </tr>
-
   </thead>
 
   <tbody>
@@ -7348,8 +7094,7 @@ function renderTutorTable(rows){
 
     const name=
      t.display_name||
-     `${t.first_name||""}
-      ${t.last_name||""}`
+     `${t.first_name||""} ${t.last_name||""}`
      .trim()||
      "Tutor";
 
@@ -7364,42 +7109,36 @@ function renderTutorTable(rows){
       </td>
 
       <td>
-       ${escapeHTML(
-        t.email||"—"
-       )}
+       ${escapeHTML(t.email||"—")}
       </td>
 
       <td>
-       ${escapeHTML(
-        t.phone||"—"
-       )}
+       ${escapeHTML(t.phone||"—")}
       </td>
 
       <td>
-       ${escapeHTML(
-        t.state||"—"
-       )}
+       ${escapeHTML(t.state||"—")}
       </td>
 
       <td>
 
-       <span
-        class="badge ${
+       <span class="badge ${
+        t.is_active
+        ?"badgeGreen"
+        :"badgeRed"
+       }">
+
+        ${
          t.is_active
-         ?"badgeGreen"
-         :"badgeRed"
-        }">
-
-        ${t.is_active
          ?"Active"
-         :"Inactive"}
+         :"Inactive"
+        }
 
        </span>
 
       </td>
 
      </tr>`;
-
    }).join("")}
 
   </tbody>
@@ -7428,8 +7167,7 @@ async function renderReports(){
     <h1>📊 Reports</h1>
 
     <p class="muted">
-     Live statistics from your
-     PHILMYSCHOOL database.
+     Live statistics from your database.
     </p>
 
     <div class="stats">
@@ -7464,64 +7202,21 @@ async function renderReports(){
      </div>
 
      <div class="stat">
-      <small>Materials</small>
-      <strong id="reportMaterials">—</strong>
-     </div>
-
-     <div class="stat">
-      <small>Scholarships</small>
-      <strong id="reportScholarships">—</strong>
-     </div>
-
-     <div class="stat">
       <small>Transactions</small>
       <strong id="reportTransactions">—</strong>
      </div>
 
-    </div>
-
-    <div class="panelGrid">
-
-     <div class="panel">
-
-      <h2>💰 Financial Overview</h2>
-
-      <p>
-       Total transaction amount recorded.
-      </p>
-
-      <h2
-       style="margin-top:15px"
-       id="reportRevenue">
-       ₦0
-      </h2>
-
+     <div class="stat">
+      <small>Withdrawals</small>
+      <strong id="reportWithdrawals">—</strong>
      </div>
 
-     <div class="panel">
-
-      <h2>🏦 Withdrawals</h2>
-
-      <p>
-       Total withdrawal records.
-      </p>
-
-      <h2
-       style="margin-top:15px"
-       id="reportWithdrawals">
-       0
-      </h2>
-
+     <div class="stat">
+      <small>Exam Attempts</small>
+      <strong id="reportAttempts">—</strong>
      </div>
 
     </div>
-
-    <button
-     class="btn secondary"
-     style="margin-top:20px"
-     onclick="renderReports()">
-     ↻ Refresh Reports
-    </button>
 
    </main>
 
@@ -7529,128 +7224,37 @@ async function renderReports(){
 
  </div>`;
 
- await loadReports();
-}
-
-async function loadReports(){
-
- const ids=[
-
-  [
-   "reportStudents",
-   "user_roles",
-   [["role","student"]]
-  ],
-
-  [
-   "reportTutors",
-   "user_roles",
-   [["role","tutor"]]
-  ],
-
-  [
-   "reportSubjects",
-   "subjects",
-   []
-  ],
-
-  [
-   "reportQuestions",
-   "questions",
-   []
-  ],
-
-  [
-   "reportExams",
-   "exams",
-   []
-  ],
-
-  [
-   "reportMaterials",
-   "materials",
-   []
-  ],
-
-  [
-   "reportScholarships",
-   "scholarships",
-   []
-  ],
-
-  [
-   "reportTransactions",
-   "transactions",
-   []
-  ],
-
-  [
-   "reportWithdrawals",
-   "withdrawals",
-   []
-  ]
-
+ const fields=[
+  ["reportStudents","user_roles",[["role","student"]]],
+  ["reportTutors","user_roles",[["role","tutor"]]],
+  ["reportSubjects","subjects",[]],
+  ["reportQuestions","questions",[]],
+  ["reportExams","exams",[]],
+  ["reportTransactions","transactions",[]],
+  ["reportWithdrawals","withdrawals",[]],
+  ["reportAttempts","exam_attempts",[]]
  ];
 
- for(
-  const [
-   id,
+ for(const [id,table,filters] of fields){
+
+  const n=await countTable(
    table,
    filters
-  ] of ids
- ){
+  );
 
-  const n=
-   await countTable(
-    table,
-    filters
-   );
+  const el=document.getElementById(id);
 
-  const el=
-   document.getElementById(id);
-
-  if(el)
-   el.textContent=n;
+  if(el)el.textContent=n;
  }
-
- try{
-
-  const r=
-   await db
-    .from("transactions")
-    .select("amount");
-
-  const total=
-   (r.data||[])
-   .reduce(
-    (sum,x)=>
-     sum+
-     Number(
-      x.amount||0
-     ),
-    0
-   );
-
-  const el=
-   document.getElementById(
-    "reportRevenue"
-   );
-
-  if(el)
-   el.textContent=
-    money(total);
-
- }catch(e){}
 }
 
 /* =========================================================
-   OTHER MODULES
+   GENERIC FEATURE PAGE
 ========================================================= */
 
 function featurePage(title){
 
- let back=
-  "renderStudent()";
+ let back="renderStudent()";
 
  if(role==="admin")
   back="renderAdmin()";
@@ -7663,13 +7267,11 @@ function featurePage(title){
  <div class="portal">
 
   ${sidebar(`
-
    <button
     class="sideButton"
     onclick="${back}">
     ← Dashboard
    </button>
-
   `)}
 
   <div class="main">
@@ -7683,13 +7285,10 @@ function featurePage(title){
     </h1>
 
     <p class="muted">
-     PHILMYSCHOOL
-     ${escapeHTML(title)}
-     module.
+     PHILMYSCHOOL ${escapeHTML(title)} module.
     </p>
 
-    <div
-     class="panel"
+    <div class="panel"
      style="margin-top:25px">
 
      <h2>
@@ -7697,15 +7296,17 @@ function featurePage(title){
      </h2>
 
      <p style="margin-top:10px">
-      This section is ready for the
-      next functionality.
+      This module is ready for the next
+      PHILMYSCHOOL functionality.
      </p>
 
      <button
       class="btn primary"
       style="margin-top:20px"
       onclick="${back}">
+
       Back to Dashboard
+
      </button>
 
     </div>
@@ -7729,8 +7330,6 @@ async function logout(){
 
  loggingOut=true;
 
- stopExamTimer();
-
  try{
 
   await db.auth.signOut();
@@ -7747,23 +7346,13 @@ async function logout(){
  profile=null;
  role=null;
 
+ clearInterval(cbt.timer);
+
  allStudents=[];
  tutorRows=[];
  currentModuleRows=[];
  subjects=[];
-
- examState={
-  active:false,
-  exam:null,
-  subject:null,
-  questions:[],
-  answers:{},
-  current:0,
-  startedAt:null,
-  endAt:null,
-  timer:null,
-  submitted:false
- };
+ questionRows=[];
 
  loggingOut=false;
 
@@ -7788,12 +7377,10 @@ db.auth.onAuthStateChange(
    profile=null;
    role=null;
 
-   allStudents=[];
-   tutorRows=[];
+   clearInterval(cbt.timer);
 
    renderLogin();
   }
-
  }
 );
 
@@ -7836,7 +7423,6 @@ db.auth.onAuthStateChange(
  }
 
 })();
-
 </script>
 
 </body>
