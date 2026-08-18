@@ -837,7 +837,7 @@ function safeJSON(value){
 
 function dateText(value){
 
-  if(!value)return "—";
+  if(!value)return "â";
 
   const d=new Date(value);
 
@@ -1588,85 +1588,85 @@ function adminSidebar(){
    <button
     class="sideButton active"
     onclick="renderAdmin()">
-    📊 Dashboard
+    ð Dashboard
    </button>
 
    <button
     class="sideButton"
     onclick="renderStudentManagement()">
-    👨‍🎓 Students
+    ð¨âð Students
    </button>
 
    <button
     class="sideButton"
     onclick="renderTutors()">
-    👨‍🏫 Tutors
+    ð¨âð« Tutors
    </button>
 
    <button
     class="sideButton"
     onclick="adminQuestionBank()">
-    📝 Question Bank
+    ð Question Bank
    </button>
 
    <button
     class="sideButton"
     onclick="adminSubjects()">
-    📚 Subjects
+    ð Subjects
    </button>
 
    <button
     class="sideButton"
     onclick="adminTopics()">
-    📖 Topics
+    ð Topics
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('exams')">
-    🧪 Exams
+    ð§ª Exams
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('materials')">
-    📚 Materials
+    ð Materials
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('scholarships')">
-    🎓 Scholarships
+    ð Scholarships
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('subscriptions')">
-    💳 Subscriptions
+    ð³ Subscriptions
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('transactions')">
-    💰 Transactions
+    ð° Transactions
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('withdrawals')">
-    🏦 Withdrawals
+    ð¦ Withdrawals
    </button>
 
    <button
     class="sideButton"
     onclick="renderReports()">
-    📊 Reports
+    ð Reports
    </button>
 
    <button
     class="sideButton"
     onclick="logout()">
-    🚪 Sign Out
+    ðª Sign Out
    </button>
   `);
 }
@@ -1719,7 +1719,7 @@ function portalHeader(title){
     <button
      class="mobileMenu"
      onclick="toggleSidebar()">
-     ☰
+     â°
     </button>
 
     <div class="headerTitle">
@@ -1767,7 +1767,7 @@ async function renderAdmin(){
     <main class="content">
 
      <h1>
-      Admin Dashboard 📊
+      Admin Dashboard ð
      </h1>
 
      <p class="muted">
@@ -1779,22 +1779,22 @@ async function renderAdmin(){
 
       <div class="stat">
        <small>Students</small>
-       <strong id="dashStudents">—</strong>
+       <strong id="dashStudents">â</strong>
       </div>
 
       <div class="stat">
        <small>Tutors</small>
-       <strong id="dashTutors">—</strong>
+       <strong id="dashTutors">â</strong>
       </div>
 
       <div class="stat">
        <small>Subjects</small>
-       <strong id="dashSubjects">—</strong>
+       <strong id="dashSubjects">â</strong>
       </div>
 
       <div class="stat">
        <small>Questions</small>
-       <strong id="dashQuestions">—</strong>
+       <strong id="dashQuestions">â</strong>
       </div>
 
      </div>
@@ -1803,22 +1803,22 @@ async function renderAdmin(){
 
       <div class="stat">
        <small>Exams</small>
-       <strong id="dashExams">—</strong>
+       <strong id="dashExams">â</strong>
       </div>
 
       <div class="stat">
        <small>Attempts</small>
-       <strong id="dashAttempts">—</strong>
+       <strong id="dashAttempts">â</strong>
       </div>
 
       <div class="stat">
        <small>Transactions</small>
-       <strong id="dashTransactions">—</strong>
+       <strong id="dashTransactions">â</strong>
       </div>
 
       <div class="stat">
        <small>Withdrawals</small>
-       <strong id="dashWithdrawals">—</strong>
+       <strong id="dashWithdrawals">â</strong>
       </div>
 
      </div>
@@ -1828,7 +1828,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        📝 Question Bank
+        ð Question Bank
        </h2>
 
        <p>
@@ -1849,7 +1849,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        📚 Subjects & Topics
+        ð Subjects & Topics
        </h2>
 
        <p>
@@ -1871,7 +1871,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        🧪 Exams
+        ð§ª Exams
        </h2>
 
        <p>
@@ -1893,7 +1893,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        📊 Reports
+        ð Reports
        </h2>
 
        <p>
@@ -1986,7 +1986,7 @@ async function countTable(
         result.error.message
       );
 
-      return "—";
+      return "â";
     }
 
     return result.count??0;
@@ -1995,7 +1995,7 @@ async function countTable(
 
     console.warn(error);
 
-    return "—";
+    return "â";
   }
 }
 
@@ -2067,7 +2067,7 @@ async function adminSubjects(){
 
     <main class="content">
 
-     <h1>📚 Subject Management</h1>
+     <h1>ð Subject Management</h1>
 
      <p class="muted">
       Manage subjects used by the CBT system.
@@ -2087,7 +2087,7 @@ async function adminSubjects(){
        class="btn secondary"
        onclick="adminSubjects()">
 
-       ↻ Refresh
+       â» Refresh
 
       </button>
 
@@ -2163,20 +2163,20 @@ function renderSubjectTable(){
         ${escapeHTML(
           s.name||
           s.subject_name||
-          "—"
+          "â"
         )}
        </strong>
       </td>
 
       <td>
        ${escapeHTML(
-         s.code||"—"
+         s.code||"â"
        )}
       </td>
 
       <td>
        ${escapeHTML(
-         s.subject_code||"—"
+         s.subject_code||"â"
        )}
       </td>
 
@@ -2239,7 +2239,7 @@ function openSubjectForm(id=null){
        <button
         class="closeBtn"
         onclick="closeSubjectModal()">
-        ✕
+        â
        </button>
 
       </div>
@@ -2519,7 +2519,7 @@ async function adminTopics(){
 
     <main class="content">
 
-     <h1>📖 Topic Management</h1>
+     <h1>ð Topic Management</h1>
 
      <p class="muted">
       Manage topics used by subjects and questions.
@@ -2539,7 +2539,7 @@ async function adminTopics(){
        class="btn secondary"
        onclick="adminTopics()">
 
-       ↻ Refresh
+       â» Refresh
 
       </button>
 
@@ -2616,7 +2616,7 @@ function renderTopicTable(){
            t.name||
            t.topic_name||
            t.title||
-           "—"
+           "â"
          )}
         </strong>
        </td>
@@ -2630,7 +2630,7 @@ function renderTopicTable(){
        <td>
         ${escapeHTML(
           t.description||
-          "—"
+          "â"
         )}
        </td>
 
@@ -2690,7 +2690,7 @@ function openTopicForm(id=null){
        <button
         class="closeBtn"
         onclick="closeTopicModal()">
-        ✕
+        â
        </button>
 
       </div>
@@ -2938,7 +2938,7 @@ async function adminQuestionBank(){
 
     <main class="content">
 
-     <h1>📝 Question Bank</h1>
+     <h1>ð Question Bank</h1>
 
      <p class="muted">
       Manage CBT questions, answers,
@@ -3008,7 +3008,7 @@ async function adminQuestionBank(){
         class="btn secondary"
         onclick="loadQuestionBank()">
 
-        ↻ Refresh
+        â» Refresh
 
        </button>
 
@@ -3247,7 +3247,7 @@ function renderQuestionBank(rows){
           q.question_text||
           q.question||
           q.text||
-          "—"
+          "â"
         )}
        </td>
 
@@ -3269,7 +3269,7 @@ function renderQuestionBank(rows){
 
         <span class="badge badgeGreen">
          ${escapeHTML(
-           answer||"—"
+           answer||"â"
          )}
         </span>
 
@@ -3411,7 +3411,7 @@ function openQuestionModal(id=null){
        <button
         class="closeBtn"
         onclick="closeQuestionModal()">
-        ✕
+        â
        </button>
 
       </div>
@@ -4079,7 +4079,7 @@ function openCSVImport(){
         class="closeBtn"
         onclick="closeCSVImport()">
 
-        ✕
+        â
 
        </button>
 
@@ -4545,7 +4545,7 @@ async function renderStudentManagement(){
     <main class="content">
 
      <h1>
-      Student Management 👨‍🎓
+      Student Management ð¨âð
      </h1>
 
      <p class="muted">
@@ -4573,7 +4573,7 @@ async function renderStudentManagement(){
         class="btn secondary"
         onclick="loadStudents()">
 
-        ↻ Refresh
+        â» Refresh
 
        </button>
 
@@ -4796,7 +4796,7 @@ function renderStudentTable(
 
        <td>
         ${escapeHTML(
-          s.phone||"—"
+          s.phone||"â"
         )}
        </td>
 
@@ -4808,7 +4808,7 @@ function renderStudentTable(
           ]
           .filter(Boolean)
           .join(", ")||
-          "—"
+          "â"
         )}
        </td>
 
@@ -4923,7 +4923,7 @@ function viewStudent(id){
 
          <strong>
           ${escapeHTML(
-            x[1]??"—"
+            x[1]??"â"
           )}
          </strong>
 
@@ -4938,7 +4938,7 @@ function viewStudent(id){
        style="margin-top:20px"
        onclick="renderStudentManagement()">
 
-       ← Back to Students
+       â Back to Students
 
       </button>
 
@@ -4964,7 +4964,7 @@ function renderTutor(){
       class="sideButton active"
       onclick="renderTutor()">
 
-      📊 Dashboard
+      ð Dashboard
 
      </button>
 
@@ -4972,7 +4972,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('My Tutor Services')">
 
-      📚 My Services
+      ð My Services
 
      </button>
 
@@ -4980,7 +4980,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('Tutor Bookings')">
 
-      📅 Bookings
+      ð Bookings
 
      </button>
 
@@ -4988,7 +4988,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('My Students')">
 
-      👨‍🎓 My Students
+      ð¨âð My Students
 
      </button>
 
@@ -4996,7 +4996,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('Tutor Availability')">
 
-      🗓 Availability
+      ð Availability
 
      </button>
 
@@ -5004,7 +5004,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('Tutor Messages')">
 
-      💬 Messages
+      ð¬ Messages
 
      </button>
 
@@ -5012,7 +5012,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('Tutor Earnings')">
 
-      💰 Earnings
+      ð° Earnings
 
      </button>
 
@@ -5020,7 +5020,7 @@ function renderTutor(){
       class="sideButton"
       onclick="logout()">
 
-      🚪 Sign Out
+      ðª Sign Out
 
      </button>
     `);
@@ -5040,7 +5040,7 @@ function renderTutor(){
     <main class="content">
 
      <h1>
-      Tutor Dashboard 👨‍🏫
+      Tutor Dashboard ð¨âð«
      </h1>
 
      <p class="muted">
@@ -5062,12 +5062,12 @@ function renderTutor(){
 
       <div class="stat">
        <small>Earnings</small>
-       <strong>₦0</strong>
+       <strong>â¦0</strong>
       </div>
 
       <div class="stat">
        <small>Rating</small>
-       <strong>—</strong>
+       <strong>â</strong>
       </div>
 
      </div>
@@ -5075,28 +5075,28 @@ function renderTutor(){
      <div class="panelGrid">
 
       <div class="panel">
-       <h2>📚 My Services</h2>
+       <h2>ð My Services</h2>
        <p>
         Create and manage tutoring services.
        </p>
       </div>
 
       <div class="panel">
-       <h2>📅 Bookings</h2>
+       <h2>ð Bookings</h2>
        <p>
         View upcoming lessons and bookings.
        </p>
       </div>
 
       <div class="panel">
-       <h2>💬 Messages</h2>
+       <h2>ð¬ Messages</h2>
        <p>
         Communicate with students.
        </p>
       </div>
 
       <div class="panel">
-       <h2>💰 Earnings</h2>
+       <h2>ð° Earnings</h2>
        <p>
         Track tutoring income and withdrawals.
        </p>
@@ -5127,7 +5127,7 @@ async function renderStudent(){
      class="sideButton active"
      onclick="renderStudent()">
 
-     📊 Dashboard
+     ð Dashboard
 
     </button>
 
@@ -5135,7 +5135,7 @@ async function renderStudent(){
      class="sideButton"
      onclick="studentExams()">
 
-     📝 CBT Exams
+     ð CBT Exams
 
     </button>
 
@@ -5143,7 +5143,7 @@ async function renderStudent(){
      class="sideButton"
      onclick="studentResults()">
 
-     📊 My Results
+     ð My Results
 
     </button>
 
@@ -5151,7 +5151,7 @@ async function renderStudent(){
      class="sideButton"
      onclick="featurePage('Study Materials')">
 
-     📚 Study Materials
+     ð Study Materials
 
     </button>
 
@@ -5159,7 +5159,7 @@ async function renderStudent(){
      class="sideButton"
      onclick="featurePage('Scholarships')">
 
-     🎓 Scholarships
+     ð Scholarships
 
     </button>
 
@@ -5167,7 +5167,7 @@ async function renderStudent(){
      class="sideButton"
      onclick="featurePage('Messages')">
 
-     💬 Messages
+     ð¬ Messages
 
     </button>
 
@@ -5175,7 +5175,7 @@ async function renderStudent(){
      class="sideButton"
      onclick="logout()">
 
-     🚪 Sign Out
+     ðª Sign Out
 
     </button>
 
@@ -5194,7 +5194,7 @@ async function renderStudent(){
           profile?.display_name||
           "Student"
         )
-      } 👋
+      } ð
      </h1>
 
      <p class="muted">
@@ -5207,28 +5207,28 @@ async function renderStudent(){
       <div class="stat">
        <small>Available Exams</small>
        <strong id="studentExamCount">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>My Attempts</small>
        <strong id="studentAttemptCount">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Questions</small>
        <strong id="studentQuestionCount">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Average Score</small>
        <strong id="studentAverageScore">
-        —
+        â
        </strong>
       </div>
 
@@ -5239,7 +5239,7 @@ async function renderStudent(){
       <div class="panel">
 
        <h2>
-        📝 Take CBT Examination
+        ð Take CBT Examination
        </h2>
 
        <p>
@@ -5261,7 +5261,7 @@ async function renderStudent(){
       <div class="panel">
 
        <h2>
-        📊 Performance
+        ð Performance
        </h2>
 
        <p>
@@ -5359,7 +5359,7 @@ async function calculateStudentAverage(){
         0
       )/scores.length
     ).toFixed(1)+"%"
-    :"—";
+    :"â";
 
   const el=
     document.getElementById(
@@ -5385,25 +5385,25 @@ async function studentExams(){
     <button
      class="sideButton"
      onclick="renderStudent()">
-     ← Dashboard
+     â Dashboard
     </button>
 
     <button
      class="sideButton active"
      onclick="studentExams()">
-     📝 CBT Exams
+     ð CBT Exams
     </button>
 
     <button
      class="sideButton"
      onclick="studentResults()">
-     📊 My Results
+     ð My Results
     </button>
 
     <button
      class="sideButton"
      onclick="logout()">
-     🚪 Sign Out
+     ðª Sign Out
     </button>
 
    `)}
@@ -5531,7 +5531,7 @@ async function loadStudentExams(){
        <strong>Duration:</strong>
        ${escapeHTML(
          e.duration_minutes||
-         "—"
+         "â"
        )} minutes
       </div>
 
@@ -6026,7 +6026,7 @@ function renderCBT(){
        }
        onclick="previousCBTQuestion()">
 
-       ← Previous
+       â Previous
 
       </button>
 
@@ -6047,7 +6047,7 @@ function renderCBT(){
           class="btn primary"
           onclick="nextCBTQuestion()">
 
-          Next →
+          Next â
 
          </button>
         `
@@ -6654,8 +6654,8 @@ function renderExamResult(
 
      <h1>
       ${auto
-       ?"⏰ Time Finished"
-       :"🎉 Examination Submitted"}
+       ?"â° Time Finished"
+       :"ð Examination Submitted"}
      </h1>
 
      <p class="muted"
@@ -6715,7 +6715,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       📚 Subject Performance
+       ð Subject Performance
       </h2>
 
       <div style="margin-top:15px">
@@ -6770,7 +6770,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       ⚠️ Weak Areas
+       â ï¸ Weak Areas
       </h2>
 
       ${
@@ -6800,7 +6800,7 @@ function renderExamResult(
                )
              )}
 
-             —
+             â
              ${x.correct}/${x.total}
 
             </div>
@@ -6824,7 +6824,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       🎯 What You Should Study
+       ð¯ What You Should Study
       </h2>
 
       ${
@@ -6875,7 +6875,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       📊 Summary
+       ð Summary
       </h2>
 
       <div style="
@@ -6978,25 +6978,25 @@ async function studentResults(){
     <button
      class="sideButton"
      onclick="renderStudent()">
-     ← Dashboard
+     â Dashboard
     </button>
 
     <button
      class="sideButton"
      onclick="studentExams()">
-     📝 CBT Exams
+     ð CBT Exams
     </button>
 
     <button
      class="sideButton active"
      onclick="studentResults()">
-     📊 My Results
+     ð My Results
     </button>
 
     <button
      class="sideButton"
      onclick="logout()">
-     🚪 Sign Out
+     ðª Sign Out
     </button>
 
    `)}
@@ -7008,7 +7008,7 @@ async function studentResults(){
     <main class="content">
 
      <h1>
-      📊 My Examination Results
+      ð My Examination Results
      </h1>
 
      <p class="muted">
@@ -7196,7 +7196,7 @@ async function loadStudentResults(){
 
        <td>
         ${escapeHTML(
-          r.score??"—"
+          r.score??"â"
         )}
         ${
           exam?.total_marks
@@ -7223,19 +7223,19 @@ async function loadStudentResults(){
 
        <td>
         ${escapeHTML(
-          r.correct_answers??"—"
+          r.correct_answers??"â"
         )}
        </td>
 
        <td>
         ${escapeHTML(
-          r.wrong_answers??"—"
+          r.wrong_answers??"â"
         )}
        </td>
 
        <td>
         ${escapeHTML(
-          r.unanswered??"—"
+          r.unanswered??"â"
         )}
        </td>
 
@@ -7269,7 +7269,7 @@ const MODULES={
 
   exams:{
     title:"Exams",
-    icon:"📝",
+    icon:"ð",
     table:"exams",
 
     columns:[
@@ -7319,7 +7319,7 @@ const MODULES={
 
   materials:{
     title:"Materials",
-    icon:"📚",
+    icon:"ð",
     table:"materials",
 
     columns:[
@@ -7345,7 +7345,7 @@ const MODULES={
 
   scholarships:{
     title:"Scholarships",
-    icon:"🎓",
+    icon:"ð",
     table:"scholarships",
 
     columns:[
@@ -7371,7 +7371,7 @@ const MODULES={
 
   subscriptions:{
     title:"Subscriptions",
-    icon:"💳",
+    icon:"ð³",
     table:"subscriptions",
 
     columns:[
@@ -7401,7 +7401,7 @@ const MODULES={
 
   transactions:{
     title:"Transactions",
-    icon:"💰",
+    icon:"ð°",
     table:"transactions",
 
     columns:[
@@ -7433,7 +7433,7 @@ const MODULES={
 
   withdrawals:{
     title:"Withdrawals",
-    icon:"🏦",
+    icon:"ð¦",
     table:"withdrawals",
 
     columns:[
@@ -7510,7 +7510,7 @@ async function adminModule(module){
        class="btn secondary"
        onclick="loadModule('${module}')">
 
-       ↻ Refresh
+       â» Refresh
 
       </button>
 
@@ -7667,7 +7667,7 @@ function renderModuleTable(
 
         <td>
          ${escapeHTML(
-           value??"—"
+           value??"â"
          )}
         </td>`;
       }).join("")}
@@ -7836,7 +7836,7 @@ function openModuleForm(
         class="closeBtn"
         onclick="closeModal()">
 
-        ✕
+        â
 
        </button>
 
@@ -8033,7 +8033,7 @@ async function renderTutors(){
     <main class="content">
 
      <h1>
-      👨‍🏫 Tutor Management
+      ð¨âð« Tutor Management
      </h1>
 
      <p class="muted">
@@ -8052,7 +8052,7 @@ async function renderTutors(){
        class="btn secondary"
        onclick="loadTutors()">
 
-       ↻ Refresh
+       â» Refresh
 
       </button>
 
@@ -8243,19 +8243,19 @@ function renderTutorTable(rows){
 
        <td>
         ${escapeHTML(
-          t.email||"—"
+          t.email||"â"
         )}
        </td>
 
        <td>
         ${escapeHTML(
-          t.phone||"—"
+          t.phone||"â"
         )}
        </td>
 
        <td>
         ${escapeHTML(
-          t.state||"—"
+          t.state||"â"
         )}
        </td>
 
@@ -8306,7 +8306,7 @@ async function renderReports(){
     <main class="content">
 
      <h1>
-      📊 Reports
+      ð Reports
      </h1>
 
      <p class="muted">
@@ -8318,28 +8318,28 @@ async function renderReports(){
       <div class="stat">
        <small>Students</small>
        <strong id="reportStudents">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Tutors</small>
        <strong id="reportTutors">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Subjects</small>
        <strong id="reportSubjects">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Questions</small>
        <strong id="reportQuestions">
-        —
+        â
        </strong>
       </div>
 
@@ -8350,28 +8350,28 @@ async function renderReports(){
       <div class="stat">
        <small>Exams</small>
        <strong id="reportExams">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Transactions</small>
        <strong id="reportTransactions">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Withdrawals</small>
        <strong id="reportWithdrawals">
-        —
+        â
        </strong>
       </div>
 
       <div class="stat">
        <small>Exam Attempts</small>
        <strong id="reportAttempts">
-        —
+        â
        </strong>
       </div>
 
@@ -8476,7 +8476,7 @@ function featurePage(title){
      class="sideButton"
      onclick="${back}">
 
-     ← Dashboard
+     â Dashboard
 
     </button>
 
@@ -8484,7 +8484,7 @@ function featurePage(title){
      class="sideButton"
      onclick="logout()">
 
-     🚪 Sign Out
+     ðª Sign Out
 
     </button>
 
@@ -8555,8 +8555,7 @@ async function logout(){
     await db.auth.signOut();
 
   }catch(error){
-
-    console.error(
+console.error(
       "Logout:",
       error
     );
