@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>PHILMYSCHOOL</title>
 
@@ -15,14 +15,25 @@
   padding:0;
 }
 
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f5f7fb;
-  color:#10233f;
+:root{
+  --navy:#10233f;
+  --blue:#155eef;
+  --light:#f5f7fb;
+  --white:#fff;
+  --muted:#718096;
+  --border:#e3e8ef;
+  --green:#159447;
+  --red:#d92d20;
 }
 
-button,input{
-  font-family:inherit;
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--light);
+  color:var(--navy);
+}
+
+button,input,select{
+  font:inherit;
 }
 
 button{
@@ -33,27 +44,10 @@ button{
   display:none!important;
 }
 
-.btn{
-  border:0;
-  border-radius:8px;
-  padding:12px 18px;
-  font-weight:700;
-}
-
-.primary{
-  background:#155eef;
-  color:white;
-}
-
-.secondary{
-  background:#eaf2ff;
-  color:#155eef;
-}
-
 .navbar{
-  height:72px;
-  background:white;
-  border-bottom:1px solid #e3e8ef;
+  height:74px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
   padding:0 6%;
   display:flex;
   align-items:center;
@@ -65,14 +59,14 @@ button{
   align-items:center;
   gap:10px;
   font-weight:800;
-  font-size:18px;
+  font-size:19px;
 }
 
 .logoIcon{
-  width:40px;
-  height:40px;
+  width:39px;
+  height:39px;
   border-radius:10px;
-  background:#155eef;
+  background:var(--blue);
   color:white;
   display:grid;
   place-items:center;
@@ -84,31 +78,49 @@ button{
   gap:10px;
 }
 
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:12px 18px;
+  font-weight:700;
+}
+
+.primary{
+  background:var(--blue);
+  color:#fff;
+}
+
+.secondary{
+  background:#eaf2ff;
+  color:var(--blue);
+}
+
 .hero{
   max-width:1180px;
   margin:auto;
-  padding:75px 25px;
+  padding:80px 25px;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:50px;
+  gap:55px;
   align-items:center;
 }
 
 .eyebrow{
-  color:#155eef;
-  font-size:12px;
+  color:var(--blue);
   font-weight:800;
+  font-size:12px;
   letter-spacing:.08em;
 }
 
 .hero h1{
-  font-size:58px;
+  font-size:60px;
   line-height:1;
+  letter-spacing:-2px;
   margin:18px 0;
 }
 
 .hero h1 span{
-  color:#155eef;
+  color:var(--blue);
 }
 
 .heroText{
@@ -120,14 +132,15 @@ button{
 .heroButtons{
   display:flex;
   gap:10px;
-  margin-top:25px;
+  margin-top:28px;
 }
 
 .preview{
-  background:#10233f;
+  background:var(--navy);
   color:white;
-  border-radius:22px;
-  padding:28px;
+  border-radius:25px;
+  padding:27px;
+  box-shadow:0 20px 50px rgba(16,35,63,.2);
 }
 
 .progress{
@@ -163,13 +176,13 @@ button{
 
 .previewCard strong{
   display:block;
-  margin-top:7px;
-  font-size:25px;
+  margin-top:6px;
+  font-size:24px;
 }
 
 .features{
-  padding:70px 6%;
-  background:white;
+  padding:75px 6%;
+  background:#fff;
 }
 
 .sectionTitle{
@@ -184,7 +197,7 @@ button{
 }
 
 .muted{
-  color:#718096;
+  color:var(--muted);
   line-height:1.6;
 }
 
@@ -197,9 +210,10 @@ button{
 }
 
 .feature{
-  border:1px solid #e3e8ef;
-  border-radius:15px;
+  border:1px solid var(--border);
+  border-radius:16px;
   padding:24px;
+  background:#fff;
 }
 
 .featureIcon{
@@ -207,15 +221,14 @@ button{
 }
 
 .feature h3{
-  margin:13px 0 8px;
+  margin:14px 0 8px;
 }
 
 .feature p{
-  color:#718096;
-  line-height:1.6;
+  color:var(--muted);
   font-size:13px;
+  line-height:1.6;
 }
-
 
 /* AUTH */
 
@@ -223,16 +236,21 @@ button{
   min-height:100vh;
   display:grid;
   grid-template-columns:1fr 1fr;
-  background:white;
+  background:#fff;
 }
 
 .authBrand{
-  background:#10233f;
+  background:var(--navy);
   color:white;
   padding:55px 9%;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+}
+
+.authBrand .logoIcon{
+  background:white;
+  color:var(--navy);
 }
 
 .authBrand h1{
@@ -272,12 +290,19 @@ button{
   margin-bottom:7px;
 }
 
-.formGroup input{
+.formGroup input,
+.formGroup select{
   width:100%;
   padding:13px;
   border:1px solid #d8e0e9;
   border-radius:9px;
   outline:none;
+  background:white;
+}
+
+.formGroup input:focus,
+.formGroup select:focus{
+  border-color:var(--blue);
 }
 
 .roleGrid{
@@ -288,7 +313,7 @@ button{
 }
 
 .roleChoice{
-  border:1px solid #e3e8ef;
+  border:1px solid var(--border);
   background:white;
   padding:13px;
   border-radius:9px;
@@ -296,9 +321,9 @@ button{
 }
 
 .roleChoice.active{
-  border-color:#155eef;
+  border-color:var(--blue);
   background:#eaf2ff;
-  color:#155eef;
+  color:var(--blue);
 }
 
 .authMessage{
@@ -324,12 +349,15 @@ button{
 .linkButton{
   border:0;
   background:none;
-  color:#155eef;
+  color:var(--blue);
   font-weight:700;
 }
 
-
 /* PORTAL */
+
+.portal{
+  min-height:100vh;
+}
 
 .sidebar{
   width:250px;
@@ -337,10 +365,11 @@ button{
   left:0;
   top:0;
   bottom:0;
-  background:#10233f;
+  background:var(--navy);
   color:white;
   padding:20px 14px;
   z-index:10;
+  overflow-y:auto;
 }
 
 .sidebarLogo{
@@ -357,7 +386,7 @@ button{
   height:35px;
   border-radius:9px;
   background:white;
-  color:#10233f;
+  color:var(--navy);
   display:grid;
   place-items:center;
   font-weight:900;
@@ -384,14 +413,11 @@ button{
 .sideButton:hover,
 .sideButton.active{
   background:#19395e;
-  color:white;
+  color:#fff;
 }
 
 .logoutButton{
-  position:absolute;
-  bottom:18px;
-  left:14px;
-  right:14px;
+  margin-top:25px;
 }
 
 .main{
@@ -401,8 +427,8 @@ button{
 
 .topbar{
   height:74px;
-  background:white;
-  border-bottom:1px solid #e3e8ef;
+  background:#fff;
+  border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
   padding:0 30px;
@@ -410,7 +436,7 @@ button{
 
 .topUser{
   margin-left:auto;
-  color:#718096;
+  color:var(--muted);
   font-size:13px;
 }
 
@@ -434,13 +460,13 @@ button{
 
 .stat{
   background:white;
-  border:1px solid #e3e8ef;
+  border:1px solid var(--border);
   border-radius:14px;
   padding:20px;
 }
 
 .stat small{
-  color:#718096;
+  color:var(--muted);
 }
 
 .stat strong{
@@ -458,9 +484,10 @@ button{
 
 .panel{
   background:white;
-  border:1px solid #e3e8ef;
+  border:1px solid var(--border);
   border-radius:15px;
   padding:25px;
+  min-height:220px;
 }
 
 .panel h2{
@@ -468,63 +495,8 @@ button{
 }
 
 .panel p{
-  color:#718096;
+  color:var(--muted);
   line-height:1.6;
-}
-
-.tableWrap{
-  margin-top:20px;
-  background:white;
-  border:1px solid #e3e8ef;
-  border-radius:15px;
-  padding:20px;
-  overflow-x:auto;
-}
-
-.dataTable{
-  width:100%;
-  border-collapse:collapse;
-  min-width:800px;
-}
-
-.dataTable th,
-.dataTable td{
-  padding:13px;
-  text-align:left;
-  border-bottom:1px solid #edf0f4;
-}
-
-.dataTable th{
-  background:#f7f9fc;
-  font-size:13px;
-}
-
-.search{
-  padding:11px;
-  border:1px solid #d8e0e9;
-  border-radius:8px;
-  min-width:250px;
-  outline:none;
-}
-
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#eaf2ff;
-  color:#155eef;
-  font-size:12px;
-  font-weight:700;
-}
-
-.badge.green{
-  background:#e9f8ef;
-  color:#126b35;
-}
-
-.badge.gray{
-  background:#edf0f4;
-  color:#667085;
 }
 
 .empty{
@@ -532,11 +504,155 @@ button{
   display:grid;
   place-items:center;
   text-align:center;
-  color:#718096;
+  color:var(--muted);
 }
 
+.status{
+  margin-top:20px;
+  padding:12px;
+  background:#e9f8ef;
+  color:#126b35;
+  border-radius:9px;
+  font-size:13px;
+}
 
-/* MOBILE */
+/* STUDENT MANAGEMENT */
+
+.managementHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-top:25px;
+  flex-wrap:wrap;
+}
+
+.searchBox{
+  width:min(420px,100%);
+  padding:13px 15px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:white;
+  outline:none;
+}
+
+.searchBox:focus{
+  border-color:var(--blue);
+}
+
+.studentTableWrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  margin-top:18px;
+  overflow-x:auto;
+}
+
+.studentTable{
+  width:100%;
+  border-collapse:collapse;
+  min-width:750px;
+}
+
+.studentTable th{
+  background:#f8fafc;
+  text-align:left;
+  padding:15px;
+  font-size:12px;
+  color:#607089;
+  border-bottom:1px solid var(--border);
+}
+
+.studentTable td{
+  padding:15px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+
+.studentTable tr:last-child td{
+  border-bottom:0;
+}
+
+.studentName{
+  font-weight:700;
+}
+
+.studentEmail{
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.badgeGreen{
+  background:#e9f8ef;
+  color:#126b35;
+}
+
+.badgeRed{
+  background:#fff0ef;
+  color:#b42318;
+}
+
+.badgeBlue{
+  background:#eaf2ff;
+  color:#155eef;
+}
+
+.tableEmpty{
+  text-align:center;
+  padding:45px 20px;
+  color:var(--muted);
+}
+
+.studentCard{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:22px;
+  margin-top:18px;
+}
+
+.detailGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  margin-top:20px;
+}
+
+.detailItem{
+  padding:15px;
+  background:#f8fafc;
+  border-radius:9px;
+}
+
+.detailItem small{
+  color:var(--muted);
+  display:block;
+  margin-bottom:5px;
+}
+
+.loading{
+  padding:40px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.errorBox{
+  margin-top:20px;
+  padding:15px;
+  border-radius:9px;
+  background:#fff0ef;
+  color:#b42318;
+}
+
+/* RESPONSIVE */
 
 @media(max-width:900px){
 
@@ -571,7 +687,6 @@ button{
   .panelGrid{
     grid-template-columns:1fr;
   }
-
 }
 
 @media(max-width:600px){
@@ -592,6 +707,10 @@ button{
     flex-direction:column;
   }
 
+  .heroButtons .btn{
+    width:100%;
+  }
+
   .featureGrid{
     grid-template-columns:1fr;
   }
@@ -604,6 +723,13 @@ button{
     padding:0 15px;
   }
 
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .detailGrid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -612,11 +738,10 @@ button{
 
 <div id="app"></div>
 
-
 <script>
 
 /* =========================================================
-   SUPABASE
+   PHILMYSCHOOL SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -624,6 +749,16 @@ const SUPABASE_URL =
 
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_-HIg7bCv6G1hLQoh5OWasA_hvhWrYOx";
+
+if(!window.supabase){
+  document.getElementById("app").innerHTML=`
+    <div style="padding:40px;font-family:Arial">
+      <h2>PHILMYSCHOOL Loading Error</h2>
+      <p>Supabase could not load. Please refresh the page.</p>
+    </div>
+  `;
+  throw new Error("Supabase library failed to load");
+}
 
 const db =
 window.supabase.createClient(
@@ -633,14 +768,14 @@ window.supabase.createClient(
 
 
 /* =========================================================
-   GLOBAL VARIABLES
+   STATE
 ========================================================= */
 
-let user = null;
-let profile = null;
-let role = null;
-let selectedRole = "student";
-let allStudents = [];
+let user=null;
+let profile=null;
+let role=null;
+let selectedRole="student";
+let allStudents=[];
 
 
 /* =========================================================
@@ -649,331 +784,215 @@ let allStudents = [];
 
 function escapeHTML(value){
 
-  return String(value ?? "")
+  if(value===null || value===undefined){
+    return "";
+  }
+
+  return String(value)
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
-
 }
-
 
 function showAuthMessage(message){
 
-  const box =
-    document.getElementById("authMessage");
+  const box=document.getElementById("authMessage");
 
-  if(!box) return;
+  if(!box)return;
 
-  box.textContent = message;
-
+  box.textContent=message;
   box.classList.add("show");
-
 }
-
 
 function clearAuthMessage(){
 
-  const box =
-    document.getElementById("authMessage");
+  const box=document.getElementById("authMessage");
 
-  if(!box) return;
+  if(!box)return;
 
-  box.textContent = "";
-
+  box.textContent="";
   box.classList.remove("show");
-
 }
 
 
 /* =========================================================
-   LANDING PAGE
+   LANDING
 ========================================================= */
 
 function renderLanding(){
 
-  document.getElementById("app").innerHTML = `
+document.getElementById("app").innerHTML=`
 
-    <header class="navbar">
+<header class="navbar">
 
-      <div class="logo">
+<div class="logo">
+<div class="logoIcon">P</div>
+PHILMYSCHOOL
+</div>
 
-        <div class="logoIcon">
-          P
-        </div>
+<div class="navButtons">
 
-        PHILMYSCHOOL
+<button class="btn secondary"
+onclick="renderLogin()">
+Login
+</button>
 
-      </div>
+<button class="btn primary"
+onclick="renderRegister('student')">
+Get Started
+</button>
 
+</div>
 
-      <div class="navButtons">
+</header>
 
-        <button
-          class="btn secondary"
-          onclick="renderLogin()">
 
-          Login
+<section class="hero">
 
-        </button>
+<div>
 
+<div class="eyebrow">
+STUDENT-FIRST EDUCATION PLATFORM
+</div>
 
-        <button
-          class="btn primary"
-          onclick="renderRegister('student')">
+<h1>
+Learn smarter.<br>
+<span>Perform better.</span>
+</h1>
 
-          Get Started
+<p class="heroText">
+PHILMYSCHOOL brings CBT practice,
+mock examinations, study materials,
+tutors and educational opportunities
+together in one platform.
+</p>
 
-        </button>
+<div class="heroButtons">
 
-      </div>
+<button class="btn primary"
+onclick="renderRegister('student')">
+🎓 Start Learning
+</button>
 
-    </header>
+<button class="btn secondary"
+onclick="renderRegister('tutor')">
+👨‍🏫 Become a Tutor
+</button>
 
+</div>
 
-    <section class="hero">
+</div>
 
-      <div>
 
-        <div class="eyebrow">
-          STUDENT-FIRST EDUCATION PLATFORM
-        </div>
+<div class="preview">
 
+<div style="
+display:flex;
+justify-content:space-between;
+">
 
-        <h1>
+<strong>Student Progress</strong>
+<strong>82%</strong>
 
-          Learn smarter.<br>
+</div>
 
-          <span>
-            Perform better.
-          </span>
+<div class="progress">
+<span></span>
+</div>
 
-        </h1>
+<div class="previewGrid">
 
+<div class="previewCard">
+<small>Questions</small>
+<strong>128</strong>
+</div>
 
-        <p class="heroText">
+<div class="previewCard">
+<small>Mock Exams</small>
+<strong>12</strong>
+</div>
 
-          PHILMYSCHOOL brings CBT practice,
-          mock examinations, study materials,
-          tutors and educational opportunities
-          together in one platform.
+<div class="previewCard">
+<small>Subjects</small>
+<strong>9</strong>
+</div>
 
-        </p>
+<div class="previewCard">
+<small>Accuracy</small>
+<strong>86%</strong>
+</div>
 
+</div>
 
-        <div class="heroButtons">
+</div>
 
-          <button
-            class="btn primary"
-            onclick="renderRegister('student')">
+</section>
 
-            🎓 Start Learning
 
-          </button>
+<section class="features">
 
+<div class="sectionTitle">
 
-          <button
-            class="btn secondary"
-            onclick="renderRegister('tutor')">
+<div class="eyebrow">
+EVERYTHING IN ONE PLACE
+</div>
 
-            👨‍🏫 Become a Tutor
+<h2>
+Built around the student.
+</h2>
 
-          </button>
+<p>
+Learn, practice, prepare for examinations,
+connect with tutors and discover opportunities.
+</p>
 
-        </div>
+</div>
 
-      </div>
 
+<div class="featureGrid">
 
-      <div class="preview">
+<div class="feature">
+<div class="featureIcon">📝</div>
+<h3>CBT & Mock Exams</h3>
+<p>
+Timed examinations, practice questions,
+automatic scoring and results.
+</p>
+</div>
 
-        <div
-          style="
-            display:flex;
-            justify-content:space-between;
-          ">
+<div class="feature">
+<div class="featureIcon">📚</div>
+<h3>Study Materials</h3>
+<p>
+Organized resources for your subjects
+and examination preparation.
+</p>
+</div>
 
-          <strong>
-            Student Progress
-          </strong>
+<div class="feature">
+<div class="featureIcon">👨‍🏫</div>
+<h3>Professional Tutors</h3>
+<p>
+Find tutors, view services and
+book private lessons.
+</p>
+</div>
 
-          <strong>
-            82%
-          </strong>
+<div class="feature">
+<div class="featureIcon">🎓</div>
+<h3>Scholarships</h3>
+<p>
+Discover scholarships and
+educational opportunities.
+</p>
+</div>
 
-        </div>
+</div>
 
-
-        <div class="progress">
-
-          <span></span>
-
-        </div>
-
-
-        <div class="previewGrid">
-
-          <div class="previewCard">
-
-            <small>
-              Questions
-            </small>
-
-            <strong>
-              128
-            </strong>
-
-          </div>
-
-
-          <div class="previewCard">
-
-            <small>
-              Mock Exams
-            </small>
-
-            <strong>
-              12
-            </strong>
-
-          </div>
-
-
-          <div class="previewCard">
-
-            <small>
-              Subjects
-            </small>
-
-            <strong>
-              9
-            </strong>
-
-          </div>
-
-
-          <div class="previewCard">
-
-            <small>
-              Accuracy
-            </small>
-
-            <strong>
-              86%
-            </strong>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <section class="features">
-
-      <div class="sectionTitle">
-
-        <div class="eyebrow">
-          EVERYTHING IN ONE PLACE
-        </div>
-
-        <h2>
-          Built around the student.
-        </h2>
-
-        <p class="muted">
-
-          Learn, practice, prepare for
-          examinations, connect with tutors
-          and discover opportunities.
-
-        </p>
-
-      </div>
-
-
-      <div class="featureGrid">
-
-        <div class="feature">
-
-          <div class="featureIcon">
-            📝
-          </div>
-
-          <h3>
-            CBT & Mock Exams
-          </h3>
-
-          <p>
-            Timed examinations, practice
-            questions, automatic scoring
-            and results.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <div class="featureIcon">
-            📚
-          </div>
-
-          <h3>
-            Study Materials
-          </h3>
-
-          <p>
-            Organized resources for your
-            subjects and examination preparation.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <div class="featureIcon">
-            👨‍🏫
-          </div>
-
-          <h3>
-            Professional Tutors
-          </h3>
-
-          <p>
-            Find tutors, view services
-            and book private lessons.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <div class="featureIcon">
-            🎓
-          </div>
-
-          <h3>
-            Scholarships
-          </h3>
-
-          <p>
-            Discover scholarships and
-            educational opportunities.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  `;
+</section>
+`;
 
 }
 
@@ -984,164 +1003,138 @@ function renderLanding(){
 
 function renderLogin(){
 
-  document.getElementById("app").innerHTML = `
+document.getElementById("app").innerHTML=`
 
-    <div class="authPage">
+<div class="authPage">
 
+<div class="authBrand">
 
-      <div class="authBrand">
+<div class="logo">
 
-        <div class="logo">
+<div class="logoIcon">P</div>
 
-          <div class="logoIcon">
-            P
-          </div>
+PHILMYSCHOOL
 
-          PHILMYSCHOOL
+</div>
 
-        </div>
+<div>
 
+<h1>
+Welcome<br>
+back.
+</h1>
 
-        <div>
+<p>
+Continue your learning journey
+with PHILMYSCHOOL.
+</p>
 
-          <h1>
+</div>
 
-            Welcome<br>
-            back.
+</div>
 
-          </h1>
 
+<div class="authBoxWrap">
 
-          <p>
+<div class="authBox">
 
-            Continue your learning journey
-            with PHILMYSCHOOL.
+<div class="logo">
 
-          </p>
+<div class="logoIcon">P</div>
 
-        </div>
+PHILMYSCHOOL
 
-      </div>
+</div>
 
+<h2>Sign in</h2>
 
-      <div class="authBoxWrap">
+<p class="muted">
+Enter your account details.
+</p>
 
-        <div class="authBox">
 
-          <div class="logo">
+<form onsubmit="login(event)">
 
-            <div class="logoIcon">
-              P
-            </div>
+<div class="formGroup">
 
-            PHILMYSCHOOL
+<label>Email</label>
 
-          </div>
+<input
+id="loginEmail"
+type="email"
+autocomplete="email"
+required
+>
 
+</div>
 
-          <h2>
-            Sign in
-          </h2>
 
+<div class="formGroup">
 
-          <p class="muted">
-            Enter your account details.
-          </p>
+<label>Password</label>
 
+<input
+id="loginPassword"
+type="password"
+autocomplete="current-password"
+required
+>
 
-          <form
-            onsubmit="login(event)">
+</div>
 
 
-            <div class="formGroup">
+<div id="authMessage"
+class="authMessage">
+</div>
 
-              <label>
-                Email
-              </label>
 
-              <input
-                id="loginEmail"
-                type="email"
-                required>
+<button
+class="btn primary"
+style="width:100%;margin-top:18px">
 
-            </div>
+Sign In
 
+</button>
 
-            <div class="formGroup">
+</form>
 
-              <label>
-                Password
-              </label>
 
-              <input
-                id="loginPassword"
-                type="password"
-                required>
+<div class="authSwitch">
 
-            </div>
+Don't have an account?
 
+<button
+class="linkButton"
+onclick="renderRegister('student')">
 
-            <div
-              id="authMessage"
-              class="authMessage">
-            </div>
+Create account
 
+</button>
 
-            <button
-              class="btn primary"
-              style="
-                width:100%;
-                margin-top:18px;
-              ">
+</div>
 
-              Sign In
 
-            </button>
+<div style="
+text-align:center;
+margin-top:12px;
+">
 
+<button
+class="linkButton"
+onclick="renderLanding()">
 
-          </form>
+← Back to PHILMYSCHOOL
 
+</button>
 
-          <div class="authSwitch">
+</div>
 
-            Don't have an account?
+</div>
 
-            <button
-              class="linkButton"
-              onclick="renderRegister('student')">
+</div>
 
-              Create account
-
-            </button>
-
-          </div>
-
-
-          <div
-            style="
-              text-align:center;
-              margin-top:12px;
-            ">
-
-            <button
-              class="linkButton"
-              onclick="renderLanding()">
-
-              ← Back
-
-            </button>
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
+</div>
+`;
 }
 
 
@@ -1151,325 +1144,262 @@ function renderLogin(){
 
 function renderRegister(type="student"){
 
-  selectedRole = type;
+selectedRole=type;
 
+document.getElementById("app").innerHTML=`
 
-  document.getElementById("app").innerHTML = `
+<div class="authPage">
 
-    <div class="authPage">
+<div class="authBrand">
 
+<div class="logo">
 
-      <div class="authBrand">
+<div class="logoIcon">P</div>
 
-        <div class="logo">
+PHILMYSCHOOL
 
-          <div class="logoIcon">
-            P
-          </div>
+</div>
 
-          PHILMYSCHOOL
+<div>
 
-        </div>
+<h1>
+Start your<br>
+journey.
+</h1>
 
+<p>
+Learn, practice, teach and grow
+with PHILMYSCHOOL.
+</p>
 
-        <div>
+</div>
 
-          <h1>
+</div>
 
-            Start your<br>
-            journey.
 
-          </h1>
+<div class="authBoxWrap">
 
+<div class="authBox">
 
-          <p>
+<div class="logo">
 
-            Learn, practice, teach and grow
-            with PHILMYSCHOOL.
+<div class="logoIcon">P</div>
 
-          </p>
+PHILMYSCHOOL
 
-        </div>
+</div>
 
-      </div>
+<h2>Create account</h2>
 
+<p class="muted">
+Choose how you want to use PHILMYSCHOOL.
+</p>
 
-      <div class="authBoxWrap">
 
-        <div class="authBox">
+<div class="roleGrid">
 
-          <div class="logo">
+<button
+id="studentRole"
+type="button"
+class="roleChoice ${type==="student"?"active":""}"
+onclick="chooseRole('student')">
 
-            <div class="logoIcon">
-              P
-            </div>
+🎓 Student
 
-            PHILMYSCHOOL
+</button>
 
-          </div>
 
+<button
+id="tutorRole"
+type="button"
+class="roleChoice ${type==="tutor"?"active":""}"
+onclick="chooseRole('tutor')">
 
-          <h2>
-            Create account
-          </h2>
+👨‍🏫 Tutor
 
+</button>
 
-          <p class="muted">
+</div>
 
-            Choose how you want to use
-            PHILMYSCHOOL.
 
-          </p>
+<form onsubmit="register(event)">
 
+<div class="formGroup">
 
-          <div class="roleGrid">
+<label>First name</label>
 
-            <button
-              id="studentRole"
-              type="button"
-              class="roleChoice ${type==="student"?"active":""}"
-              onclick="chooseRole('student')">
+<input
+id="firstName"
+autocomplete="given-name"
+required
+>
 
-              🎓 Student
+</div>
 
-            </button>
 
+<div class="formGroup">
 
-            <button
-              id="tutorRole"
-              type="button"
-              class="roleChoice ${type==="tutor"?"active":""}"
-              onclick="chooseRole('tutor')">
+<label>Last name</label>
 
-              👨‍🏫 Tutor
+<input
+id="lastName"
+autocomplete="family-name"
+required
+>
 
-            </button>
+</div>
 
-          </div>
 
+<div class="formGroup">
 
-          <form
-            onsubmit="register(event)">
+<label>Email</label>
 
+<input
+id="registerEmail"
+type="email"
+autocomplete="email"
+required
+>
 
-            <div class="formGroup">
+</div>
 
-              <label>
-                First name
-              </label>
 
-              <input
-                id="firstName"
-                required>
+<div class="formGroup">
 
-            </div>
+<label>Password</label>
 
+<input
+id="registerPassword"
+type="password"
+minlength="6"
+autocomplete="new-password"
+required
+>
 
-            <div class="formGroup">
+</div>
 
-              <label>
-                Last name
-              </label>
 
-              <input
-                id="lastName"
-                required>
+<div
+id="authMessage"
+class="authMessage">
+</div>
 
-            </div>
 
+<button
+class="btn primary"
+style="width:100%;margin-top:18px">
 
-            <div class="formGroup">
+Create Account
 
-              <label>
-                Email
-              </label>
+</button>
 
-              <input
-                id="registerEmail"
-                type="email"
-                required>
+</form>
 
-            </div>
 
+<div class="authSwitch">
 
-            <div class="formGroup">
+Already have an account?
 
-              <label>
-                Password
-              </label>
+<button
+class="linkButton"
+onclick="renderLogin()">
 
-              <input
-                id="registerPassword"
-                type="password"
-                minlength="6"
-                required>
+Sign in
 
-            </div>
+</button>
 
+</div>
 
-            <div
-              id="authMessage"
-              class="authMessage">
-            </div>
+</div>
 
+</div>
 
-            <button
-              class="btn primary"
-              style="
-                width:100%;
-                margin-top:18px;
-              ">
-
-              Create Account
-
-            </button>
-
-
-          </form>
-
-
-          <div class="authSwitch">
-
-            Already have an account?
-
-            <button
-              class="linkButton"
-              onclick="renderLogin()">
-
-              Sign in
-
-            </button>
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
+</div>
+`;
 }
 
 
 function chooseRole(type){
 
-  selectedRole = type;
+selectedRole=type;
 
-  document
-    .getElementById("studentRole")
-    .classList
-    .toggle(
-      "active",
-      type === "student"
-    );
+document
+.getElementById("studentRole")
+.classList
+.toggle("active",type==="student");
 
-
-  document
-    .getElementById("tutorRole")
-    .classList
-    .toggle(
-      "active",
-      type === "tutor"
-    );
-
+document
+.getElementById("tutorRole")
+.classList
+.toggle("active",type==="tutor");
 }
 
 
 /* =========================================================
-   REGISTER ACCOUNT
+   REGISTER
 ========================================================= */
 
 async function register(event){
 
-  event.preventDefault();
+event.preventDefault();
 
-  clearAuthMessage();
+clearAuthMessage();
 
+const firstName=
+document.getElementById("firstName").value.trim();
 
-  const firstName =
-    document
-      .getElementById("firstName")
-      .value
-      .trim();
+const lastName=
+document.getElementById("lastName").value.trim();
 
+const email=
+document.getElementById("registerEmail").value.trim();
 
-  const lastName =
-    document
-      .getElementById("lastName")
-      .value
-      .trim();
+const password=
+document.getElementById("registerPassword").value;
 
+showAuthMessage("Creating your account...");
 
-  const email =
-    document
-      .getElementById("registerEmail")
-      .value
-      .trim();
+const result=
+await db.auth.signUp({
 
+email,
+password,
 
-  const password =
-    document
-      .getElementById("registerPassword")
-      .value;
+options:{
+data:{
+first_name:firstName,
+last_name:lastName,
+requested_role:selectedRole
+}
+}
 
+});
 
-  showAuthMessage(
-    "Creating your account..."
-  );
+if(result.error){
 
+showAuthMessage(result.error.message);
+return;
 
-  const result =
-    await db.auth.signUp({
+}
 
-      email,
+if(!result.data.session){
 
-      password,
+showAuthMessage(
+"Account created. Check your email to confirm your account, then sign in."
+);
 
-      options:{
-        data:{
-          first_name:firstName,
-          last_name:lastName,
-          requested_role:selectedRole
-        }
-      }
+return;
 
-    });
+}
 
+await ensureProfileAndRole(
+result.data.user,
+firstName,
+lastName,
+selectedRole
+);
 
-  if(result.error){
-
-    showAuthMessage(
-      result.error.message
-    );
-
-    return;
-
-  }
-
-
-  if(!result.data.session){
-
-    showAuthMessage(
-      "Account created. Check your email to confirm your account, then sign in."
-    );
-
-    return;
-
-  }
-
-
-  await ensureProfileAndRole(
-    result.data.user,
-    firstName,
-    lastName,
-    selectedRole
-  );
-
-
-  await loadCurrentUser();
+await loadCurrentUser();
 
 }
 
@@ -1479,91 +1409,73 @@ async function register(event){
 ========================================================= */
 
 async function ensureProfileAndRole(
-  authUser,
-  firstName,
-  lastName,
-  requestedRole
+authUser,
+firstName,
+lastName,
+requestedRole
 ){
 
-  const profileResult =
-    await db
-      .from("profiles")
-      .upsert({
+const profilePayload={
 
-        id:authUser.id,
+id:authUser.id,
+email:authUser.email,
+first_name:firstName,
+last_name:lastName,
+display_name:`${firstName} ${lastName}`.trim(),
+account_status:"active",
+onboarding_completed:false
 
-        email:authUser.email,
+};
 
-        first_name:firstName,
+const profileResult=
+await db
+.from("profiles")
+.upsert(
+profilePayload,
+{onConflict:"id"}
+);
 
-        last_name:lastName,
+if(profileResult.error){
 
-        display_name:
-          `${firstName} ${lastName}`.trim(),
+console.warn(
+"Profile creation:",
+profileResult.error.message
+);
 
-        account_status:"active",
+}
 
-        onboarding_completed:false
+const roleResult=
+await db
+.from("user_roles")
+.select("id,role,is_active")
+.eq("user_id",authUser.id)
+.eq("is_active",true)
+.limit(1)
+.maybeSingle();
 
-      },{
-        onConflict:"id"
-      });
+if(!roleResult.data){
 
+const insertRole=
+await db
+.from("user_roles")
+.insert({
 
-  if(profileResult.error){
+user_id:authUser.id,
+role:requestedRole,
+is_active:true
 
-    console.warn(
-      "Profile:",
-      profileResult.error.message
-    );
+});
 
-  }
+if(insertRole.error){
 
+console.warn(
+"Role creation:",
+insertRole.error.message
+);
 
-  const roleResult =
-    await db
-      .from("user_roles")
-      .select(
-        "id,role,is_active"
-      )
-      .eq(
-        "user_id",
-        authUser.id
-      )
-      .eq(
-        "is_active",
-        true
-      )
-      .limit(1)
-      .maybeSingle();
+}
 
-
-  if(!roleResult.data){
-
-    const insertRole =
-      await db
-        .from("user_roles")
-        .insert({
-
-          user_id:authUser.id,
-
-          role:requestedRole,
-
-          is_active:true
-
-        });
-
-
-    if(insertRole.error){
-
-      console.warn(
-        "Role:",
-        insertRole.error.message
-      );
-
-    }
-
-  }
+}
 
 }
 
@@ -1574,51 +1486,32 @@ async function ensureProfileAndRole(
 
 async function login(event){
 
-  event.preventDefault();
+event.preventDefault();
 
-  clearAuthMessage();
+clearAuthMessage();
 
+const email=
+document.getElementById("loginEmail").value.trim();
 
-  const email =
-    document
-      .getElementById("loginEmail")
-      .value
-      .trim();
+const password=
+document.getElementById("loginPassword").value;
 
+showAuthMessage("Signing you in...");
 
-  const password =
-    document
-      .getElementById("loginPassword")
-      .value;
+const result=
+await db.auth.signInWithPassword({
+email,
+password
+});
 
+if(result.error){
 
-  showAuthMessage(
-    "Signing you in..."
-  );
+showAuthMessage(result.error.message);
+return;
 
+}
 
-  const result =
-    await db.auth.signInWithPassword({
-
-      email,
-
-      password
-
-    });
-
-
-  if(result.error){
-
-    showAuthMessage(
-      result.error.message
-    );
-
-    return;
-
-  }
-
-
-  await loadCurrentUser();
+await loadCurrentUser();
 
 }
 
@@ -1629,160 +1522,46 @@ async function login(event){
 
 async function loadCurrentUser(){
 
-  const result =
-    await db.auth.getUser();
+const auth=
+await db.auth.getUser();
 
+if(auth.error || !auth.data.user){
 
-  if(
-    result.error ||
-    !result.data.user
-  ){
-
-    renderLanding();
-
-    return;
-
-  }
-
-
-  user =
-    result.data.user;
-
-
-  const profileResult =
-    await db
-      .from("profiles")
-      .select("*")
-      .eq(
-        "id",
-        user.id
-      )
-      .maybeSingle();
-
-
-  profile =
-    profileResult.data ||
-    {
-
-      id:user.id,
-
-      email:user.email,
-
-      display_name:user.email
-
-    };
-
-
-  const roleResult =
-    await db
-      .from("user_roles")
-      .select("role")
-      .eq(
-        "user_id",
-        user.id
-      )
-      .eq(
-        "is_active",
-        true
-      )
-      .order(
-        "created_at",
-        {
-          ascending:true
-        }
-      )
-      .limit(1)
-      .maybeSingle();
-
-
-  role =
-    roleResult.data?.role ||
-    "student";
-
-
-  openPortal();
+renderLanding();
+return;
 
 }
 
+user=auth.data.user;
 
-/* =========================================================
-   SIDEBAR
-========================================================= */
+const profileResult=
+await db
+.from("profiles")
+.select("*")
+.eq("id",user.id)
+.maybeSingle();
 
-function sidebar(items){
+profile=
+profileResult.data||{
+id:user.id,
+email:user.email,
+display_name:user.email
+};
 
-  return `
+const roleResult=
+await db
+.from("user_roles")
+.select("role")
+.eq("user_id",user.id)
+.eq("is_active",true)
+.order("created_at",{ascending:true})
+.limit(1)
+.maybeSingle();
 
-    <aside class="sidebar">
+role=
+roleResult.data?.role||"student";
 
-
-      <div class="sidebarLogo">
-
-        <div class="sidebarLogoIcon">
-          P
-        </div>
-
-        PHILMYSCHOOL
-
-      </div>
-
-
-      <div class="sideLabel">
-
-        ${
-          role === "admin"
-            ? "ADMIN PORTAL"
-            : role === "tutor"
-              ? "TUTOR PORTAL"
-              : "STUDENT PORTAL"
-        }
-
-      </div>
-
-
-      ${items}
-
-
-      <button
-        class="sideButton logoutButton"
-        onclick="logout()">
-
-        🚪 Sign Out
-
-      </button>
-
-
-    </aside>
-
-  `;
-
-}
-
-
-function portalHeader(title){
-
-  return `
-
-    <header class="topbar">
-
-      <strong>
-        ${escapeHTML(title)}
-      </strong>
-
-
-      <div class="topUser">
-
-        ${escapeHTML(
-          profile?.display_name ||
-          user?.email ||
-          ""
-        )}
-
-      </div>
-
-    </header>
-
-  `;
+openPortal();
 
 }
 
@@ -1793,619 +1572,515 @@ function portalHeader(title){
 
 function openPortal(){
 
-  if(role === "admin"){
+if(role==="admin"){
+renderAdmin();
+return;
+}
 
-    renderAdmin();
+if(role==="tutor"){
+renderTutor();
+return;
+}
 
-    return;
-
-  }
-
-
-  if(role === "tutor"){
-
-    renderTutor();
-
-    return;
-
-  }
-
-
-  renderStudent();
+renderStudent();
 
 }
 
 
 /* =========================================================
-   STUDENT DASHBOARD
+   SIDEBAR
+========================================================= */
+
+function sidebar(items){
+
+return `
+
+<aside class="sidebar">
+
+<div class="sidebarLogo">
+
+<div class="sidebarLogoIcon">P</div>
+
+PHILMYSCHOOL
+
+</div>
+
+
+<div class="sideLabel">
+
+${escapeHTML(
+role==="admin"
+?"ADMIN PORTAL"
+:role==="tutor"
+?"TUTOR PORTAL"
+:"STUDENT PORTAL"
+)}
+
+</div>
+
+
+${items}
+
+
+<button
+class="sideButton logoutButton"
+onclick="logout()">
+
+🚪 Sign Out
+
+</button>
+
+</aside>
+
+`;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+function portalHeader(title){
+
+return `
+
+<header class="topbar">
+
+<strong>
+${escapeHTML(title)}
+</strong>
+
+<div class="topUser">
+
+${escapeHTML(
+profile?.display_name||
+user?.email||
+""
+)}
+
+</div>
+
+</header>
+
+`;
+}
+
+
+/* =========================================================
+   STUDENT PORTAL
 ========================================================= */
 
 function renderStudent(){
 
-  const nav =
-    sidebar(`
+const nav=sidebar(`
+
+<button
+class="sideButton active"
+onclick="renderStudent()">
+📊 Dashboard
+</button>
 
-      <button
-        class="sideButton active"
-        onclick="renderStudent()">
+<button
+class="sideButton"
+onclick="featurePage('Mock Exams')">
+📝 Mock Exams
+</button>
 
-        📊 Dashboard
+<button
+class="sideButton"
+onclick="featurePage('Practice Questions')">
+❓ Practice Questions
+</button>
 
-      </button>
+<button
+class="sideButton"
+onclick="featurePage('Study Materials')">
+📚 Study Materials
+</button>
 
+<button
+class="sideButton"
+onclick="featurePage('Study Plans')">
+📅 Study Plan
+</button>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Mock Exams')">
+<button
+class="sideButton"
+onclick="featurePage('Find a Tutor')">
+👨‍🏫 Find a Tutor
+</button>
 
-        📝 Mock Exams
+<button
+class="sideButton"
+onclick="featurePage('Scholarships')">
+🎓 Scholarships
+</button>
 
-      </button>
+<button
+class="sideButton"
+onclick="featurePage('My Progress')">
+📈 My Progress
+</button>
 
+<button
+class="sideButton"
+onclick="featurePage('Subscription')">
+💳 Subscription
+</button>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Practice Questions')">
+`);
 
-        ❓ Practice Questions
 
-      </button>
+document.getElementById("app").innerHTML=`
 
+<div class="portal">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Study Materials')">
+${nav}
 
-        📚 Study Materials
+<div class="main">
 
-      </button>
+${portalHeader("Student Dashboard")}
 
+<main class="content">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Study Plans')">
+<h1>
+Welcome,
+${escapeHTML(profile?.first_name||"Student")} 👋
+</h1>
 
-        📅 Study Plan
+<p class="muted">
+Your PHILMYSCHOOL learning dashboard.
+</p>
 
-      </button>
 
+<div class="stats">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Find a Tutor')">
+<div class="stat">
+<small>Questions Practiced</small>
+<strong>0</strong>
+</div>
 
-        👨‍🏫 Find a Tutor
+<div class="stat">
+<small>Mock Exams</small>
+<strong>0</strong>
+</div>
 
-      </button>
+<div class="stat">
+<small>Accuracy</small>
+<strong>—</strong>
+</div>
 
+<div class="stat">
+<small>Study Time</small>
+<strong>0m</strong>
+</div>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Scholarships')">
+</div>
 
-        🎓 Scholarships
 
-      </button>
+<div class="panelGrid">
 
+<div class="panel">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('My Progress')">
+<h2>📝 Mock Exams</h2>
 
-        📈 My Progress
+<p>
+Take timed practice examinations
+and receive your results.
+</p>
 
-      </button>
+<button
+class="btn primary"
+style="margin-top:20px"
+onclick="featurePage('Mock Exams')">
 
+Open Mock Exams
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Subscription')">
+</button>
 
-        💳 Subscription
+</div>
 
-      </button>
 
-    `);
+<div class="panel">
 
+<h2>📚 Study Materials</h2>
 
-  document.getElementById("app").innerHTML = `
+<p>
+Access organized learning resources
+for your subjects.
+</p>
 
-    <div>
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Study Materials')">
 
-      ${nav}
+Browse Materials
 
+</button>
 
-      <div class="main">
+</div>
 
-        ${portalHeader(
-          "Student Dashboard"
-        )}
 
+<div class="panel">
 
-        <main class="content">
+<h2>👨‍🏫 Find a Tutor</h2>
 
-          <h1>
+<p>
+Discover tutors and book
+lessons that suit you.
+</p>
 
-            Welcome,
-            ${escapeHTML(
-              profile?.first_name ||
-              "Student"
-            )}
-            👋
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Find a Tutor')">
 
-          </h1>
+Find Tutors
 
+</button>
 
-          <p class="muted">
+</div>
 
-            Your PHILMYSCHOOL learning dashboard.
 
-          </p>
+<div class="panel">
 
+<h2>🎓 Opportunities</h2>
 
-          <div class="stats">
+<p>
+Explore scholarships and
+educational opportunities.
+</p>
 
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Scholarships')">
 
-            <div class="stat">
+Explore
 
-              <small>
-                Questions Practiced
-              </small>
+</button>
 
-              <strong>
-                0
-              </strong>
+</div>
 
-            </div>
+</div>
 
+</main>
 
-            <div class="stat">
+</div>
 
-              <small>
-                Mock Exams
-              </small>
+</div>
 
-              <strong>
-                0
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Accuracy
-              </small>
-
-              <strong>
-                —
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Study Time
-              </small>
-
-              <strong>
-                0m
-              </strong>
-
-            </div>
-
-
-          </div>
-
-
-          <div class="panelGrid">
-
-
-            <div class="panel">
-
-              <h2>
-                📝 Mock Exams
-              </h2>
-
-              <p>
-
-                Take timed practice examinations
-                and receive your results.
-
-              </p>
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('Mock Exams')">
-
-                Open Mock Exams
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                📚 Study Materials
-              </h2>
-
-              <p>
-
-                Access organized learning
-                resources for your subjects.
-
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Study Materials')">
-
-                Browse Materials
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                👨‍🏫 Find a Tutor
-              </h2>
-
-              <p>
-
-                Discover tutors and book
-                lessons that suit you.
-
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Find a Tutor')">
-
-                Find Tutors
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                🎓 Opportunities
-              </h2>
-
-              <p>
-
-                Explore scholarships and
-                educational opportunities.
-
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Scholarships')">
-
-                Explore
-
-              </button>
-
-            </div>
-
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
 /* =========================================================
-   TUTOR DASHBOARD
+   TUTOR PORTAL
 ========================================================= */
 
 function renderTutor(){
 
-  const nav =
-    sidebar(`
+const nav=sidebar(`
+
+<button
+class="sideButton active"
+onclick="renderTutor()">
+📊 Dashboard
+</button>
 
-      <button
-        class="sideButton active"
-        onclick="renderTutor()">
+<button
+class="sideButton"
+onclick="featurePage('My Tutor Services')">
+📚 My Services
+</button>
 
-        📊 Dashboard
+<button
+class="sideButton"
+onclick="featurePage('Tutor Bookings')">
+📅 Bookings
+</button>
 
-      </button>
+<button
+class="sideButton"
+onclick="featurePage('My Students')">
+👨‍🎓 My Students
+</button>
 
+<button
+class="sideButton"
+onclick="featurePage('Tutor Availability')">
+🗓 Availability
+</button>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('My Tutor Services')">
+<button
+class="sideButton"
+onclick="featurePage('Tutor Messages')">
+💬 Messages
+</button>
 
-        📚 My Services
+<button
+class="sideButton"
+onclick="featurePage('Tutor Materials')">
+📎 Materials
+</button>
 
-      </button>
+<button
+class="sideButton"
+onclick="featurePage('Tutor Earnings')">
+💰 Earnings
+</button>
 
+<button
+class="sideButton"
+onclick="featurePage('Withdrawals')">
+🏦 Withdrawals
+</button>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Tutor Bookings')">
+`);
 
-        📅 Bookings
 
-      </button>
+document.getElementById("app").innerHTML=`
 
+<div class="portal">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('My Students')">
+${nav}
 
-        👨‍🎓 My Students
+<div class="main">
 
-      </button>
+${portalHeader("Tutor Dashboard")}
 
+<main class="content">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Tutor Availability')">
+<h1>
+Tutor Dashboard 👨‍🏫
+</h1>
 
-        🗓 Availability
+<p class="muted">
+Manage your tutoring business,
+students and earnings.
+</p>
 
-      </button>
 
+<div class="stats">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Tutor Messages')">
+<div class="stat">
+<small>Students</small>
+<strong>0</strong>
+</div>
 
-        💬 Messages
+<div class="stat">
+<small>Bookings</small>
+<strong>0</strong>
+</div>
 
-      </button>
+<div class="stat">
+<small>Earnings</small>
+<strong>₦0</strong>
+</div>
 
+<div class="stat">
+<small>Rating</small>
+<strong>—</strong>
+</div>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Tutor Materials')">
+</div>
 
-        📎 Materials
 
-      </button>
+<div class="panelGrid">
 
+<div class="panel">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Tutor Earnings')">
+<h2>📚 My Services</h2>
 
-        💰 Earnings
+<p>
+Create and manage tutoring
+services students can book.
+</p>
 
-      </button>
+<button
+class="btn primary"
+style="margin-top:20px"
+onclick="featurePage('My Tutor Services')">
 
+Manage Services
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Withdrawals')">
+</button>
 
-        🏦 Withdrawals
+</div>
 
-      </button>
 
-    `);
+<div class="panel">
 
+<h2>📅 Bookings</h2>
 
-  document.getElementById("app").innerHTML = `
+<p>
+View upcoming lessons and
+student bookings.
+</p>
 
-    <div>
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Tutor Bookings')">
 
-      ${nav}
+View Bookings
 
+</button>
 
-      <div class="main">
+</div>
 
-        ${portalHeader(
-          "Tutor Dashboard"
-        )}
 
+<div class="panel">
 
-        <main class="content">
+<h2>💬 Messages</h2>
 
-          <h1>
-            Tutor Dashboard 👨‍🏫
-          </h1>
+<p>
+Communicate with students.
+</p>
 
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Tutor Messages')">
 
-          <p class="muted">
+Open Messages
 
-            Manage your tutoring business,
-            students and earnings.
+</button>
 
-          </p>
+</div>
 
 
-          <div class="stats">
+<div class="panel">
 
-            <div class="stat">
+<h2>💰 Earnings</h2>
 
-              <small>
-                Students
-              </small>
+<p>
+Track tutoring income and
+withdrawal requests.
+</p>
 
-              <strong>
-                0
-              </strong>
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Tutor Earnings')">
 
-            </div>
+View Earnings
 
+</button>
 
-            <div class="stat">
+</div>
 
-              <small>
-                Bookings
-              </small>
+</div>
 
-              <strong>
-                0
-              </strong>
+</main>
 
-            </div>
+</div>
 
+</div>
 
-            <div class="stat">
-
-              <small>
-                Earnings
-              </small>
-
-              <strong>
-                ₦0
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Rating
-              </small>
-
-              <strong>
-                —
-              </strong>
-
-            </div>
-
-          </div>
-
-
-          <div class="panelGrid">
-
-
-            <div class="panel">
-
-              <h2>
-                📚 My Services
-              </h2>
-
-              <p>
-
-                Create and manage tutoring
-                services students can book.
-
-              </p>
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('My Tutor Services')">
-
-                Manage Services
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                📅 Bookings
-              </h2>
-
-              <p>
-
-                View upcoming lessons and
-                student bookings.
-
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Bookings')">
-
-                View Bookings
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                💬 Messages
-              </h2>
-
-              <p>
-
-                Communicate with students
-                through the platform.
-
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Messages')">
-
-                Open Messages
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                💰 Earnings
-              </h2>
-
-              <p>
-
-                Track tutoring income and
-                withdrawal requests.
-
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Earnings')">
-
-                View Earnings
-
-              </button>
-
-            </div>
-
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
@@ -2416,737 +2091,408 @@ function renderTutor(){
 
 function renderAdmin(){
 
-  const nav =
-    sidebar(`
+const nav=sidebar(`
 
-      <button
-        class="sideButton active"
-        onclick="renderAdmin()">
+<button
+class="sideButton active"
+onclick="renderAdmin()">
+📊 Dashboard
+</button>
 
-        📊 Dashboard
+<button
+class="sideButton"
+onclick="renderStudentManagement()">
+👨‍🎓 Students
+</button>
+
+<button
+class="sideButton"
+onclick="featurePage('Tutor Management')">
+👨‍🏫 Tutors
+</button>
 
-      </button>
+<button
+class="sideButton"
+onclick="featurePage('Exam Management')">
+📝 Exams
+</button>
 
+<button
+class="sideButton"
+onclick="featurePage('Question Bank')">
+❓ Question Bank
+</button>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Student Management')">
+<button
+class="sideButton"
+onclick="featurePage('Study Materials')">
+📚 Materials
+</button>
 
-        👨‍🎓 Students
+<button
+class="sideButton"
+onclick="featurePage('Scholarship Management')">
+🎓 Scholarships
+</button>
 
-      </button>
+<button
+class="sideButton"
+onclick="featurePage('Subscriptions')">
+💳 Subscriptions
+</button>
 
+<button
+class="sideButton"
+onclick="featurePage('Transactions')">
+💰 Transactions
+</button>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Tutor Management')">
+<button
+class="sideButton"
+onclick="featurePage('Withdrawals')">
+🏦 Withdrawals
+</button>
 
-        👨‍🏫 Tutors
+<button
+class="sideButton"
+onclick="featurePage('Reports')">
+📊 Reports
+</button>
 
-      </button>
+`);
 
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Exam Management')">
+document.getElementById("app").innerHTML=`
 
-        📝 Exams
+<div class="portal">
 
-      </button>
+${nav}
 
+<div class="main">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Question Bank')">
+${portalHeader("Admin Dashboard")}
 
-        ❓ Question Bank
+<main class="content">
 
-      </button>
+<h1>
+PHILMYSCHOOL Admin 🛡️
+</h1>
 
+<p class="muted">
+Manage the entire PHILMYSCHOOL ecosystem.
+</p>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Study Materials')">
 
-        📚 Materials
+<div class="status">
+✓ Supabase connection configured.
+</div>
 
-      </button>
 
+<div class="stats">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Scholarship Management')">
+<div class="stat">
+<small>Students</small>
+<strong id="adminStudentCount">—</strong>
+</div>
 
-        🎓 Scholarships
+<div class="stat">
+<small>Tutors</small>
+<strong>—</strong>
+</div>
 
-      </button>
+<div class="stat">
+<small>Revenue</small>
+<strong>₦0</strong>
+</div>
 
+<div class="stat">
+<small>Exams</small>
+<strong>—</strong>
+</div>
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Subscriptions')">
+</div>
 
-        💳 Subscriptions
 
-      </button>
+<div class="panelGrid">
 
+<div class="panel">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Transactions')">
+<h2>👨‍🎓 Student Management</h2>
 
-        💰 Transactions
+<p>
+Manage student accounts,
+profiles and account status.
+</p>
 
-      </button>
+<button
+class="btn primary"
+style="margin-top:20px"
+onclick="renderStudentManagement()">
 
+Open Students
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Withdrawals')">
+</button>
 
-        🏦 Withdrawals
+</div>
 
-      </button>
 
+<div class="panel">
 
-      <button
-        class="sideButton"
-        onclick="featurePage('Reports')">
+<h2>👨‍🏫 Tutor Management</h2>
 
-        📊 Reports
+<p>
+Review tutor applications,
+profiles and verification.
+</p>
 
-      </button>
+<button
+class="btn primary"
+style="margin-top:20px"
+onclick="featurePage('Tutor Management')">
 
-    `);
+Manage Tutors
 
+</button>
 
-  document.getElementById("app").innerHTML = `
+</div>
 
-    <div>
 
-      ${nav}
+<div class="panel">
 
+<h2>📝 Exam Management</h2>
 
-      <div class="main">
+<p>
+Manage exams, questions,
+subjects and results.
+</p>
 
-        ${portalHeader(
-          "Admin Dashboard"
-        )}
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Exam Management')">
 
+Manage Exams
 
-        <main class="content">
+</button>
 
+</div>
 
-          <h1>
-            PHILMYSCHOOL Admin 🛡️
-          </h1>
 
+<div class="panel">
 
-          <p class="muted">
+<h2>💳 Financial Management</h2>
 
-            Manage the entire
-            PHILMYSCHOOL ecosystem.
+<p>
+Monitor subscriptions,
+transactions and withdrawals.
+</p>
 
-          </p>
+<button
+class="btn secondary"
+style="margin-top:20px"
+onclick="featurePage('Transactions')">
 
+Open Finance
 
-          <div
-            class="panel"
-            style="
-              margin-top:20px;
-              background:#e9f8ef;
-              color:#126b35;
-              min-height:auto;
-              padding:14px;
-            ">
+</button>
 
-            ✓ Supabase connection configured.
+</div>
 
-            You are signed in as
+</div>
 
-            <strong>
-              admin
-            </strong>.
+</main>
 
-          </div>
+</div>
 
+</div>
 
-          <div class="stats">
+`;
 
 
-            <div class="stat">
+/* Load count without blocking dashboard */
 
-              <small>
-                Profiles
-              </small>
-
-              <strong
-                id="adminProfiles">
-
-                —
-
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Students
-              </small>
-
-              <strong
-                id="adminStudents">
-
-                —
-
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Tutors
-              </small>
-
-              <strong
-                id="adminTutors">
-
-                —
-
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Admins
-              </small>
-
-              <strong
-                id="adminAdmins">
-
-                —
-
-              </strong>
-
-            </div>
-
-
-          </div>
-
-
-          <div class="panelGrid">
-
-
-            <div class="panel">
-
-              <h2>
-                👨‍🎓 Student Management
-              </h2>
-
-              <p>
-
-                View registered students,
-                search accounts and inspect
-                profile information.
-
-              </p>
-
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('Student Management')">
-
-                Open Students
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                👨‍🏫 Tutor Management
-              </h2>
-
-              <p>
-
-                Review tutor applications,
-                profiles and verification.
-
-              </p>
-
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Management')">
-
-                Manage Tutors
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                📝 Exam Management
-              </h2>
-
-              <p>
-
-                Manage exams, questions,
-                subjects and results.
-
-              </p>
-
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Exam Management')">
-
-                Manage Exams
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>
-                💰 Finance Management
-              </h2>
-
-              <p>
-
-                Monitor subscriptions,
-                transactions, earnings
-                and withdrawals.
-
-              </p>
-
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Transactions')">
-
-                Open Finance
-
-              </button>
-
-            </div>
-
-
-          </div>
-
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  loadAdminStats();
+loadStudentCount();
 
 }
 
 
 /* =========================================================
-   ADMIN STATISTICS
+   STUDENT COUNT
 ========================================================= */
 
-async function loadAdminStats(){
+async function loadStudentCount(){
 
-  const profiles =
-    await db
-      .from("profiles")
-      .select(
-        "id",
-        {
-          count:"exact",
-          head:true
-        }
-      );
+const el=document.getElementById("adminStudentCount");
 
+if(!el)return;
 
-  const roles =
-    await db
-      .from("user_roles")
-      .select(
-        "role,is_active"
-      );
+try{
 
+const result=
+await db
+.from("user_roles")
+.select("id",{count:"exact",head:true})
+.eq("role","student")
+.eq("is_active",true);
 
-  const rows =
-    roles.data || [];
+if(result.error){
 
+console.warn(
+"Student count:",
+result.error.message
+);
 
-  document.getElementById(
-    "adminProfiles"
-  ).textContent =
-    profiles.count ?? 0;
+el.textContent="—";
+return;
 
+}
 
-  document.getElementById(
-    "adminStudents"
-  ).textContent =
-    rows.filter(
-      x =>
-        x.role === "student" &&
-        x.is_active
-    ).length;
+el.textContent=result.count??0;
 
+}catch(error){
 
-  document.getElementById(
-    "adminTutors"
-  ).textContent =
-    rows.filter(
-      x =>
-        x.role === "tutor" &&
-        x.is_active
-    ).length;
+console.warn(error);
 
+el.textContent="—";
 
-  document.getElementById(
-    "adminAdmins"
-  ).textContent =
-    rows.filter(
-      x =>
-        x.role === "admin" &&
-        x.is_active
-    ).length;
+}
 
 }
 
 
 /* =========================================================
-   PLACEHOLDER MODULES
-========================================================= */
-
-function featurePage(title){
-
-  if(
-    title ===
-    "Student Management"
-  ){
-
-    renderStudentManagement();
-
-    return;
-
-  }
-
-
-  const back =
-    role === "admin"
-      ? "renderAdmin()"
-      : role === "tutor"
-        ? "renderTutor()"
-        : "renderStudent()";
-
-
-  const nav =
-    sidebar(`
-
-      <button
-        class="sideButton"
-        onclick="${back}">
-
-        ← Dashboard
-
-      </button>
-
-    `);
-
-
-  document.getElementById("app").innerHTML = `
-
-    <div>
-
-      ${nav}
-
-
-      <div class="main">
-
-        ${portalHeader(title)}
-
-
-        <main class="content">
-
-          <h1>
-            ${escapeHTML(title)}
-          </h1>
-
-
-          <p class="muted">
-
-            This module is connected
-            to PHILMYSCHOOL and will use
-            the existing Supabase database.
-
-          </p>
-
-
-          <div
-            class="panel"
-            style="margin-top:25px">
-
-            <div class="empty">
-
-              <div>
-
-                <h2>
-                  ${escapeHTML(title)}
-                </h2>
-
-
-                <p
-                  style="
-                    margin-top:10px
-                  ">
-
-                  The database foundation
-                  is ready.
-
-                </p>
-
-
-                <button
-                  class="btn primary"
-                  style="margin-top:20px"
-                  onclick="${back}">
-
-                  Back to Dashboard
-
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   REAL STUDENT MANAGEMENT
+   STUDENT MANAGEMENT
 ========================================================= */
 
 async function renderStudentManagement(){
 
-  if(role !== "admin"){
+const nav=sidebar(`
 
-    alert(
-      "Admin access required."
-    );
+<button
+class="sideButton"
+onclick="renderAdmin()">
 
-    return;
+← Dashboard
 
-  }
+</button>
 
+<button
+class="sideButton active"
+onclick="renderStudentManagement()">
 
-  const nav =
-    sidebar(`
+👨‍🎓 Students
 
-      <button
-        class="sideButton"
-        onclick="renderAdmin()">
+</button>
 
-        ← Admin Dashboard
+`);
 
-      </button>
 
+document.getElementById("app").innerHTML=`
 
-      <button
-        class="sideButton active">
+<div class="portal">
 
-        👨‍🎓 Students
+${nav}
 
-      </button>
+<div class="main">
 
-    `);
+${portalHeader("Student Management")}
 
+<main class="content">
 
-  document.getElementById("app").innerHTML = `
+<h1>
+Student Management 👨‍🎓
+</h1>
 
-    <div>
+<p class="muted">
+View and manage registered PHILMYSCHOOL students.
+</p>
 
-      ${nav}
 
+<div class="stats">
 
-      <div class="main">
+<div class="stat">
+<small>Total Students</small>
+<strong id="totalStudents">0</strong>
+</div>
 
-        ${portalHeader(
-          "Student Management"
-        )}
+<div class="stat">
+<small>Active Students</small>
+<strong id="activeStudents">0</strong>
+</div>
 
+<div class="stat">
+<small>Inactive Students</small>
+<strong id="inactiveStudents">0</strong>
+</div>
 
-        <main class="content">
+<div class="stat">
+<small>Showing</small>
+<strong id="showingStudents">0</strong>
+</div>
 
+</div>
 
-          <h1>
-            Student Management
-          </h1>
 
+<div class="managementHeader">
 
-          <p class="muted">
+<div>
 
-            View and manage
-            PHILMYSCHOOL user profiles.
+<h2>
+Registered Students
+</h2>
 
-          </p>
+<p class="muted">
+Search and view student accounts.
+</p>
 
+</div>
 
-          <div class="stats">
 
+<div style="
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+">
 
-            <div class="stat">
+<input
+id="studentSearch"
+class="searchBox"
+placeholder="Search name or email..."
+oninput="filterStudents()"
+>
 
-              <small>
-                Total Profiles
-              </small>
+<button
+class="btn secondary"
+onclick="loadStudents()">
 
-              <strong
-                id="totalProfiles">
+↻ Refresh
 
-                ...
+</button>
 
-              </strong>
+</div>
 
-            </div>
+</div>
 
 
-            <div class="stat">
+<div
+id="studentManagementArea"
+class="studentTableWrap">
 
-              <small>
-                Students
-              </small>
+<div class="loading">
+Loading students...
+</div>
 
-              <strong
-                id="totalStudents">
+</div>
 
-                ...
+</main>
 
-              </strong>
+</div>
 
-            </div>
+</div>
 
+`;
 
-            <div class="stat">
-
-              <small>
-                Active Students
-              </small>
-
-              <strong
-                id="activeStudents">
-
-                ...
-
-              </strong>
-
-            </div>
-
-
-            <div class="stat">
-
-              <small>
-                Admins
-              </small>
-
-              <strong
-                id="totalAdmins">
-
-                ...
-
-              </strong>
-
-            </div>
-
-
-          </div>
-
-
-          <div class="tableWrap">
-
-
-            <div
-              style="
-                display:flex;
-                gap:10px;
-                flex-wrap:wrap;
-                align-items:center;
-                justify-content:space-between;
-              ">
-
-
-              <h2>
-                Registered Users
-              </h2>
-
-
-              <input
-                id="studentSearch"
-                class="search"
-                type="search"
-                placeholder="Search name or email..."
-                oninput="filterStudents()">
-
-
-            </div>
-
-
-            <div
-              id="studentTableArea"
-              style="margin-top:20px">
-
-              <div class="empty">
-
-                Loading users...
-
-              </div>
-
-            </div>
-
-
-          </div>
-
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  await loadStudents();
+await loadStudents();
 
 }
 
@@ -3157,219 +2503,276 @@ async function renderStudentManagement(){
 
 async function loadStudents(){
 
-  const area =
-    document.getElementById(
-      "studentTableArea"
-    );
+const area=
+document.getElementById("studentManagementArea");
+
+if(!area)return;
+
+area.innerHTML=`
+<div class="loading">
+Loading students...
+</div>
+`;
+
+try{
+
+/*
+  We first get all active/inactive roles
+  belonging to students.
+*/
+
+const rolesResult=
+await db
+.from("user_roles")
+.select("id,user_id,role,is_active,created_at")
+.eq("role","student")
+.order("created_at",{ascending:false});
 
 
-  try{
+if(rolesResult.error){
+
+console.error(rolesResult.error);
+
+area.innerHTML=`
+<div class="errorBox">
+<strong>Unable to load students.</strong>
+<br><br>
+${escapeHTML(rolesResult.error.message)}
+</div>
+`;
+
+return;
+
+}
 
 
-    const profiles =
-      await db
-        .from("profiles")
-        .select(`
-          id,
-          email,
-          first_name,
-          last_name,
-          display_name,
-          phone,
-          state,
-          lga,
-          country,
-          account_status,
-          onboarding_completed,
-          created_at
-        `)
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+const roles=rolesResult.data||[];
+
+const userIds=
+roles
+.map(x=>x.user_id)
+.filter(Boolean);
 
 
-    if(profiles.error){
+/*
+  No students found.
+*/
 
-      area.innerHTML = `
+if(userIds.length===0){
 
-        <div class="empty">
+allStudents=[];
 
-          <div>
+updateStudentStats();
 
-            <h3>
-              Unable to load profiles
-            </h3>
+area.innerHTML=`
 
+<div class="tableEmpty">
 
-            <p
-              style="
-                margin-top:8px
-              ">
+<h3>No students yet</h3>
 
-              ${escapeHTML(
-                profiles.error.message
-              )}
+<p style="margin-top:8px">
+Registered student accounts will appear here.
+</p>
 
-            </p>
+</div>
 
-          </div>
+`;
 
-        </div>
+return;
 
-      `;
-
-      return;
-
-    }
+}
 
 
-    const roles =
-      await db
-        .from("user_roles")
-        .select(
-          "user_id,role,is_active"
-        );
+/*
+  Load profiles.
+*/
+
+const profilesResult=
+await db
+.from("profiles")
+.select(`
+id,
+email,
+first_name,
+last_name,
+display_name,
+phone,
+avatar_url,
+date_of_birth,
+gender,
+state,
+lga,
+country,
+account_status,
+onboarding_completed,
+created_at,
+updated_at
+`)
+.in("id",userIds);
 
 
-    if(roles.error){
+if(profilesResult.error){
 
-      console.warn(
-        roles.error.message
-      );
+console.error(profilesResult.error);
 
-    }
+area.innerHTML=`
+<div class="errorBox">
+<strong>Student profiles could not be loaded.</strong>
+<br><br>
+${escapeHTML(profilesResult.error.message)}
+</div>
+`;
 
+return;
 
-    const roleMap = {};
-
-
-    (roles.data || [])
-      .forEach(item => {
-
-        if(
-          item.is_active &&
-          !roleMap[item.user_id]
-        ){
-
-          roleMap[item.user_id] =
-            item.role;
-
-        }
-
-      });
+}
 
 
-    allStudents =
-      (profiles.data || [])
-        .map(item => ({
-
-          ...item,
-
-          role:
-            roleMap[item.id] ||
-            "student"
-
-        }));
+const profiles=profilesResult.data||[];
 
 
-    updateStudentStats();
+/*
+  Combine profile + role.
+*/
+
+allStudents=roles.map(roleRow=>{
+
+const p=
+profiles.find(
+profileRow=>profileRow.id===roleRow.user_id
+)||{};
+
+return{
+
+...p,
+
+user_id:roleRow.user_id,
+
+role:roleRow.role,
+
+is_active:roleRow.is_active,
+
+role_created_at:roleRow.created_at
+
+};
+
+});
 
 
-    renderStudentTable(
-      allStudents
-    );
+updateStudentStats();
 
+renderStudentTable(allStudents);
 
-  }catch(error){
+}catch(error){
 
-    area.innerHTML = `
+console.error(error);
 
-      <div class="empty">
+area.innerHTML=`
+<div class="errorBox">
+<strong>Something went wrong.</strong>
+<br><br>
+${escapeHTML(error.message||"Unable to load students.")}
+</div>
+`;
 
-        <div>
-
-          <h3>
-            Something went wrong
-          </h3>
-
-
-          <p>
-            ${escapeHTML(
-              error.message
-            )}
-          </p>
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
+}
 
 }
 
 
 /* =========================================================
-   STUDENT STATISTICS
+   STUDENT STATS
 ========================================================= */
 
 function updateStudentStats(){
 
-  const total =
-    allStudents.length;
+const total=
+allStudents.length;
+
+const active=
+allStudents.filter(
+student=>student.is_active!==false
+).length;
+
+const inactive=
+total-active;
+
+const totalEl=
+document.getElementById("totalStudents");
+
+const activeEl=
+document.getElementById("activeStudents");
+
+const inactiveEl=
+document.getElementById("inactiveStudents");
+
+const showingEl=
+document.getElementById("showingStudents");
+
+if(totalEl)totalEl.textContent=total;
+
+if(activeEl)activeEl.textContent=active;
+
+if(inactiveEl)inactiveEl.textContent=inactive;
+
+if(showingEl)showingEl.textContent=total;
+
+}
 
 
-  const students =
-    allStudents.filter(
-      x =>
-        x.role === "student"
-    ).length;
+/* =========================================================
+   FILTER STUDENTS
+========================================================= */
 
+function filterStudents(){
 
-  const active =
-    allStudents.filter(
-      x =>
-        x.role === "student" &&
-        (
-          x.account_status === "active" ||
-          !x.account_status
-        )
-    ).length;
+const input=
+document.getElementById("studentSearch");
 
+if(!input)return;
 
-  const admins =
-    allStudents.filter(
-      x =>
-        x.role === "admin"
-    ).length;
+const search=
+input.value
+.trim()
+.toLowerCase();
 
+if(!search){
 
-  document.getElementById(
-    "totalProfiles"
-  ).textContent =
-    total;
+renderStudentTable(allStudents);
 
+return;
 
-  document.getElementById(
-    "totalStudents"
-  ).textContent =
-    students;
+}
 
+const filtered=
+allStudents.filter(student=>{
 
-  document.getElementById(
-    "activeStudents"
-  ).textContent =
-    active;
+const name=
+`${student.first_name||""} ${student.last_name||""} ${student.display_name||""}`
+.toLowerCase();
 
+const email=
+(student.email||"").toLowerCase();
 
-  document.getElementById(
-    "totalAdmins"
-  ).textContent =
-    admins;
+const phone=
+(student.phone||"").toLowerCase();
+
+return(
+name.includes(search)||
+email.includes(search)||
+phone.includes(search)
+);
+
+});
+
+const showingEl=
+document.getElementById("showingStudents");
+
+if(showingEl){
+showingEl.textContent=filtered.length;
+}
+
+renderStudentTable(filtered);
 
 }
 
@@ -3378,331 +2781,505 @@ function updateStudentStats(){
    STUDENT TABLE
 ========================================================= */
 
-function renderStudentTable(list){
+function renderStudentTable(students){
 
-  const area =
-    document.getElementById(
-      "studentTableArea"
-    );
+const area=
+document.getElementById("studentManagementArea");
 
+if(!area)return;
 
-  if(!list.length){
+if(!students.length){
 
-    area.innerHTML = `
+area.innerHTML=`
 
-      <div class="empty">
+<div class="tableEmpty">
 
-        <div>
+<h3>No students found</h3>
 
-          <h3>
-            No users found
-          </h3>
+<p style="margin-top:8px">
+Try another search.
+</p>
 
+</div>
 
-          <p>
-            Registered profiles
-            will appear here.
-          </p>
+`;
 
-        </div>
+return;
 
-      </div>
+}
 
-    `;
 
-    return;
+let rows="";
 
-  }
+students.forEach((student,index)=>{
 
+const fullName=
+student.display_name||
+`${student.first_name||""} ${student.last_name||""}`.trim()||
+"Unnamed Student";
 
-  let rows = "";
+const email=
+student.email||"No email";
 
+const location=
+[
+student.state,
+student.lga
+]
+.filter(Boolean)
+.join(", ")||"—";
 
-  list.forEach(student => {
+const status=
+student.is_active!==false;
 
+rows+=`
 
-    const name =
-      student.display_name ||
-      `${student.first_name || ""} ${student.last_name || ""}`
-        .trim() ||
-      "Unnamed User";
+<tr>
 
+<td>
+${index+1}
+</td>
 
-    const status =
-      student.account_status ||
-      "active";
+<td>
 
+<div class="studentName">
+${escapeHTML(fullName)}
+</div>
 
-    rows += `
+<div class="studentEmail">
+${escapeHTML(email)}
+</div>
 
-      <tr>
+</td>
 
 
-        <td>
+<td>
+${escapeHTML(student.phone||"—")}
+</td>
 
-          <strong>
 
-            ${escapeHTML(
-              name
-            )}
+<td>
+${escapeHTML(location)}
+</td>
 
-          </strong>
 
+<td>
 
-          <div
-            style="
-              color:#718096;
-              font-size:12px;
-              margin-top:3px;
-            ">
+<span class="badge ${
+status
+?"badgeGreen"
+:"badgeRed"
+}">
 
-            ${escapeHTML(
-              student.email || ""
-            )}
+${status?"Active":"Inactive"}
 
-          </div>
+</span>
 
-        </td>
+</td>
 
 
-        <td>
+<td>
 
-          <span class="badge">
+<button
+class="btn secondary"
+style="padding:8px 12px"
+onclick="viewStudent('${escapeHTML(student.id||student.user_id)}')">
 
-            ${escapeHTML(
-              student.role
-            )}
+View
 
-          </span>
+</button>
 
-        </td>
+</td>
 
+</tr>
 
-        <td>
+`;
 
-          <span
-            class="
-              badge
-              ${
-                status === "active"
-                  ? "green"
-                  : "gray"
-              }
-            ">
+});
 
-            ${escapeHTML(
-              status
-            )}
 
-          </span>
+area.innerHTML=`
 
-        </td>
+<table class="studentTable">
 
+<thead>
 
-        <td>
+<tr>
 
-          ${escapeHTML(
-            student.state || "—"
-          )}
+<th>#</th>
 
-        </td>
+<th>Student</th>
 
+<th>Phone</th>
 
-        <td>
+<th>Location</th>
 
-          <button
-            class="btn secondary"
-            style="
-              padding:8px 11px
-            "
-            onclick="
-              viewStudent('${student.id}')
-            ">
+<th>Status</th>
 
-            View
+<th>Action</th>
 
-          </button>
+</tr>
 
-        </td>
+</thead>
 
+<tbody>
 
-      </tr>
+${rows}
 
-    `;
+</tbody>
 
-  });
+</table>
 
-
-  area.innerHTML = `
-
-    <table class="dataTable">
-
-
-      <thead>
-
-        <tr>
-
-          <th>
-            User
-          </th>
-
-          <th>
-            Role
-          </th>
-
-          <th>
-            Status
-          </th>
-
-          <th>
-            State
-          </th>
-
-          <th>
-            Action
-          </th>
-
-        </tr>
-
-      </thead>
-
-
-      <tbody>
-
-        ${rows}
-
-      </tbody>
-
-
-    </table>
-
-  `;
+`;
 
 }
 
 
 /* =========================================================
-   SEARCH
-========================================================= */
-
-function filterStudents(){
-
-  const input =
-    document.getElementById(
-      "studentSearch"
-    );
-
-
-  const search =
-    input.value
-      .trim()
-      .toLowerCase();
-
-
-  if(!search){
-
-    renderStudentTable(
-      allStudents
-    );
-
-    return;
-
-  }
-
-
-  const filtered =
-    allStudents.filter(
-      student => {
-
-        const text = [
-
-          student.email,
-
-          student.first_name,
-
-          student.last_name,
-
-          student.display_name,
-
-          student.phone,
-
-          student.state,
-
-          student.lga
-
-        ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-
-        return text.includes(
-          search
-        );
-
-      }
-    );
-
-
-  renderStudentTable(
-    filtered
-  );
-
-}
-
-
-/* =========================================================
-   VIEW USER
+   VIEW STUDENT
 ========================================================= */
 
 function viewStudent(id){
 
-  const student =
-    allStudents.find(
-      x =>
-        x.id === id
-    );
+const student=
+allStudents.find(
+item=>item.id===id||
+item.user_id===id
+);
+
+if(!student){
+
+alert("Student information could not be found.");
+
+return;
+
+}
 
 
-  if(!student){
+const nav=sidebar(`
 
-    alert(
-      "User not found."
-    );
+<button
+class="sideButton"
+onclick="renderStudentManagement()">
 
-    return;
+← Students
 
-  }
+</button>
 
-
-  const name =
-    student.display_name ||
-    `${student.first_name || ""} ${student.last_name || ""}`
-      .trim() ||
-    "Unnamed User";
+`);
 
 
-  alert(
+const fullName=
+student.display_name||
+`${student.first_name||""} ${student.last_name||""}`.trim()||
+"Student";
 
-`PHILMYSCHOOL USER
 
-Name: ${name}
-Email: ${student.email || "—"}
-Role: ${student.role || "—"}
-Status: ${student.account_status || "active"}
-Phone: ${student.phone || "—"}
-State: ${student.state || "—"}
-LGA: ${student.lga || "—"}
-Country: ${student.country || "—"}
-Created: ${
-  student.created_at
-    ? new Date(
-        student.created_at
-      ).toLocaleString()
-    : "—"
-}`
+document.getElementById("app").innerHTML=`
 
-  );
+<div class="portal">
+
+${nav}
+
+<div class="main">
+
+${portalHeader("Student Details")}
+
+<main class="content">
+
+<h1>
+Student Details
+</h1>
+
+<p class="muted">
+View the student's PHILMYSCHOOL account information.
+</p>
+
+
+<div class="studentCard">
+
+<h2>
+👨‍🎓 ${escapeHTML(fullName)}
+</h2>
+
+<div
+style="
+margin-top:8px;
+color:#718096;
+">
+
+${escapeHTML(student.email||"No email")}
+
+</div>
+
+
+<div class="detailGrid">
+
+<div class="detailItem">
+
+<small>First Name</small>
+
+<strong>
+${escapeHTML(student.first_name||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Last Name</small>
+
+<strong>
+${escapeHTML(student.last_name||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Email</small>
+
+<strong>
+${escapeHTML(student.email||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Phone</small>
+
+<strong>
+${escapeHTML(student.phone||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Gender</small>
+
+<strong>
+${escapeHTML(student.gender||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Date of Birth</small>
+
+<strong>
+${escapeHTML(student.date_of_birth||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>State</small>
+
+<strong>
+${escapeHTML(student.state||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>LGA</small>
+
+<strong>
+${escapeHTML(student.lga||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Country</small>
+
+<strong>
+${escapeHTML(student.country||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Account Status</small>
+
+<strong>
+${escapeHTML(student.account_status||"—")}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Onboarding</small>
+
+<strong>
+${student.onboarding_completed?"Completed":"Not completed"}
+</strong>
+
+</div>
+
+
+<div class="detailItem">
+
+<small>Account Created</small>
+
+<strong>
+${student.created_at
+?new Date(student.created_at).toLocaleDateString()
+:"—"}
+</strong>
+
+</div>
+
+</div>
+
+
+<div style="
+margin-top:25px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+">
+
+<button
+class="btn primary"
+onclick="renderStudentManagement()">
+
+← Back to Students
+
+</button>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================================
+   OTHER FEATURE PAGES
+========================================================= */
+
+function featurePage(title){
+
+if(title==="Student Management"){
+
+renderStudentManagement();
+return;
+
+}
+
+let backFunction="renderStudent()";
+
+if(role==="admin"){
+backFunction="renderAdmin()";
+}
+
+if(role==="tutor"){
+backFunction="renderTutor()";
+}
+
+const nav=sidebar(`
+
+<button
+class="sideButton"
+onclick="${backFunction}">
+
+← Dashboard
+
+</button>
+
+`);
+
+
+document.getElementById("app").innerHTML=`
+
+<div class="portal">
+
+${nav}
+
+<div class="main">
+
+${portalHeader(title)}
+
+<main class="content">
+
+<h1>
+${escapeHTML(title)}
+</h1>
+
+<p class="muted">
+PHILMYSCHOOL ${escapeHTML(title)} module.
+</p>
+
+
+<div
+class="panel"
+style="margin-top:25px">
+
+<div class="empty">
+
+<div>
+
+<h2>
+${escapeHTML(title)}
+</h2>
+
+<p style="margin-top:10px">
+
+This module is connected to
+PHILMYSCHOOL and will use the
+existing Supabase database.
+
+</p>
+
+<button
+class="btn primary"
+style="margin-top:20px"
+onclick="${backFunction}">
+
+Back to Dashboard
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+</div>
+
+`;
 
 }
 
@@ -3713,61 +3290,104 @@ Created: ${
 
 async function logout(){
 
-  await db.auth.signOut();
+await db.auth.signOut();
 
-  user = null;
-  profile = null;
-  role = null;
+user=null;
+profile=null;
+role=null;
 
-  renderLanding();
+renderLanding();
 
 }
 
 
 /* =========================================================
-   AUTH STATE
+   AUTH LISTENER
 ========================================================= */
 
 db.auth.onAuthStateChange(
-  (event) => {
+(event,session)=>{
 
-    if(
-      event === "SIGNED_OUT"
-    ){
+if(event==="SIGNED_OUT"){
 
-      user = null;
-      profile = null;
-      role = null;
+user=null;
+profile=null;
+role=null;
 
-      renderLanding();
+renderLanding();
 
-    }
+}
 
-  }
+}
 );
 
 
 /* =========================================================
-   START APPLICATION
+   INITIAL LOAD
 ========================================================= */
 
 (async function(){
 
-  const session =
-    await db.auth.getSession();
+try{
 
+const sessionResult=
+await db.auth.getSession();
 
-  if(
-    session.data.session
-  ){
+if(sessionResult.error){
 
-    await loadCurrentUser();
+console.error(
+sessionResult.error
+);
 
-  }else{
+renderLanding();
 
-    renderLanding();
+return;
 
-  }
+}
+
+if(sessionResult.data.session){
+
+await loadCurrentUser();
+
+}else{
+
+renderLanding();
+
+}
+
+}catch(error){
+
+console.error(error);
+
+document.getElementById("app").innerHTML=`
+
+<div style="
+padding:40px;
+font-family:Arial;
+">
+
+<h2>PHILMYSCHOOL</h2>
+
+<p style="margin-top:10px;color:#718096">
+
+The application could not finish loading.
+
+</p>
+
+<button
+class="btn primary"
+style="margin-top:20px"
+onclick="renderLanding()">
+
+Reload PHILMYSCHOOL
+
+</button>
+
+</div>
+
+`;
+
+}
 
 })();
 
