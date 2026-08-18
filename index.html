@@ -760,6 +760,18 @@ textarea{
 <div id="app"></div>
 
 <script>
+(function(){
+  window.__philyschoolBooted = false;
+  window.setTimeout(function(){
+    var app = document.getElementById('app');
+    if(!window.__philyschoolBooted && app && (!app.innerHTML.trim() || app.innerHTML.indexOf('Loading your school portal') !== -1)){
+      app.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f7fb;font-family:Arial,sans-serif;padding:24px"><div style="background:#fff;padding:30px;border-radius:16px;max-width:560px;width:100%;box-shadow:0 10px 35px rgba(0,0,0,.1)"><h2 style="color:#2563eb;margin:0 0 10px">PHILMYSCHOOL</h2><p style="color:#475569;line-height:1.6">The application did not finish loading. Please reload the page. If this message remains, open the browser console to see the exact startup error.</p><button onclick="location.reload()" style="background:#2563eb;color:white;border:0;padding:12px 18px;border-radius:8px;font-weight:700">Reload</button></div></div>';
+    }
+  }, 5000);
+})();
+</script>
+
+<script>
 /* =========================================================
    PHILMYSCHOOL
    COMPLETE SUPABASE REPLACEMENT
@@ -771,19 +783,60 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_-HIg7bCv6G1hLQoh5OWasA_hvhWrYOx";
 
-const {createClient}=supabase;
+let db=null;
 
-const db=createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY,
-  {
-    auth:{
-      autoRefreshToken:true,
-      persistSession:true,
-      detectSessionInUrl:true
+function initializeSupabase(){
+
+  try{
+    if(
+      typeof window.supabase === "undefined" ||
+      typeof window.supabase.createClient !== "function"
+    ){
+      throw new Error("Supabase library failed to load. Check your internet connection or CDN access.");
     }
+
+    db=window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY,
+      {
+        auth:{
+          autoRefreshToken:true,
+          persistSession:true,
+          detectSessionInUrl:true,
+          flowType:"pkce"
+        }
+      }
+    );
+
+    return true;
+  }catch(error){
+    console.error("Supabase initialization error:",error);
+    showFatalStartupError(error);
+    return false;
   }
-);
+}
+
+function showFatalStartupError(error){
+  const app=document.getElementById("app");
+  if(!app)return;
+  app.innerHTML=`
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#f5f7fb;font-family:Arial,sans-serif">
+      <div style="max-width:560px;width:100%;background:#fff;padding:30px;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.12)">
+        <h2 style="color:#dc2626">PHILMYSCHOOL could not start</h2>
+        <p style="margin-top:12px;color:#475569;line-height:1.6">The application could not initialize. The exact error is shown below.</p>
+        <pre style="margin-top:18px;padding:14px;background:#fef2f2;color:#991b1b;border-radius:10px;white-space:pre-wrap;overflow:auto">${String(error?.stack||error?.message||error||"Unknown error").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>
+        <button onclick="location.reload()" style="margin-top:18px;border:0;border-radius:9px;padding:12px 18px;background:#2563eb;color:#fff;font-weight:700">Reload</button>
+      </div>
+    </div>`;
+}
+
+window.addEventListener("error",function(event){
+  console.error("PHILMYSCHOOL runtime error:",event.error||event.message);
+});
+
+window.addEventListener("unhandledrejection",function(event){
+  console.error("PHILMYSCHOOL unhandled rejection:",event.reason);
+});
 
 /* =========================================================
    GLOBAL STATE
@@ -914,6 +967,8 @@ function getOptionValue(q,letter){
 
 async function loadCurrentUser(){
 
+  window.__philyschoolBooted = true;
+
   const sessionResult=
     await db.auth.getSession();
 
@@ -989,6 +1044,8 @@ async function loadCurrentUser(){
 ========================================================= */
 
 function renderLanding(){
+
+  window.__philyschoolBooted = true;
 
   document.getElementById("app").innerHTML=`
 
@@ -7258,7 +7315,7 @@ const MODULES={
     ],
 
     defaults:{
-      mode:existing?.mode||"mock",
+      mode:"mock",
       access_level:"free",
       price:0,
       currency:"NGN",
@@ -7417,312 +7474,7 @@ const MODULES={
   }
 };
 
-function examSlug(title){
-  const base=String(title||"exam")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g,"-")
-    .replace(/^-+|-+$/g,"") || "exam";
-  return base+"-"+Date.now().toString(36);
-}
-
-async function adminExams(){
-
-  await loadSubjects();
-
-  document.getElementById("app").innerHTML=`
-  <div class="portal">
-    ${adminSidebar()}
-    <div class="main">
-      ${portalHeader("Exams")}
-      <main class="content">
-        <h1>ð§ª Exams</h1>
-        <p class="muted">Create, configure, publish and assign questions to examinations without opening Supabase.</p>
-        <div class="moduleToolbar">
-          <button class="btn primary" onclick="openExamForm()">+ Create Exam</button>
-          <button class="btn secondary" onclick="adminExams()">â» Refresh</button>
-        </div>
-        <div id="examAdminArea" class="studentTableWrap">
-          <div class="loading">Loading exams...</div>
-        </div>
-      </main>
-    </div>
-  </div>`;
-
-  await loadAdminExams();
-}
-
-async function loadAdminExams(){
-  const area=document.getElementById("examAdminArea");
-  if(!area)return;
-
-  const result=await db
-    .from("exams")
-    .select("*")
-    .order("created_at",{ascending:false})
-    .limit(500);
-
-  if(result.error){
-    area.innerHTML=`<div class="errorBox">${escapeHTML(result.error.message)}</div>`;
-    return;
-  }
-
-  const exams=result.data||[];
-  window.adminExamRows=exams;
-
-  if(!exams.length){
-    area.innerHTML=`<div class="tableEmpty"><h3>No exams yet.</h3><p>Create your first exam above.</p></div>`;
-    return;
-  }
-
-  area.innerHTML=`
-    <table class="studentTable">
-      <thead><tr>
-        <th>Exam</th><th>Type</th><th>Duration</th><th>Questions</th><th>Pass Mark</th><th>Status</th><th>Actions</th>
-      </tr></thead>
-      <tbody>
-        ${exams.map(e=>`
-          <tr>
-            <td><strong>${escapeHTML(e.title||"Untitled")}</strong><br><small>${escapeHTML(e.slug||"")}</small></td>
-            <td>${escapeHTML(e.exam_type||"CBT")}</td>
-            <td>${escapeHTML(e.duration_minutes??"â")} min</td>
-            <td>${escapeHTML(e.total_questions??0)}</td>
-            <td>${escapeHTML(e.pass_mark??0)}</td>
-            <td><span class="badge ${e.status==="published"?"badgeGreen":"badgeRed"}">${escapeHTML(e.status||"draft")}</span></td>
-            <td>
-              <div style="display:flex;gap:7px;flex-wrap:wrap">
-                <button class="btn primary" style="padding:7px 10px" onclick="manageExamQuestions('${e.id}')">Questions</button>
-                <button class="btn secondary" style="padding:7px 10px" onclick="openExamForm('${e.id}')">Edit</button>
-                <button class="btn danger" style="padding:7px 10px" onclick="deleteExam('${e.id}')">Delete</button>
-              </div>
-            </td>
-          </tr>`).join("")}
-      </tbody>
-    </table>`;
-}
-
-function openExamForm(id=null){
-  const existing=(window.adminExamRows||[]).find(x=>String(x.id)===String(id))||null;
-  const title=existing?.title||"";
-  const slug=existing?.slug||"";
-  const subjectId=existing?.subject_id||"";
-
-  document.body.insertAdjacentHTML("beforeend",`
-    <div class="modal" id="examAdminModal">
-      <div class="modalBox">
-        <div class="modalHead">
-          <h2>${id?"Edit":"Create"} Exam</h2>
-          <button class="closeBtn" onclick="closeExamForm()">â</button>
-        </div>
-        <div class="formGrid">
-          <div class="formGroup full"><label>Title *</label><input id="exam_title" value="${escapeHTML(title)}" placeholder="e.g. JAMB Biology Mock 1"></div>
-          <div class="formGroup"><label>Subject</label><select id="exam_subject"><option value="">All / Mixed Subjects</option>${subjects.map(s=>`<option value="${s.id}" ${String(subjectId)===String(s.id)?"selected":""}>${escapeHTML(s.name||s.code||"")}</option>`).join("")}</select></div>
-          <div class="formGroup"><label>Exam Type *</label><input id="exam_type" value="${escapeHTML(existing?.exam_type||"CBT")}"></div>
-          <div class="formGroup"><label>Duration (minutes) *</label><input id="exam_duration" type="number" min="1" value="${escapeHTML(existing?.duration_minutes??60)}"></div>
-          <div class="formGroup"><label>Questions per Attempt</label><input id="exam_questions_per_attempt" type="number" min="0" value="${escapeHTML(existing?.questions_per_attempt??0)}"><small class="muted">0 = use all assigned questions.</small></div>
-          <div class="formGroup"><label>Question Selection</label><select id="exam_selection"><option value="all" ${existing?.question_selection_mode!=="random"?"selected":""}>All assigned</option><option value="random" ${existing?.question_selection_mode==="random"?"selected":""}>Random</option></select></div>
-          <div class="formGroup"><label>Pass Mark (%)</label><input id="exam_pass" type="number" min="0" max="100" value="${escapeHTML(existing?.pass_mark??50)}"></div>
-          <div class="formGroup"><label>Access Level</label><input id="exam_access" value="${escapeHTML(existing?.access_level||"free")}"></div>
-          <div class="formGroup"><label>Price</label><input id="exam_price" type="number" min="0" value="${escapeHTML(existing?.price??0)}"></div>
-          <div class="formGroup"><label>Currency</label><input id="exam_currency" value="${escapeHTML(existing?.currency||"NGN")}"></div>
-          <div class="formGroup"><label>Status</label><select id="exam_status"><option value="draft" ${existing?.status!=="published"?"selected":""}>Draft</option><option value="published" ${existing?.status==="published"?"selected":""}>Published</option><option value="active" ${existing?.status==="active"?"selected":""}>Active</option><option value="closed" ${existing?.status==="closed"?"selected":""}>Closed</option></select></div>
-          <div class="formGroup"><label><input id="exam_random_questions" type="checkbox" style="width:auto" ${existing?.randomize_questions!==false?"checked":""}> Randomize Questions</label></div>
-          <div class="formGroup"><label><input id="exam_random_options" type="checkbox" style="width:auto" ${existing?.randomize_options!==false?"checked":""}> Randomize Options</label></div>
-          <div class="formGroup"><label><input id="exam_back" type="checkbox" style="width:auto" ${existing?.allow_back_navigation!==false?"checked":""}> Allow Back Navigation</label></div>
-          <div class="formGroup"><label><input id="exam_result" type="checkbox" style="width:auto" ${existing?.show_result_immediately!==false?"checked":""}> Show Result Immediately</label></div>
-          <div class="formGroup full"><label>Description</label><textarea id="exam_description">${escapeHTML(existing?.description||"")}</textarea></div>
-          <div class="formGroup full"><label>Instructions</label><textarea id="exam_instructions">${escapeHTML(existing?.instructions||"")}</textarea></div>
-        </div>
-        <div id="examFormMessage"></div>
-        <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-          <button class="btn secondary" onclick="closeExamForm()">Cancel</button>
-          <button class="btn primary" onclick="saveExamForm('${id||""}')">${id?"Save Changes":"Create Exam"}</button>
-        </div>
-      </div>
-    </div>`);
-}
-
-function closeExamForm(){document.getElementById("examAdminModal")?.remove();}
-
-async function saveExamForm(id){
-  const title=document.getElementById("exam_title")?.value.trim();
-  const duration=Number(document.getElementById("exam_duration")?.value||0);
-  const type=document.getElementById("exam_type")?.value.trim()||"CBT";
-  const message=document.getElementById("examFormMessage");
-
-  if(!title||duration<1){
-    message.innerHTML=`<div class="errorBox">Exam title and duration are required.</div>`;
-    return;
-  }
-
-  const existing=(window.adminExamRows||[]).find(x=>String(x.id)===String(id))||null;
-  const payload={
-    title,
-    slug:existing?.slug||examSlug(title),
-    description:document.getElementById("exam_description")?.value.trim()||null,
-    exam_type:type,
-    mode:"mock",
-    duration_minutes:duration,
-    total_questions:Number(existing?.total_questions||0),
-    total_marks:Number(existing?.total_marks||0),
-    pass_mark:Number(document.getElementById("exam_pass")?.value||50),
-    instructions:document.getElementById("exam_instructions")?.value.trim()||null,
-    randomize_questions:document.getElementById("exam_random_questions")?.checked===true,
-    randomize_options:document.getElementById("exam_random_options")?.checked===true,
-    allow_back_navigation:document.getElementById("exam_back")?.checked===true,
-    show_result_immediately:document.getElementById("exam_result")?.checked===true,
-    access_level:document.getElementById("exam_access")?.value.trim()||"free",
-    price:Number(document.getElementById("exam_price")?.value||0),
-    currency:document.getElementById("exam_currency")?.value.trim()||"NGN",
-    status:document.getElementById("exam_status")?.value||"draft",
-    subject_id:document.getElementById("exam_subject")?.value||null,
-    questions_per_attempt:Number(document.getElementById("exam_questions_per_attempt")?.value||0)||null,
-    question_selection_mode:document.getElementById("exam_selection")?.value||"all",
-    updated_at:new Date().toISOString()
-  };
-
-  if(!id)payload.created_by=user?.id||null;
-
-  const result=id
-    ?await db.from("exams").update(payload).eq("id",id)
-    :await db.from("exams").insert(payload).select("id").single();
-
-  if(result.error){
-    message.innerHTML=`<div class="errorBox">${escapeHTML(result.error.message)}</div>`;
-    return;
-  }
-
-  closeExamForm();
-  await adminExams();
-}
-
-async function deleteExam(examId){
-  if(!confirm("Delete this exam? Its question assignments and attempts may also need to be removed first."))return;
-
-  const attempts=await db.from("exam_attempts").select("id").eq("exam_id",examId).limit(1);
-  if(attempts.data?.length){
-    alert("This exam already has student attempts and cannot be safely deleted. Set its status to closed instead.");
-    return;
-  }
-
-  await db.from("exam_questions").delete().eq("exam_id",examId);
-  const result=await db.from("exams").delete().eq("id",examId);
-  if(result.error){alert(result.error.message);return;}
-  await adminExams();
-}
-
-async function manageExamQuestions(examId){
-  const exam=(window.adminExamRows||[]).find(x=>String(x.id)===String(examId));
-  if(!exam)return;
-
-  const [qResult,linkResult]=await Promise.all([
-    db.from("questions").select("id,subject_id,topic_id,question_text,marks,status").order("created_at",{ascending:false}).limit(1000),
-    db.from("exam_questions").select("id,question_id,question_number,marks").eq("exam_id",examId).order("question_number",{ascending:true})
-  ]);
-
-  if(qResult.error){alert(qResult.error.message);return;}
-  if(linkResult.error){alert(linkResult.error.message);return;}
-
-  const selected=new Map((linkResult.data||[]).map(x=>[String(x.question_id),x]));
-  const qs=qResult.data||[];
-
-  document.body.insertAdjacentHTML("beforeend",`
-    <div class="modal" id="examQuestionsModal">
-      <div class="modalBox" style="max-width:1000px">
-        <div class="modalHead">
-          <h2>Questions â ${escapeHTML(exam.title||"")}</h2>
-          <button class="closeBtn" onclick="closeExamQuestions()">â</button>
-        </div>
-        <p class="muted">Select the questions students should receive in this exam. You can import more questions from the Question Bank at any time.</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:15px 0">
-          <input id="examQuestionSearch" class="searchBox" placeholder="Search questions..." oninput="filterExamQuestionPicker()">
-          <button class="btn secondary" onclick="selectAllExamQuestions(true)">Select All</button>
-          <button class="btn secondary" onclick="selectAllExamQuestions(false)">Clear All</button>
-        </div>
-        <div id="examQuestionPicker" style="max-height:55vh;overflow:auto;display:grid;gap:8px">
-          ${qs.map((q,i)=>`
-            <label class="panel examPickerRow" data-search="${escapeHTML((q.question_text||"").toLowerCase())}" style="display:flex;gap:12px;align-items:flex-start;padding:12px;cursor:pointer">
-              <input class="examQuestionCheck" type="checkbox" value="${q.id}" ${selected.has(String(q.id))?"checked":""} style="width:auto;margin-top:4px">
-              <span><strong>#${i+1}</strong> ${escapeHTML(q.question_text||"")}<br><small class="muted">${escapeHTML(q.marks??1)} mark(s)</small></span>
-            </label>`).join("")}
-        </div>
-        <div id="examQuestionsMessage" style="margin-top:15px"></div>
-        <div style="display:flex;gap:10px;margin-top:20px">
-          <button class="btn secondary" onclick="closeExamQuestions()">Cancel</button>
-          <button class="btn primary" onclick="saveExamQuestions('${examId}')">Save Selected Questions</button>
-        </div>
-      </div>
-    </div>`);
-}
-
-function closeExamQuestions(){document.getElementById("examQuestionsModal")?.remove();}
-
-function filterExamQuestionPicker(){
-  const term=(document.getElementById("examQuestionSearch")?.value||"").toLowerCase();
-  document.querySelectorAll(".examPickerRow").forEach(row=>{
-    row.style.display=(row.dataset.search||"").includes(term)?"flex":"none";
-  });
-}
-
-function selectAllExamQuestions(value){
-  document.querySelectorAll(".examPickerRow").forEach(row=>{
-    if(row.style.display!=="none"){
-      const cb=row.querySelector(".examQuestionCheck");
-      if(cb)cb.checked=value;
-    }
-  });
-}
-
-async function saveExamQuestions(examId){
-  const message=document.getElementById("examQuestionsMessage");
-  const selected=[...document.querySelectorAll(".examQuestionCheck:checked")].map(x=>x.value);
-
-  if(!selected.length){
-    message.innerHTML=`<div class="errorBox">Select at least one question.</div>`;
-    return;
-  }
-
-  const qResult=await db.from("questions").select("id,marks").in("id",selected);
-  if(qResult.error){message.innerHTML=`<div class="errorBox">${escapeHTML(qResult.error.message)}</div>`;return;}
-  const marksMap={};
-  (qResult.data||[]).forEach(q=>marksMap[q.id]=Number(q.marks||1));
-
-  const rows=selected.map((questionId,index)=>({
-    exam_id:examId,
-    question_id:questionId,
-    question_number:index+1,
-    marks:marksMap[questionId]||1
-  }));
-
-  const del=await db.from("exam_questions").delete().eq("exam_id",examId);
-  if(del.error){message.innerHTML=`<div class="errorBox">${escapeHTML(del.error.message)}</div>`;return;}
-
-  const ins=await db.from("exam_questions").insert(rows);
-  if(ins.error){message.innerHTML=`<div class="errorBox">${escapeHTML(ins.error.message)}</div>`;return;}
-
-  const totalMarks=rows.reduce((sum,row)=>sum+Number(row.marks||0),0);
-  const exam=(window.adminExamRows||[]).find(x=>String(x.id)===String(examId));
-  const requested=Number(exam?.questions_per_attempt||0);
-  const totalQuestions=rows.length;
-
-  const update=await db.from("exams").update({
-    total_questions:totalQuestions,
-    total_marks:totalMarks,
-    questions_per_attempt:requested>0?Math.min(requested,totalQuestions):totalQuestions,
-    updated_at:new Date().toISOString()
-  }).eq("id",examId);
-
-  if(update.error){message.innerHTML=`<div class="errorBox">Questions saved, but exam totals could not be updated: ${escapeHTML(update.error.message)}</div>`;return;}
-
-  message.innerHTML=`<div class="successBox">Saved ${totalQuestions} questions (${totalMarks} total marks).</div>`;
-  setTimeout(async()=>{closeExamQuestions();await adminExams();},500);
-}
-
 async function adminModule(module){
-
-  if(module==="exams"){
-    return adminExams();
-  }
 
   const cfg=
     MODULES[module];
@@ -8844,81 +8596,61 @@ async function logout(){
    AUTH STATE
 ========================================================= */
 
-db.auth.onAuthStateChange(
-  (event,session)=>{
-
-    console.log(
-      "AUTH EVENT:",
-      event
-    );
-
-    if(
-      event==="SIGNED_OUT"
-    ){
-
-      user=null;
-      profile=null;
-      role=null;
-
-      clearInterval(
-        cbt.timer
-      );
-
-      renderLogin();
+function registerAuthListener(){
+  if(!db)return;
+  db.auth.onAuthStateChange(
+    (event,session)=>{
+      console.log("AUTH EVENT:",event);
+      if(event==="SIGNED_OUT"){
+        user=null;
+        profile=null;
+        role=null;
+        clearInterval(cbt.timer);
+        renderLogin();
+      }
     }
-  }
-);
+  );
+}
 
 /* Ensure inline buttons always resolve these handlers. */
 window.openCSVImport = openCSVImport;
 window.closeCSVImport = closeCSVImport;
 window.showCSVFileName = showCSVFileName;
 window.importCSV = importCSV;
-window.saveQuestionOptions = saveQuestionOptions;
-window.adminExams = adminExams;
-window.openExamForm = openExamForm;
-window.saveExamForm = saveExamForm;
-window.manageExamQuestions = manageExamQuestions;
-window.saveExamQuestions = saveExamQuestions;
-window.closeExamQuestions = closeExamQuestions;
-window.deleteExam = deleteExam;
 
 /* =========================================================
    INITIAL LOAD
 ========================================================= */
 
-(async function(){
+(async function startPHILMYSCHOOL(){
 
   try{
+    const app=document.getElementById("app");
+    if(app){
+      app.innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;background:#f5f7fb"><div style="text-align:center"><div style="font-size:28px;font-weight:900;color:#2563eb">PHILMYSCHOOL</div><div style="margin-top:10px;color:#64748b">Loading...</div></div></div>`;
+    }
 
-    const result=
-      await db.auth.getSession();
+    if(!initializeSupabase())return;
+
+    registerAuthListener();
+
+    const result=await db.auth.getSession();
 
     if(result.error){
-
-      console.error(
-        result.error
-      );
-
+      console.error("Session error:",result.error);
       renderLanding();
-
       return;
     }
 
-    if(result.data.session){
-
+    if(result.data?.session){
       await loadCurrentUser();
-
     }else{
-
       renderLanding();
     }
 
   }catch(error){
-
-    console.error(error);
-
-    renderLanding();
+    console.error("PHILMYSCHOOL startup error:",error);
+    showFatalStartupError(error);
   }
 
 })();
