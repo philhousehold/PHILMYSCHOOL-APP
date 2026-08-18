@@ -24,6 +24,7 @@
   --border:#e3e8ef;
   --green:#159447;
   --red:#d92d20;
+  --orange:#f79009;
 }
 
 body{
@@ -44,14 +45,40 @@ button{
   display:none!important;
 }
 
-.navbar{
-  height:74px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-  padding:0 6%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+/* =========================
+   GLOBAL
+========================= */
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:12px 18px;
+  font-weight:700;
+}
+
+.primary{
+  background:var(--blue);
+  color:#fff;
+}
+
+.secondary{
+  background:#eaf2ff;
+  color:var(--blue);
+}
+
+.danger{
+  background:#fff0ef;
+  color:var(--red);
+}
+
+.success{
+  background:#e9f8ef;
+  color:#126b35;
+}
+
+.muted{
+  color:var(--muted);
+  line-height:1.6;
 }
 
 .logo{
@@ -73,26 +100,23 @@ button{
   font-weight:900;
 }
 
+/* =========================
+   LANDING
+========================= */
+
+.navbar{
+  height:74px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:0 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
 .navButtons{
   display:flex;
   gap:10px;
-}
-
-.btn{
-  border:0;
-  border-radius:9px;
-  padding:12px 18px;
-  font-weight:700;
-}
-
-.primary{
-  background:var(--blue);
-  color:#fff;
-}
-
-.secondary{
-  background:#eaf2ff;
-  color:var(--blue);
 }
 
 .hero{
@@ -196,11 +220,6 @@ button{
   margin:10px 0;
 }
 
-.muted{
-  color:var(--muted);
-  line-height:1.6;
-}
-
 .featureGrid{
   max-width:1180px;
   margin:40px auto 0;
@@ -230,7 +249,9 @@ button{
   line-height:1.6;
 }
 
-/* AUTH */
+/* =========================
+   AUTH
+========================= */
 
 .authPage{
   min-height:100vh;
@@ -353,7 +374,9 @@ button{
   font-weight:700;
 }
 
-/* PORTAL */
+/* =========================
+   PORTAL
+========================= */
 
 .portal{
   min-height:100vh;
@@ -487,7 +510,7 @@ button{
   border:1px solid var(--border);
   border-radius:15px;
   padding:25px;
-  min-height:220px;
+  min-height:180px;
 }
 
 .panel h2{
@@ -516,7 +539,9 @@ button{
   font-size:13px;
 }
 
-/* STUDENT MANAGEMENT */
+/* =========================
+   MANAGEMENT
+========================= */
 
 .managementHeader{
   display:flex;
@@ -534,10 +559,6 @@ button{
   border-radius:9px;
   background:white;
   outline:none;
-}
-
-.searchBox:focus{
-  border-color:var(--blue);
 }
 
 .studentTableWrap{
@@ -567,10 +588,6 @@ button{
   padding:15px;
   border-bottom:1px solid var(--border);
   font-size:13px;
-}
-
-.studentTable tr:last-child td{
-  border-bottom:0;
 }
 
 .studentName{
@@ -652,7 +669,9 @@ button{
   color:#b42318;
 }
 
-/* RESPONSIVE */
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:900px){
 
@@ -741,7 +760,7 @@ button{
 <script>
 
 /* =========================================================
-   PHILMYSCHOOL SUPABASE
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -751,12 +770,22 @@ const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_-HIg7bCv6G1hLQoh5OWasA_hvhWrYOx";
 
 if(!window.supabase){
+
   document.getElementById("app").innerHTML=`
     <div style="padding:40px;font-family:Arial">
       <h2>PHILMYSCHOOL Loading Error</h2>
-      <p>Supabase could not load. Please refresh the page.</p>
+      <p style="margin-top:10px">
+        Supabase could not load.
+      </p>
+      <button
+        class="btn primary"
+        style="margin-top:20px"
+        onclick="location.reload()">
+        Reload
+      </button>
     </div>
   `;
+
   throw new Error("Supabase library failed to load");
 }
 
@@ -796,9 +825,11 @@ function escapeHTML(value){
     .replaceAll("'","&#039;");
 }
 
+
 function showAuthMessage(message){
 
-  const box=document.getElementById("authMessage");
+  const box =
+    document.getElementById("authMessage");
 
   if(!box)return;
 
@@ -806,9 +837,11 @@ function showAuthMessage(message){
   box.classList.add("show");
 }
 
+
 function clearAuthMessage(){
 
-  const box=document.getElementById("authMessage");
+  const box =
+    document.getElementById("authMessage");
 
   if(!box)return;
 
@@ -823,177 +856,180 @@ function clearAuthMessage(){
 
 function renderLanding(){
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <header class="navbar">
 
-<div class="logo">
-<div class="logoIcon">P</div>
-PHILMYSCHOOL
-</div>
+  <div class="logo">
+    <div class="logoIcon">P</div>
+    PHILMYSCHOOL
+  </div>
 
-<div class="navButtons">
+  <div class="navButtons">
 
-<button class="btn secondary"
-onclick="renderLogin()">
-Login
-</button>
+    <button
+      class="btn secondary"
+      onclick="renderLogin()">
+      Login
+    </button>
 
-<button class="btn primary"
-onclick="renderRegister('student')">
-Get Started
-</button>
+    <button
+      class="btn primary"
+      onclick="renderRegister('student')">
+      Get Started
+    </button>
 
-</div>
+  </div>
 
 </header>
 
 
 <section class="hero">
 
-<div>
+  <div>
 
-<div class="eyebrow">
-STUDENT-FIRST EDUCATION PLATFORM
-</div>
+    <div class="eyebrow">
+      STUDENT-FIRST EDUCATION PLATFORM
+    </div>
 
-<h1>
-Learn smarter.<br>
-<span>Perform better.</span>
-</h1>
+    <h1>
+      Learn smarter.<br>
+      <span>Perform better.</span>
+    </h1>
 
-<p class="heroText">
-PHILMYSCHOOL brings CBT practice,
-mock examinations, study materials,
-tutors and educational opportunities
-together in one platform.
-</p>
+    <p class="heroText">
+      PHILMYSCHOOL brings CBT practice,
+      mock examinations, study materials,
+      tutors and educational opportunities
+      together in one platform.
+    </p>
 
-<div class="heroButtons">
+    <div class="heroButtons">
 
-<button class="btn primary"
-onclick="renderRegister('student')">
-🎓 Start Learning
-</button>
+      <button
+        class="btn primary"
+        onclick="renderRegister('student')">
+        🎓 Start Learning
+      </button>
 
-<button class="btn secondary"
-onclick="renderRegister('tutor')">
-👨‍🏫 Become a Tutor
-</button>
+      <button
+        class="btn secondary"
+        onclick="renderRegister('tutor')">
+        👨‍🏫 Become a Tutor
+      </button>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
 
-<div class="preview">
+  <div class="preview">
 
-<div style="
-display:flex;
-justify-content:space-between;
-">
+    <div style="
+      display:flex;
+      justify-content:space-between;
+    ">
 
-<strong>Student Progress</strong>
-<strong>82%</strong>
+      <strong>Student Progress</strong>
+      <strong>82%</strong>
 
-</div>
+    </div>
 
-<div class="progress">
-<span></span>
-</div>
+    <div class="progress">
+      <span></span>
+    </div>
 
-<div class="previewGrid">
+    <div class="previewGrid">
 
-<div class="previewCard">
-<small>Questions</small>
-<strong>128</strong>
-</div>
+      <div class="previewCard">
+        <small>Questions</small>
+        <strong>128</strong>
+      </div>
 
-<div class="previewCard">
-<small>Mock Exams</small>
-<strong>12</strong>
-</div>
+      <div class="previewCard">
+        <small>Mock Exams</small>
+        <strong>12</strong>
+      </div>
 
-<div class="previewCard">
-<small>Subjects</small>
-<strong>9</strong>
-</div>
+      <div class="previewCard">
+        <small>Subjects</small>
+        <strong>9</strong>
+      </div>
 
-<div class="previewCard">
-<small>Accuracy</small>
-<strong>86%</strong>
-</div>
+      <div class="previewCard">
+        <small>Accuracy</small>
+        <strong>86%</strong>
+      </div>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
 </section>
 
 
 <section class="features">
 
-<div class="sectionTitle">
+  <div class="sectionTitle">
 
-<div class="eyebrow">
-EVERYTHING IN ONE PLACE
-</div>
+    <div class="eyebrow">
+      EVERYTHING IN ONE PLACE
+    </div>
 
-<h2>
-Built around the student.
-</h2>
+    <h2>
+      Built around the student.
+    </h2>
 
-<p>
-Learn, practice, prepare for examinations,
-connect with tutors and discover opportunities.
-</p>
+    <p class="muted">
+      Learn, practice, prepare for examinations,
+      connect with tutors and discover opportunities.
+    </p>
 
-</div>
+  </div>
 
 
-<div class="featureGrid">
+  <div class="featureGrid">
 
-<div class="feature">
-<div class="featureIcon">📝</div>
-<h3>CBT & Mock Exams</h3>
-<p>
-Timed examinations, practice questions,
-automatic scoring and results.
-</p>
-</div>
+    <div class="feature">
+      <div class="featureIcon">📝</div>
+      <h3>CBT & Mock Exams</h3>
+      <p>
+        Timed examinations, practice questions,
+        automatic scoring and results.
+      </p>
+    </div>
 
-<div class="feature">
-<div class="featureIcon">📚</div>
-<h3>Study Materials</h3>
-<p>
-Organized resources for your subjects
-and examination preparation.
-</p>
-</div>
+    <div class="feature">
+      <div class="featureIcon">📚</div>
+      <h3>Study Materials</h3>
+      <p>
+        Organized resources for your subjects
+        and examination preparation.
+      </p>
+    </div>
 
-<div class="feature">
-<div class="featureIcon">👨‍🏫</div>
-<h3>Professional Tutors</h3>
-<p>
-Find tutors, view services and
-book private lessons.
-</p>
-</div>
+    <div class="feature">
+      <div class="featureIcon">👨‍🏫</div>
+      <h3>Professional Tutors</h3>
+      <p>
+        Find tutors, view services and
+        book private lessons.
+      </p>
+    </div>
 
-<div class="feature">
-<div class="featureIcon">🎓</div>
-<h3>Scholarships</h3>
-<p>
-Discover scholarships and
-educational opportunities.
-</p>
-</div>
+    <div class="feature">
+      <div class="featureIcon">🎓</div>
+      <h3>Scholarships</h3>
+      <p>
+        Discover scholarships and
+        educational opportunities.
+      </p>
+    </div>
 
-</div>
+  </div>
 
 </section>
 `;
-
 }
 
 
@@ -1003,135 +1039,128 @@ educational opportunities.
 
 function renderLogin(){
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="authPage">
 
-<div class="authBrand">
+  <div class="authBrand">
 
-<div class="logo">
+    <div class="logo">
+      <div class="logoIcon">P</div>
+      PHILMYSCHOOL
+    </div>
 
-<div class="logoIcon">P</div>
+    <div>
 
-PHILMYSCHOOL
+      <h1>
+        Welcome<br>
+        back.
+      </h1>
 
-</div>
+      <p>
+        Continue your learning journey
+        with PHILMYSCHOOL.
+      </p>
 
-<div>
+    </div>
 
-<h1>
-Welcome<br>
-back.
-</h1>
-
-<p>
-Continue your learning journey
-with PHILMYSCHOOL.
-</p>
-
-</div>
-
-</div>
+  </div>
 
 
-<div class="authBoxWrap">
+  <div class="authBoxWrap">
 
-<div class="authBox">
+    <div class="authBox">
 
-<div class="logo">
+      <div class="logo">
+        <div class="logoIcon">P</div>
+        PHILMYSCHOOL
+      </div>
 
-<div class="logoIcon">P</div>
+      <h2>Sign in</h2>
 
-PHILMYSCHOOL
-
-</div>
-
-<h2>Sign in</h2>
-
-<p class="muted">
-Enter your account details.
-</p>
+      <p class="muted">
+        Enter your account details.
+      </p>
 
 
-<form onsubmit="login(event)">
+      <form onsubmit="login(event)">
 
-<div class="formGroup">
+        <div class="formGroup">
 
-<label>Email</label>
+          <label>Email</label>
 
-<input
-id="loginEmail"
-type="email"
-autocomplete="email"
-required
->
+          <input
+            id="loginEmail"
+            type="email"
+            autocomplete="email"
+            required>
 
-</div>
-
-
-<div class="formGroup">
-
-<label>Password</label>
-
-<input
-id="loginPassword"
-type="password"
-autocomplete="current-password"
-required
->
-
-</div>
+        </div>
 
 
-<div id="authMessage"
-class="authMessage">
-</div>
+        <div class="formGroup">
+
+          <label>Password</label>
+
+          <input
+            id="loginPassword"
+            type="password"
+            autocomplete="current-password"
+            required>
+
+        </div>
 
 
-<button
-class="btn primary"
-style="width:100%;margin-top:18px">
-
-Sign In
-
-</button>
-
-</form>
+        <div
+          id="authMessage"
+          class="authMessage">
+        </div>
 
 
-<div class="authSwitch">
+        <button
+          class="btn primary"
+          style="width:100%;margin-top:18px">
 
-Don't have an account?
+          Sign In
 
-<button
-class="linkButton"
-onclick="renderRegister('student')">
+        </button>
 
-Create account
-
-</button>
-
-</div>
+      </form>
 
 
-<div style="
-text-align:center;
-margin-top:12px;
-">
+      <div class="authSwitch">
 
-<button
-class="linkButton"
-onclick="renderLanding()">
+        Don't have an account?
 
-← Back to PHILMYSCHOOL
+        <button
+          class="linkButton"
+          onclick="renderRegister('student')">
 
-</button>
+          Create account
 
-</div>
+        </button>
 
-</div>
+      </div>
 
-</div>
+
+      <div style="
+        text-align:center;
+        margin-top:12px;
+      ">
+
+        <button
+          class="linkButton"
+          onclick="renderLanding()">
+
+          ← Back to PHILMYSCHOOL
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 `;
@@ -1144,175 +1173,185 @@ onclick="renderLanding()">
 
 function renderRegister(type="student"){
 
-selectedRole=type;
+  selectedRole=type;
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="authPage">
 
-<div class="authBrand">
+  <div class="authBrand">
 
-<div class="logo">
+    <div class="logo">
 
-<div class="logoIcon">P</div>
+      <div class="logoIcon">P</div>
+      PHILMYSCHOOL
 
-PHILMYSCHOOL
+    </div>
 
-</div>
+    <div>
 
-<div>
+      <h1>
+        Start your<br>
+        journey.
+      </h1>
 
-<h1>
-Start your<br>
-journey.
-</h1>
+      <p>
+        Learn, practice, teach and grow
+        with PHILMYSCHOOL.
+      </p>
 
-<p>
-Learn, practice, teach and grow
-with PHILMYSCHOOL.
-</p>
+    </div>
 
-</div>
+  </div>
 
-</div>
 
+  <div class="authBoxWrap">
 
-<div class="authBoxWrap">
+    <div class="authBox">
 
-<div class="authBox">
+      <div class="logo">
 
-<div class="logo">
+        <div class="logoIcon">P</div>
+        PHILMYSCHOOL
 
-<div class="logoIcon">P</div>
+      </div>
 
-PHILMYSCHOOL
+      <h2>Create account</h2>
 
-</div>
+      <p class="muted">
+        Choose how you want to use PHILMYSCHOOL.
+      </p>
 
-<h2>Create account</h2>
 
-<p class="muted">
-Choose how you want to use PHILMYSCHOOL.
-</p>
+      <div class="roleGrid">
 
+        <button
+          id="studentRole"
+          type="button"
+          class="roleChoice ${type==="student"?"active":""}"
+          onclick="chooseRole('student')">
 
-<div class="roleGrid">
+          🎓 Student
 
-<button
-id="studentRole"
-type="button"
-class="roleChoice ${type==="student"?"active":""}"
-onclick="chooseRole('student')">
+        </button>
 
-🎓 Student
 
-</button>
+        <button
+          id="tutorRole"
+          type="button"
+          class="roleChoice ${type==="tutor"?"active":""}"
+          onclick="chooseRole('tutor')">
 
+          👨‍🏫 Tutor
 
-<button
-id="tutorRole"
-type="button"
-class="roleChoice ${type==="tutor"?"active":""}"
-onclick="chooseRole('tutor')">
+        </button>
 
-👨‍🏫 Tutor
+      </div>
 
-</button>
 
-</div>
+      <form onsubmit="register(event)">
 
+        <div class="formGroup">
 
-<form onsubmit="register(event)">
+          <label>First name</label>
 
-<div class="formGroup">
+          <input
+            id="firstName"
+            autocomplete="given-name"
+            required>
 
-<label>First name</label>
+        </div>
 
-<input
-id="firstName"
-autocomplete="given-name"
-required
->
 
-</div>
+        <div class="formGroup">
 
+          <label>Last name</label>
 
-<div class="formGroup">
+          <input
+            id="lastName"
+            autocomplete="family-name"
+            required>
 
-<label>Last name</label>
+        </div>
 
-<input
-id="lastName"
-autocomplete="family-name"
-required
->
 
-</div>
+        <div class="formGroup">
 
+          <label>Email</label>
 
-<div class="formGroup">
+          <input
+            id="registerEmail"
+            type="email"
+            autocomplete="email"
+            required>
 
-<label>Email</label>
+        </div>
 
-<input
-id="registerEmail"
-type="email"
-autocomplete="email"
-required
->
 
-</div>
+        <div class="formGroup">
 
+          <label>Password</label>
 
-<div class="formGroup">
+          <input
+            id="registerPassword"
+            type="password"
+            minlength="6"
+            autocomplete="new-password"
+            required>
 
-<label>Password</label>
+        </div>
 
-<input
-id="registerPassword"
-type="password"
-minlength="6"
-autocomplete="new-password"
-required
->
 
-</div>
+        <div
+          id="authMessage"
+          class="authMessage">
+        </div>
 
 
-<div
-id="authMessage"
-class="authMessage">
-</div>
+        <button
+          class="btn primary"
+          style="width:100%;margin-top:18px">
 
+          Create Account
 
-<button
-class="btn primary"
-style="width:100%;margin-top:18px">
+        </button>
 
-Create Account
+      </form>
 
-</button>
 
-</form>
+      <div class="authSwitch">
 
+        Already have an account?
 
-<div class="authSwitch">
+        <button
+          class="linkButton"
+          onclick="renderLogin()">
 
-Already have an account?
+          Sign in
 
-<button
-class="linkButton"
-onclick="renderLogin()">
+        </button>
 
-Sign in
+      </div>
 
-</button>
 
-</div>
+      <div style="
+        text-align:center;
+        margin-top:12px;
+      ">
 
-</div>
+        <button
+          class="linkButton"
+          onclick="renderLanding()">
 
-</div>
+          ← Back
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 `;
@@ -1321,161 +1360,103 @@ Sign in
 
 function chooseRole(type){
 
-selectedRole=type;
+  selectedRole=type;
 
-document
-.getElementById("studentRole")
-.classList
-.toggle("active",type==="student");
+  const student =
+    document.getElementById("studentRole");
 
-document
-.getElementById("tutorRole")
-.classList
-.toggle("active",type==="tutor");
+  const tutor =
+    document.getElementById("tutorRole");
+
+  if(student){
+    student.classList.toggle(
+      "active",
+      type==="student"
+    );
+  }
+
+  if(tutor){
+    tutor.classList.toggle(
+      "active",
+      type==="tutor"
+    );
+  }
 }
 
 
 /* =========================================================
    REGISTER
+   Profile + role are created by DB trigger
 ========================================================= */
 
 async function register(event){
 
-event.preventDefault();
+  event.preventDefault();
 
-clearAuthMessage();
+  clearAuthMessage();
 
-const firstName=
-document.getElementById("firstName").value.trim();
+  const firstName =
+    document.getElementById("firstName")
+    .value
+    .trim();
 
-const lastName=
-document.getElementById("lastName").value.trim();
+  const lastName =
+    document.getElementById("lastName")
+    .value
+    .trim();
 
-const email=
-document.getElementById("registerEmail").value.trim();
+  const email =
+    document.getElementById("registerEmail")
+    .value
+    .trim();
 
-const password=
-document.getElementById("registerPassword").value;
+  const password =
+    document.getElementById("registerPassword")
+    .value;
 
-showAuthMessage("Creating your account...");
-
-const result=
-await db.auth.signUp({
-
-email,
-password,
-
-options:{
-data:{
-first_name:firstName,
-last_name:lastName,
-requested_role:selectedRole
-}
-}
-
-});
-
-if(result.error){
-
-showAuthMessage(result.error.message);
-return;
-
-}
-
-if(!result.data.session){
-
-showAuthMessage(
-"Account created. Check your email to confirm your account, then sign in."
-);
-
-return;
-
-}
-
-await ensureProfileAndRole(
-result.data.user,
-firstName,
-lastName,
-selectedRole
-);
-
-await loadCurrentUser();
-
-}
+  showAuthMessage(
+    "Creating your account..."
+  );
 
 
-/* =========================================================
-   PROFILE + ROLE
-========================================================= */
+  const result =
+    await db.auth.signUp({
 
-async function ensureProfileAndRole(
-authUser,
-firstName,
-lastName,
-requestedRole
-){
+      email,
+      password,
 
-const profilePayload={
+      options:{
+        data:{
+          first_name:firstName,
+          last_name:lastName,
+          requested_role:selectedRole
+        }
+      }
 
-id:authUser.id,
-email:authUser.email,
-first_name:firstName,
-last_name:lastName,
-display_name:`${firstName} ${lastName}`.trim(),
-account_status:"active",
-onboarding_completed:false
+    });
 
-};
 
-const profileResult=
-await db
-.from("profiles")
-.upsert(
-profilePayload,
-{onConflict:"id"}
-);
+  if(result.error){
 
-if(profileResult.error){
+    showAuthMessage(
+      result.error.message
+    );
 
-console.warn(
-"Profile creation:",
-profileResult.error.message
-);
+    return;
+  }
 
-}
 
-const roleResult=
-await db
-.from("user_roles")
-.select("id,role,is_active")
-.eq("user_id",authUser.id)
-.eq("is_active",true)
-.limit(1)
-.maybeSingle();
+  if(!result.data.session){
 
-if(!roleResult.data){
+    showAuthMessage(
+      "Account created successfully. Please check your email, confirm your account, then sign in."
+    );
 
-const insertRole=
-await db
-.from("user_roles")
-.insert({
+    return;
+  }
 
-user_id:authUser.id,
-role:requestedRole,
-is_active:true
 
-});
-
-if(insertRole.error){
-
-console.warn(
-"Role creation:",
-insertRole.error.message
-);
-
-}
-
-}
+  await loadCurrentUser();
 
 }
 
@@ -1486,32 +1467,42 @@ insertRole.error.message
 
 async function login(event){
 
-event.preventDefault();
+  event.preventDefault();
 
-clearAuthMessage();
+  clearAuthMessage();
 
-const email=
-document.getElementById("loginEmail").value.trim();
+  const email =
+    document.getElementById("loginEmail")
+    .value
+    .trim();
 
-const password=
-document.getElementById("loginPassword").value;
+  const password =
+    document.getElementById("loginPassword")
+    .value;
 
-showAuthMessage("Signing you in...");
+  showAuthMessage(
+    "Signing you in..."
+  );
 
-const result=
-await db.auth.signInWithPassword({
-email,
-password
-});
 
-if(result.error){
+  const result =
+    await db.auth.signInWithPassword({
+      email,
+      password
+    });
 
-showAuthMessage(result.error.message);
-return;
 
-}
+  if(result.error){
 
-await loadCurrentUser();
+    showAuthMessage(
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  await loadCurrentUser();
 
 }
 
@@ -1522,67 +1513,102 @@ await loadCurrentUser();
 
 async function loadCurrentUser(){
 
-const auth=
-await db.auth.getUser();
+  const auth =
+    await db.auth.getUser();
 
-if(auth.error || !auth.data.user){
 
-renderLanding();
-return;
+  if(auth.error || !auth.data.user){
 
-}
+    renderLanding();
+    return;
 
-user=auth.data.user;
+  }
 
-const profileResult=
-await db
-.from("profiles")
-.select("*")
-.eq("id",user.id)
-.maybeSingle();
 
-profile=
-profileResult.data||{
-id:user.id,
-email:user.email,
-display_name:user.email
-};
+  user =
+    auth.data.user;
 
-const roleResult=
-await db
-.from("user_roles")
-.select("role")
-.eq("user_id",user.id)
-.eq("is_active",true)
-.order("created_at",{ascending:true})
-.limit(1)
-.maybeSingle();
 
-role=
-roleResult.data?.role||"student";
+  const profileResult =
+    await db
+      .from("profiles")
+      .select("*")
+      .eq("id",user.id)
+      .maybeSingle();
 
-openPortal();
+
+  if(profileResult.error){
+
+    console.error(
+      "Profile error:",
+      profileResult.error
+    );
+
+  }
+
+
+  profile =
+    profileResult.data || {
+
+      id:user.id,
+      email:user.email,
+      display_name:user.email
+
+    };
+
+
+  const roleResult =
+    await db
+      .from("user_roles")
+      .select("role,is_active")
+      .eq("user_id",user.id)
+      .eq("is_active",true)
+      .limit(1)
+      .maybeSingle();
+
+
+  if(roleResult.error){
+
+    console.error(
+      "Role error:",
+      roleResult.error
+    );
+
+  }
+
+
+  role =
+    roleResult.data?.role || "student";
+
+
+  openPortal();
 
 }
 
 
 /* =========================================================
-   OPEN PORTAL
+   PORTAL ROUTER
 ========================================================= */
 
 function openPortal(){
 
-if(role==="admin"){
-renderAdmin();
-return;
-}
+  if(role==="admin"){
 
-if(role==="tutor"){
-renderTutor();
-return;
-}
+    renderAdmin();
+    return;
 
-renderStudent();
+  }
+
+
+  if(role==="tutor"){
+
+    renderTutor();
+    return;
+
+  }
+
+
+  renderStudent();
 
 }
 
@@ -1593,42 +1619,45 @@ renderStudent();
 
 function sidebar(items){
 
-return `
+  let portalName="STUDENT PORTAL";
+
+  if(role==="admin"){
+    portalName="ADMIN PORTAL";
+  }
+
+  if(role==="tutor"){
+    portalName="TUTOR PORTAL";
+  }
+
+
+  return `
 
 <aside class="sidebar">
 
-<div class="sidebarLogo">
+  <div class="sidebarLogo">
 
-<div class="sidebarLogoIcon">P</div>
+    <div class="sidebarLogoIcon">P</div>
 
-PHILMYSCHOOL
+    PHILMYSCHOOL
 
-</div>
-
-
-<div class="sideLabel">
-
-${escapeHTML(
-role==="admin"
-?"ADMIN PORTAL"
-:role==="tutor"
-?"TUTOR PORTAL"
-:"STUDENT PORTAL"
-)}
-
-</div>
+  </div>
 
 
-${items}
+  <div class="sideLabel">
+    ${portalName}
+  </div>
 
 
-<button
-class="sideButton logoutButton"
-onclick="logout()">
+  ${items}
 
-🚪 Sign Out
 
-</button>
+  <button
+    class="sideButton logoutButton"
+    onclick="logout()">
+
+    🚪 Sign Out
+
+  </button>
 
 </aside>
 
@@ -1642,23 +1671,23 @@ onclick="logout()">
 
 function portalHeader(title){
 
-return `
+  return `
 
 <header class="topbar">
 
-<strong>
-${escapeHTML(title)}
-</strong>
+  <strong>
+    ${escapeHTML(title)}
+  </strong>
 
-<div class="topUser">
+  <div class="topUser">
 
-${escapeHTML(
-profile?.display_name||
-user?.email||
-""
-)}
+    ${escapeHTML(
+      profile?.display_name ||
+      user?.email ||
+      ""
+    )}
 
-</div>
+  </div>
 
 </header>
 
@@ -1672,207 +1701,210 @@ user?.email||
 
 function renderStudent(){
 
-const nav=sidebar(`
+  const nav =
+    sidebar(`
 
 <button
-class="sideButton active"
-onclick="renderStudent()">
-📊 Dashboard
+  class="sideButton active"
+  onclick="renderStudent()">
+  📊 Dashboard
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Mock Exams')">
-📝 Mock Exams
+  class="sideButton"
+  onclick="featurePage('Mock Exams')">
+  📝 Mock Exams
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Practice Questions')">
-❓ Practice Questions
+  class="sideButton"
+  onclick="featurePage('Practice Questions')">
+  ❓ Practice Questions
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Study Materials')">
-📚 Study Materials
+  class="sideButton"
+  onclick="featurePage('Study Materials')">
+  📚 Study Materials
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Study Plans')">
-📅 Study Plan
+  class="sideButton"
+  onclick="featurePage('Study Plans')">
+  📅 Study Plan
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Find a Tutor')">
-👨‍🏫 Find a Tutor
+  class="sideButton"
+  onclick="featurePage('Find a Tutor')">
+  👨‍🏫 Find a Tutor
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Scholarships')">
-🎓 Scholarships
+  class="sideButton"
+  onclick="featurePage('Scholarships')">
+  🎓 Scholarships
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('My Progress')">
-📈 My Progress
+  class="sideButton"
+  onclick="featurePage('My Progress')">
+  📈 My Progress
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Subscription')">
-💳 Subscription
+  class="sideButton"
+  onclick="featurePage('Subscription')">
+  💳 Subscription
 </button>
 
 `);
 
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="portal">
 
-${nav}
+  ${nav}
 
-<div class="main">
+  <div class="main">
 
-${portalHeader("Student Dashboard")}
+    ${portalHeader("Student Dashboard")}
 
-<main class="content">
+    <main class="content">
 
-<h1>
-Welcome,
-${escapeHTML(profile?.first_name||"Student")} 👋
-</h1>
+      <h1>
+        Welcome,
+        ${escapeHTML(
+          profile?.first_name ||
+          "Student"
+        )} 👋
+      </h1>
 
-<p class="muted">
-Your PHILMYSCHOOL learning dashboard.
-</p>
-
-
-<div class="stats">
-
-<div class="stat">
-<small>Questions Practiced</small>
-<strong>0</strong>
-</div>
-
-<div class="stat">
-<small>Mock Exams</small>
-<strong>0</strong>
-</div>
-
-<div class="stat">
-<small>Accuracy</small>
-<strong>—</strong>
-</div>
-
-<div class="stat">
-<small>Study Time</small>
-<strong>0m</strong>
-</div>
-
-</div>
+      <p class="muted">
+        Your PHILMYSCHOOL learning dashboard.
+      </p>
 
 
-<div class="panelGrid">
+      <div class="stats">
 
-<div class="panel">
+        <div class="stat">
+          <small>Questions Practiced</small>
+          <strong>0</strong>
+        </div>
 
-<h2>📝 Mock Exams</h2>
+        <div class="stat">
+          <small>Mock Exams</small>
+          <strong>0</strong>
+        </div>
 
-<p>
-Take timed practice examinations
-and receive your results.
-</p>
+        <div class="stat">
+          <small>Accuracy</small>
+          <strong>—</strong>
+        </div>
 
-<button
-class="btn primary"
-style="margin-top:20px"
-onclick="featurePage('Mock Exams')">
+        <div class="stat">
+          <small>Study Time</small>
+          <strong>0m</strong>
+        </div>
 
-Open Mock Exams
-
-</button>
-
-</div>
-
-
-<div class="panel">
-
-<h2>📚 Study Materials</h2>
-
-<p>
-Access organized learning resources
-for your subjects.
-</p>
-
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Study Materials')">
-
-Browse Materials
-
-</button>
-
-</div>
+      </div>
 
 
-<div class="panel">
+      <div class="panelGrid">
 
-<h2>👨‍🏫 Find a Tutor</h2>
+        <div class="panel">
 
-<p>
-Discover tutors and book
-lessons that suit you.
-</p>
+          <h2>📝 Mock Exams</h2>
 
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Find a Tutor')">
+          <p>
+            Take timed practice examinations
+            and receive your results.
+          </p>
 
-Find Tutors
+          <button
+            class="btn primary"
+            style="margin-top:20px"
+            onclick="featurePage('Mock Exams')">
 
-</button>
+            Open Mock Exams
 
-</div>
+          </button>
+
+        </div>
 
 
-<div class="panel">
+        <div class="panel">
 
-<h2>🎓 Opportunities</h2>
+          <h2>📚 Study Materials</h2>
 
-<p>
-Explore scholarships and
-educational opportunities.
-</p>
+          <p>
+            Access organized learning resources
+            for your subjects.
+          </p>
 
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Scholarships')">
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Study Materials')">
 
-Explore
+            Browse Materials
 
-</button>
+          </button>
 
-</div>
+        </div>
 
-</div>
 
-</main>
+        <div class="panel">
 
-</div>
+          <h2>👨‍🏫 Find a Tutor</h2>
+
+          <p>
+            Discover tutors and book
+            lessons that suit you.
+          </p>
+
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Find a Tutor')">
+
+            Find Tutors
+
+          </button>
+
+        </div>
+
+
+        <div class="panel">
+
+          <h2>🎓 Opportunities</h2>
+
+          <p>
+            Explore scholarships and
+            educational opportunities.
+          </p>
+
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Scholarships')">
+
+            Explore
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
 
 `;
-
 }
 
 
@@ -1882,480 +1914,507 @@ Explore
 
 function renderTutor(){
 
-const nav=sidebar(`
+  const nav =
+    sidebar(`
 
 <button
-class="sideButton active"
-onclick="renderTutor()">
-📊 Dashboard
+  class="sideButton active"
+  onclick="renderTutor()">
+  📊 Dashboard
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('My Tutor Services')">
-📚 My Services
+  class="sideButton"
+  onclick="featurePage('My Tutor Services')">
+  📚 My Services
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Tutor Bookings')">
-📅 Bookings
+  class="sideButton"
+  onclick="featurePage('Tutor Bookings')">
+  📅 Bookings
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('My Students')">
-👨‍🎓 My Students
+  class="sideButton"
+  onclick="featurePage('My Students')">
+  👨‍🎓 My Students
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Tutor Availability')">
-🗓 Availability
+  class="sideButton"
+  onclick="featurePage('Tutor Availability')">
+  🗓 Availability
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Tutor Messages')">
-💬 Messages
+  class="sideButton"
+  onclick="featurePage('Tutor Messages')">
+  💬 Messages
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Tutor Materials')">
-📎 Materials
+  class="sideButton"
+  onclick="featurePage('Tutor Materials')">
+  📎 Materials
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Tutor Earnings')">
-💰 Earnings
+  class="sideButton"
+  onclick="featurePage('Tutor Earnings')">
+  💰 Earnings
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Withdrawals')">
-🏦 Withdrawals
+  class="sideButton"
+  onclick="featurePage('Withdrawals')">
+  🏦 Withdrawals
 </button>
 
 `);
 
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="portal">
 
-${nav}
+  ${nav}
 
-<div class="main">
+  <div class="main">
 
-${portalHeader("Tutor Dashboard")}
+    ${portalHeader("Tutor Dashboard")}
 
-<main class="content">
+    <main class="content">
 
-<h1>
-Tutor Dashboard 👨‍🏫
-</h1>
+      <h1>
+        Tutor Dashboard 👨‍🏫
+      </h1>
 
-<p class="muted">
-Manage your tutoring business,
-students and earnings.
-</p>
-
-
-<div class="stats">
-
-<div class="stat">
-<small>Students</small>
-<strong>0</strong>
-</div>
-
-<div class="stat">
-<small>Bookings</small>
-<strong>0</strong>
-</div>
-
-<div class="stat">
-<small>Earnings</small>
-<strong>₦0</strong>
-</div>
-
-<div class="stat">
-<small>Rating</small>
-<strong>—</strong>
-</div>
-
-</div>
+      <p class="muted">
+        Manage your tutoring business,
+        students and earnings.
+      </p>
 
 
-<div class="panelGrid">
+      <div class="stats">
 
-<div class="panel">
+        <div class="stat">
+          <small>Students</small>
+          <strong>0</strong>
+        </div>
 
-<h2>📚 My Services</h2>
+        <div class="stat">
+          <small>Bookings</small>
+          <strong>0</strong>
+        </div>
 
-<p>
-Create and manage tutoring
-services students can book.
-</p>
+        <div class="stat">
+          <small>Earnings</small>
+          <strong>₦0</strong>
+        </div>
 
-<button
-class="btn primary"
-style="margin-top:20px"
-onclick="featurePage('My Tutor Services')">
+        <div class="stat">
+          <small>Rating</small>
+          <strong>—</strong>
+        </div>
 
-Manage Services
-
-</button>
-
-</div>
-
-
-<div class="panel">
-
-<h2>📅 Bookings</h2>
-
-<p>
-View upcoming lessons and
-student bookings.
-</p>
-
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Tutor Bookings')">
-
-View Bookings
-
-</button>
-
-</div>
+      </div>
 
 
-<div class="panel">
+      <div class="panelGrid">
 
-<h2>💬 Messages</h2>
+        <div class="panel">
 
-<p>
-Communicate with students.
-</p>
+          <h2>📚 My Services</h2>
 
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Tutor Messages')">
+          <p>
+            Create and manage tutoring
+            services students can book.
+          </p>
 
-Open Messages
+          <button
+            class="btn primary"
+            style="margin-top:20px"
+            onclick="featurePage('My Tutor Services')">
 
-</button>
+            Manage Services
 
-</div>
+          </button>
+
+        </div>
 
 
-<div class="panel">
+        <div class="panel">
 
-<h2>💰 Earnings</h2>
+          <h2>📅 Bookings</h2>
 
-<p>
-Track tutoring income and
-withdrawal requests.
-</p>
+          <p>
+            View upcoming lessons and
+            student bookings.
+          </p>
 
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Tutor Earnings')">
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Tutor Bookings')">
 
-View Earnings
+            View Bookings
 
-</button>
+          </button>
 
-</div>
+        </div>
 
-</div>
 
-</main>
+        <div class="panel">
 
-</div>
+          <h2>💬 Messages</h2>
+
+          <p>
+            Communicate with students.
+          </p>
+
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Tutor Messages')">
+
+            Open Messages
+
+          </button>
+
+        </div>
+
+
+        <div class="panel">
+
+          <h2>💰 Earnings</h2>
+
+          <p>
+            Track tutoring income and
+            withdrawal requests.
+          </p>
+
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Tutor Earnings')">
+
+            View Earnings
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
 
 `;
-
 }
 
 
 /* =========================================================
-   ADMIN DASHBOARD
+   ADMIN
 ========================================================= */
 
 function renderAdmin(){
 
-const nav=sidebar(`
+  const nav =
+    sidebar(`
 
 <button
-class="sideButton active"
-onclick="renderAdmin()">
-📊 Dashboard
+  class="sideButton active"
+  onclick="renderAdmin()">
+  📊 Dashboard
 </button>
 
 <button
-class="sideButton"
-onclick="renderStudentManagement()">
-👨‍🎓 Students
+  class="sideButton"
+  onclick="renderStudentManagement()">
+  👨‍🎓 Students
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Tutor Management')">
-👨‍🏫 Tutors
+  class="sideButton"
+  onclick="featurePage('Tutor Management')">
+  👨‍🏫 Tutors
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Exam Management')">
-📝 Exams
+  class="sideButton"
+  onclick="featurePage('Exam Management')">
+  📝 Exams
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Question Bank')">
-❓ Question Bank
+  class="sideButton"
+  onclick="featurePage('Question Bank')">
+  ❓ Question Bank
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Study Materials')">
-📚 Materials
+  class="sideButton"
+  onclick="featurePage('Study Materials')">
+  📚 Materials
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Scholarship Management')">
-🎓 Scholarships
+  class="sideButton"
+  onclick="featurePage('Scholarship Management')">
+  🎓 Scholarships
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Subscriptions')">
-💳 Subscriptions
+  class="sideButton"
+  onclick="featurePage('Subscriptions')">
+  💳 Subscriptions
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Transactions')">
-💰 Transactions
+  class="sideButton"
+  onclick="featurePage('Transactions')">
+  💰 Transactions
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Withdrawals')">
-🏦 Withdrawals
+  class="sideButton"
+  onclick="featurePage('Withdrawals')">
+  🏦 Withdrawals
 </button>
 
 <button
-class="sideButton"
-onclick="featurePage('Reports')">
-📊 Reports
+  class="sideButton"
+  onclick="featurePage('Reports')">
+  📊 Reports
 </button>
 
 `);
 
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="portal">
 
-${nav}
+  ${nav}
 
-<div class="main">
+  <div class="main">
 
-${portalHeader("Admin Dashboard")}
+    ${portalHeader("Admin Dashboard")}
 
-<main class="content">
+    <main class="content">
 
-<h1>
-PHILMYSCHOOL Admin 🛡️
-</h1>
+      <h1>
+        PHILMYSCHOOL Admin 🛡️
+      </h1>
 
-<p class="muted">
-Manage the entire PHILMYSCHOOL ecosystem.
-</p>
-
-
-<div class="status">
-✓ Supabase connection configured.
-</div>
+      <p class="muted">
+        Manage the entire PHILMYSCHOOL ecosystem.
+      </p>
 
 
-<div class="stats">
-
-<div class="stat">
-<small>Students</small>
-<strong id="adminStudentCount">—</strong>
-</div>
-
-<div class="stat">
-<small>Tutors</small>
-<strong>—</strong>
-</div>
-
-<div class="stat">
-<small>Revenue</small>
-<strong>₦0</strong>
-</div>
-
-<div class="stat">
-<small>Exams</small>
-<strong>—</strong>
-</div>
-
-</div>
+      <div class="status">
+        ✓ Supabase connection configured.
+      </div>
 
 
-<div class="panelGrid">
+      <div class="stats">
 
-<div class="panel">
+        <div class="stat">
+          <small>Students</small>
+          <strong id="adminStudentCount">—</strong>
+        </div>
 
-<h2>👨‍🎓 Student Management</h2>
+        <div class="stat">
+          <small>Tutors</small>
+          <strong id="adminTutorCount">—</strong>
+        </div>
 
-<p>
-Manage student accounts,
-profiles and account status.
-</p>
+        <div class="stat">
+          <small>Revenue</small>
+          <strong>₦0</strong>
+        </div>
 
-<button
-class="btn primary"
-style="margin-top:20px"
-onclick="renderStudentManagement()">
+        <div class="stat">
+          <small>Exams</small>
+          <strong>—</strong>
+        </div>
 
-Open Students
-
-</button>
-
-</div>
-
-
-<div class="panel">
-
-<h2>👨‍🏫 Tutor Management</h2>
-
-<p>
-Review tutor applications,
-profiles and verification.
-</p>
-
-<button
-class="btn primary"
-style="margin-top:20px"
-onclick="featurePage('Tutor Management')">
-
-Manage Tutors
-
-</button>
-
-</div>
+      </div>
 
 
-<div class="panel">
+      <div class="panelGrid">
 
-<h2>📝 Exam Management</h2>
+        <div class="panel">
 
-<p>
-Manage exams, questions,
-subjects and results.
-</p>
+          <h2>👨‍🎓 Student Management</h2>
 
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Exam Management')">
+          <p>
+            Manage student accounts,
+            profiles and account status.
+          </p>
 
-Manage Exams
+          <button
+            class="btn primary"
+            style="margin-top:20px"
+            onclick="renderStudentManagement()">
 
-</button>
+            Open Students
 
-</div>
+          </button>
+
+        </div>
 
 
-<div class="panel">
+        <div class="panel">
 
-<h2>💳 Financial Management</h2>
+          <h2>👨‍🏫 Tutor Management</h2>
 
-<p>
-Monitor subscriptions,
-transactions and withdrawals.
-</p>
+          <p>
+            Review tutor accounts,
+            profiles and verification.
+          </p>
 
-<button
-class="btn secondary"
-style="margin-top:20px"
-onclick="featurePage('Transactions')">
+          <button
+            class="btn primary"
+            style="margin-top:20px"
+            onclick="renderTutorManagement()">
 
-Open Finance
+            Manage Tutors
 
-</button>
+          </button>
 
-</div>
+        </div>
 
-</div>
 
-</main>
+        <div class="panel">
 
-</div>
+          <h2>📝 Exam Management</h2>
+
+          <p>
+            Manage exams, questions,
+            subjects and results.
+          </p>
+
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Exam Management')">
+
+            Manage Exams
+
+          </button>
+
+        </div>
+
+
+        <div class="panel">
+
+          <h2>💳 Financial Management</h2>
+
+          <p>
+            Monitor subscriptions,
+            transactions and withdrawals.
+          </p>
+
+          <button
+            class="btn secondary"
+            style="margin-top:20px"
+            onclick="featurePage('Transactions')">
+
+            Open Finance
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
 
 `;
 
-
-/* Load count without blocking dashboard */
-
-loadStudentCount();
+  loadStudentCount();
+  loadTutorCount();
 
 }
 
 
 /* =========================================================
-   STUDENT COUNT
+   COUNTS
 ========================================================= */
 
 async function loadStudentCount(){
 
-const el=document.getElementById("adminStudentCount");
+  const el =
+    document.getElementById(
+      "adminStudentCount"
+    );
 
-if(!el)return;
+  if(!el)return;
 
-try{
+  const result =
+    await db
+      .from("user_roles")
+      .select("id",{
+        count:"exact",
+        head:true
+      })
+      .eq("role","student")
+      .eq("is_active",true);
 
-const result=
-await db
-.from("user_roles")
-.select("id",{count:"exact",head:true})
-.eq("role","student")
-.eq("is_active",true);
 
-if(result.error){
+  if(result.error){
 
-console.warn(
-"Student count:",
-result.error.message
-);
+    console.error(result.error);
+    el.textContent="—";
+    return;
 
-el.textContent="—";
-return;
+  }
 
-}
-
-el.textContent=result.count??0;
-
-}catch(error){
-
-console.warn(error);
-
-el.textContent="—";
+  el.textContent =
+    result.count ?? 0;
 
 }
+
+
+async function loadTutorCount(){
+
+  const el =
+    document.getElementById(
+      "adminTutorCount"
+    );
+
+  if(!el)return;
+
+  const result =
+    await db
+      .from("user_roles")
+      .select("id",{
+        count:"exact",
+        head:true
+      })
+      .eq("role","tutor")
+      .eq("is_active",true);
+
+
+  if(result.error){
+
+    console.error(result.error);
+    el.textContent="—";
+    return;
+
+  }
+
+  el.textContent =
+    result.count ?? 0;
 
 }
 
@@ -2366,133 +2425,134 @@ el.textContent="—";
 
 async function renderStudentManagement(){
 
-const nav=sidebar(`
+  const nav =
+    sidebar(`
 
 <button
-class="sideButton"
-onclick="renderAdmin()">
+  class="sideButton"
+  onclick="renderAdmin()">
 
-← Dashboard
+  ← Dashboard
 
 </button>
 
 <button
-class="sideButton active"
-onclick="renderStudentManagement()">
+  class="sideButton active"
+  onclick="renderStudentManagement()">
 
-👨‍🎓 Students
+  👨‍🎓 Students
 
 </button>
 
 `);
 
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="portal">
 
-${nav}
+  ${nav}
 
-<div class="main">
+  <div class="main">
 
-${portalHeader("Student Management")}
+    ${portalHeader("Student Management")}
 
-<main class="content">
+    <main class="content">
 
-<h1>
-Student Management 👨‍🎓
-</h1>
+      <h1>
+        Student Management 👨‍🎓
+      </h1>
 
-<p class="muted">
-View and manage registered PHILMYSCHOOL students.
-</p>
-
-
-<div class="stats">
-
-<div class="stat">
-<small>Total Students</small>
-<strong id="totalStudents">0</strong>
-</div>
-
-<div class="stat">
-<small>Active Students</small>
-<strong id="activeStudents">0</strong>
-</div>
-
-<div class="stat">
-<small>Inactive Students</small>
-<strong id="inactiveStudents">0</strong>
-</div>
-
-<div class="stat">
-<small>Showing</small>
-<strong id="showingStudents">0</strong>
-</div>
-
-</div>
+      <p class="muted">
+        View registered PHILMYSCHOOL students.
+      </p>
 
 
-<div class="managementHeader">
+      <div class="stats">
 
-<div>
+        <div class="stat">
+          <small>Total Students</small>
+          <strong id="totalStudents">0</strong>
+        </div>
 
-<h2>
-Registered Students
-</h2>
+        <div class="stat">
+          <small>Active Students</small>
+          <strong id="activeStudents">0</strong>
+        </div>
 
-<p class="muted">
-Search and view student accounts.
-</p>
+        <div class="stat">
+          <small>Inactive Students</small>
+          <strong id="inactiveStudents">0</strong>
+        </div>
 
-</div>
+        <div class="stat">
+          <small>Showing</small>
+          <strong id="showingStudents">0</strong>
+        </div>
 
-
-<div style="
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-">
-
-<input
-id="studentSearch"
-class="searchBox"
-placeholder="Search name or email..."
-oninput="filterStudents()"
->
-
-<button
-class="btn secondary"
-onclick="loadStudents()">
-
-↻ Refresh
-
-</button>
-
-</div>
-
-</div>
+      </div>
 
 
-<div
-id="studentManagementArea"
-class="studentTableWrap">
+      <div class="managementHeader">
 
-<div class="loading">
-Loading students...
-</div>
+        <div>
 
-</div>
+          <h2>
+            Registered Students
+          </h2>
 
-</main>
+          <p class="muted">
+            Search student accounts.
+          </p>
 
-</div>
+        </div>
+
+
+        <div style="
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+        ">
+
+          <input
+            id="studentSearch"
+            class="searchBox"
+            placeholder="Search name, email or phone..."
+            oninput="filterStudents()">
+
+
+          <button
+            class="btn secondary"
+            onclick="loadStudents()">
+
+            ↻ Refresh
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="studentManagementArea"
+        class="studentTableWrap">
+
+        <div class="loading">
+          Loading students...
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
 
 `;
 
-await loadStudents();
+  await loadStudents();
 
 }
 
@@ -2503,179 +2563,182 @@ await loadStudents();
 
 async function loadStudents(){
 
-const area=
-document.getElementById("studentManagementArea");
+  const area =
+    document.getElementById(
+      "studentManagementArea"
+    );
 
-if(!area)return;
+  if(!area)return;
 
-area.innerHTML=`
-<div class="loading">
-Loading students...
-</div>
-`;
-
-try{
-
-/*
-  We first get all active/inactive roles
-  belonging to students.
-*/
-
-const rolesResult=
-await db
-.from("user_roles")
-.select("id,user_id,role,is_active,created_at")
-.eq("role","student")
-.order("created_at",{ascending:false});
+  area.innerHTML=`
+    <div class="loading">
+      Loading students...
+    </div>
+  `;
 
 
-if(rolesResult.error){
-
-console.error(rolesResult.error);
-
-area.innerHTML=`
-<div class="errorBox">
-<strong>Unable to load students.</strong>
-<br><br>
-${escapeHTML(rolesResult.error.message)}
-</div>
-`;
-
-return;
-
-}
+  const rolesResult =
+    await db
+      .from("user_roles")
+      .select(
+        "id,user_id,role,is_active,created_at"
+      )
+      .eq("role","student")
+      .order(
+        "created_at",
+        {ascending:false}
+      );
 
 
-const roles=rolesResult.data||[];
+  if(rolesResult.error){
 
-const userIds=
-roles
-.map(x=>x.user_id)
-.filter(Boolean);
+    area.innerHTML=`
 
+      <div class="errorBox">
 
-/*
-  No students found.
-*/
+        <strong>
+          Unable to load students.
+        </strong>
 
-if(userIds.length===0){
+        <br><br>
 
-allStudents=[];
+        ${escapeHTML(
+          rolesResult.error.message
+        )}
 
-updateStudentStats();
+      </div>
 
-area.innerHTML=`
+    `;
 
-<div class="tableEmpty">
+    return;
 
-<h3>No students yet</h3>
-
-<p style="margin-top:8px">
-Registered student accounts will appear here.
-</p>
-
-</div>
-
-`;
-
-return;
-
-}
+  }
 
 
-/*
-  Load profiles.
-*/
-
-const profilesResult=
-await db
-.from("profiles")
-.select(`
-id,
-email,
-first_name,
-last_name,
-display_name,
-phone,
-avatar_url,
-date_of_birth,
-gender,
-state,
-lga,
-country,
-account_status,
-onboarding_completed,
-created_at,
-updated_at
-`)
-.in("id",userIds);
+  const roles =
+    rolesResult.data || [];
 
 
-if(profilesResult.error){
-
-console.error(profilesResult.error);
-
-area.innerHTML=`
-<div class="errorBox">
-<strong>Student profiles could not be loaded.</strong>
-<br><br>
-${escapeHTML(profilesResult.error.message)}
-</div>
-`;
-
-return;
-
-}
+  const userIds =
+    roles
+      .map(x=>x.user_id)
+      .filter(Boolean);
 
 
-const profiles=profilesResult.data||[];
+  if(userIds.length===0){
+
+    allStudents=[];
+
+    updateStudentStats();
+
+    area.innerHTML=`
+
+      <div class="tableEmpty">
+
+        <h3>
+          No students yet
+        </h3>
+
+        <p style="margin-top:8px">
+          Registered students will appear here.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
 
 
-/*
-  Combine profile + role.
-*/
-
-allStudents=roles.map(roleRow=>{
-
-const p=
-profiles.find(
-profileRow=>profileRow.id===roleRow.user_id
-)||{};
-
-return{
-
-...p,
-
-user_id:roleRow.user_id,
-
-role:roleRow.role,
-
-is_active:roleRow.is_active,
-
-role_created_at:roleRow.created_at
-
-};
-
-});
+  const profilesResult =
+    await db
+      .from("profiles")
+      .select(`
+        id,
+        email,
+        first_name,
+        last_name,
+        display_name,
+        phone,
+        avatar_url,
+        date_of_birth,
+        gender,
+        state,
+        lga,
+        country,
+        account_status,
+        onboarding_completed,
+        created_at,
+        updated_at
+      `)
+      .in("id",userIds);
 
 
-updateStudentStats();
+  if(profilesResult.error){
 
-renderStudentTable(allStudents);
+    area.innerHTML=`
 
-}catch(error){
+      <div class="errorBox">
 
-console.error(error);
+        <strong>
+          Student profiles could not be loaded.
+        </strong>
 
-area.innerHTML=`
-<div class="errorBox">
-<strong>Something went wrong.</strong>
-<br><br>
-${escapeHTML(error.message||"Unable to load students.")}
-</div>
-`;
+        <br><br>
 
-}
+        ${escapeHTML(
+          profilesResult.error.message
+        )}
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const profiles =
+    profilesResult.data || [];
+
+
+  allStudents =
+    roles.map(roleRow=>{
+
+      const p =
+        profiles.find(
+          profileRow =>
+            profileRow.id ===
+            roleRow.user_id
+        ) || {};
+
+
+      return {
+
+        ...p,
+
+        user_id:roleRow.user_id,
+
+        role:roleRow.role,
+
+        is_active:roleRow.is_active,
+
+        role_created_at:
+          roleRow.created_at
+
+      };
+
+    });
+
+
+  updateStudentStats();
+
+  renderStudentTable(
+    allStudents
+  );
 
 }
 
@@ -2686,36 +2749,50 @@ ${escapeHTML(error.message||"Unable to load students.")}
 
 function updateStudentStats(){
 
-const total=
-allStudents.length;
+  const total =
+    allStudents.length;
 
-const active=
-allStudents.filter(
-student=>student.is_active!==false
-).length;
+  const active =
+    allStudents.filter(
+      s=>s.is_active!==false
+    ).length;
 
-const inactive=
-total-active;
+  const inactive =
+    total-active;
 
-const totalEl=
-document.getElementById("totalStudents");
 
-const activeEl=
-document.getElementById("activeStudents");
+  const totalEl =
+    document.getElementById(
+      "totalStudents"
+    );
 
-const inactiveEl=
-document.getElementById("inactiveStudents");
+  const activeEl =
+    document.getElementById(
+      "activeStudents"
+    );
 
-const showingEl=
-document.getElementById("showingStudents");
+  const inactiveEl =
+    document.getElementById(
+      "inactiveStudents"
+    );
 
-if(totalEl)totalEl.textContent=total;
+  const showingEl =
+    document.getElementById(
+      "showingStudents"
+    );
 
-if(activeEl)activeEl.textContent=active;
 
-if(inactiveEl)inactiveEl.textContent=inactive;
+  if(totalEl)
+    totalEl.textContent=total;
 
-if(showingEl)showingEl.textContent=total;
+  if(activeEl)
+    activeEl.textContent=active;
+
+  if(inactiveEl)
+    inactiveEl.textContent=inactive;
+
+  if(showingEl)
+    showingEl.textContent=total;
 
 }
 
@@ -2726,53 +2803,79 @@ if(showingEl)showingEl.textContent=total;
 
 function filterStudents(){
 
-const input=
-document.getElementById("studentSearch");
+  const input =
+    document.getElementById(
+      "studentSearch"
+    );
 
-if(!input)return;
+  if(!input)return;
 
-const search=
-input.value
-.trim()
-.toLowerCase();
 
-if(!search){
+  const search =
+    input.value
+      .trim()
+      .toLowerCase();
 
-renderStudentTable(allStudents);
 
-return;
+  if(!search){
 
-}
+    renderStudentTable(
+      allStudents
+    );
 
-const filtered=
-allStudents.filter(student=>{
+    updateStudentStats();
 
-const name=
-`${student.first_name||""} ${student.last_name||""} ${student.display_name||""}`
-.toLowerCase();
+    return;
 
-const email=
-(student.email||"").toLowerCase();
+  }
 
-const phone=
-(student.phone||"").toLowerCase();
 
-return(
-name.includes(search)||
-email.includes(search)||
-phone.includes(search)
-);
+  const filtered =
+    allStudents.filter(student=>{
 
-});
+      const name =
+        `
+        ${student.first_name||""}
+        ${student.last_name||""}
+        ${student.display_name||""}
+        `.toLowerCase();
 
-const showingEl=
-document.getElementById("showingStudents");
 
-if(showingEl){
-showingEl.textContent=filtered.length;
-}
+      const email =
+        (student.email||"")
+        .toLowerCase();
 
-renderStudentTable(filtered);
+
+      const phone =
+        (student.phone||"")
+        .toLowerCase();
+
+
+      return(
+        name.includes(search) ||
+        email.includes(search) ||
+        phone.includes(search)
+      );
+
+    });
+
+
+  const showingEl =
+    document.getElementById(
+      "showingStudents"
+    );
+
+  if(showingEl){
+
+    showingEl.textContent =
+      filtered.length;
+
+  }
+
+
+  renderStudentTable(
+    filtered
+  );
 
 }
 
@@ -2783,122 +2886,140 @@ renderStudentTable(filtered);
 
 function renderStudentTable(students){
 
-const area=
-document.getElementById("studentManagementArea");
+  const area =
+    document.getElementById(
+      "studentManagementArea"
+    );
 
-if(!area)return;
-
-if(!students.length){
-
-area.innerHTML=`
-
-<div class="tableEmpty">
-
-<h3>No students found</h3>
-
-<p style="margin-top:8px">
-Try another search.
-</p>
-
-</div>
-
-`;
-
-return;
-
-}
+  if(!area)return;
 
 
-let rows="";
+  if(!students.length){
 
-students.forEach((student,index)=>{
+    area.innerHTML=`
 
-const fullName=
-student.display_name||
-`${student.first_name||""} ${student.last_name||""}`.trim()||
-"Unnamed Student";
+      <div class="tableEmpty">
 
-const email=
-student.email||"No email";
+        <h3>
+          No students found
+        </h3>
 
-const location=
-[
-student.state,
-student.lga
-]
-.filter(Boolean)
-.join(", ")||"—";
+        <p style="margin-top:8px">
+          Try another search.
+        </p>
 
-const status=
-student.is_active!==false;
+      </div>
 
-rows+=`
+    `;
+
+    return;
+
+  }
+
+
+  let rows="";
+
+
+  students.forEach(
+    (student,index)=>{
+
+      const fullName =
+        student.display_name ||
+        `
+        ${student.first_name||""}
+        ${student.last_name||""}
+        `.trim() ||
+        "Unnamed Student";
+
+
+      const location =
+        [
+          student.state,
+          student.lga
+        ]
+        .filter(Boolean)
+        .join(", ") || "—";
+
+
+      const status =
+        student.is_active !== false;
+
+
+      rows += `
 
 <tr>
 
-<td>
-${index+1}
-</td>
+  <td>
+    ${index+1}
+  </td>
 
-<td>
+  <td>
 
-<div class="studentName">
-${escapeHTML(fullName)}
-</div>
+    <div class="studentName">
+      ${escapeHTML(fullName)}
+    </div>
 
-<div class="studentEmail">
-${escapeHTML(email)}
-</div>
+    <div class="studentEmail">
+      ${escapeHTML(
+        student.email ||
+        "No email"
+      )}
+    </div>
 
-</td>
-
-
-<td>
-${escapeHTML(student.phone||"—")}
-</td>
+  </td>
 
 
-<td>
-${escapeHTML(location)}
-</td>
+  <td>
+    ${escapeHTML(
+      student.phone || "—"
+    )}
+  </td>
 
 
-<td>
-
-<span class="badge ${
-status
-?"badgeGreen"
-:"badgeRed"
-}">
-
-${status?"Active":"Inactive"}
-
-</span>
-
-</td>
+  <td>
+    ${escapeHTML(location)}
+  </td>
 
 
-<td>
+  <td>
 
-<button
-class="btn secondary"
-style="padding:8px 12px"
-onclick="viewStudent('${escapeHTML(student.id||student.user_id)}')">
+    <span class="badge ${
+      status
+        ? "badgeGreen"
+        : "badgeRed"
+    }">
 
-View
+      ${status
+        ? "Active"
+        : "Inactive"}
 
-</button>
+    </span>
 
-</td>
+  </td>
+
+
+  <td>
+
+    <button
+      class="btn secondary"
+      style="padding:8px 12px"
+      onclick="viewStudent('${student.id||student.user_id}')">
+
+      View
+
+    </button>
+
+  </td>
 
 </tr>
 
 `;
 
-});
+    }
+  );
 
 
-area.innerHTML=`
+  area.innerHTML=`
 
 <table class="studentTable">
 
@@ -2906,17 +3027,12 @@ area.innerHTML=`
 
 <tr>
 
-<th>#</th>
-
-<th>Student</th>
-
-<th>Phone</th>
-
-<th>Location</th>
-
-<th>Status</th>
-
-<th>Action</th>
+  <th>#</th>
+  <th>Student</th>
+  <th>Phone</th>
+  <th>Location</th>
+  <th>Status</th>
+  <th>Action</th>
 
 </tr>
 
@@ -2941,238 +3057,241 @@ ${rows}
 
 function viewStudent(id){
 
-const student=
-allStudents.find(
-item=>item.id===id||
-item.user_id===id
-);
-
-if(!student){
-
-alert("Student information could not be found.");
-
-return;
-
-}
+  const student =
+    allStudents.find(
+      item =>
+        item.id===id ||
+        item.user_id===id
+    );
 
 
-const nav=sidebar(`
+  if(!student){
+
+    alert(
+      "Student information could not be found."
+    );
+
+    return;
+
+  }
+
+
+  const nav =
+    sidebar(`
 
 <button
-class="sideButton"
-onclick="renderStudentManagement()">
+  class="sideButton"
+  onclick="renderStudentManagement()">
 
-← Students
+  ← Students
 
 </button>
 
 `);
 
 
-const fullName=
-student.display_name||
-`${student.first_name||""} ${student.last_name||""}`.trim()||
-"Student";
+  const fullName =
+    student.display_name ||
+    `
+    ${student.first_name||""}
+    ${student.last_name||""}
+    `.trim() ||
+    "Student";
 
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="portal">
 
-${nav}
+  ${nav}
 
-<div class="main">
+  <div class="main">
 
-${portalHeader("Student Details")}
+    ${portalHeader("Student Details")}
+
+    <main class="content">
+
+      <h1>
+        Student Details
+      </h1>
 
-<main class="content">
-
-<h1>
-Student Details
-</h1>
-
-<p class="muted">
-View the student's PHILMYSCHOOL account information.
-</p>
-
-
-<div class="studentCard">
-
-<h2>
-👨‍🎓 ${escapeHTML(fullName)}
-</h2>
-
-<div
-style="
-margin-top:8px;
-color:#718096;
-">
-
-${escapeHTML(student.email||"No email")}
-
-</div>
-
-
-<div class="detailGrid">
-
-<div class="detailItem">
-
-<small>First Name</small>
-
-<strong>
-${escapeHTML(student.first_name||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Last Name</small>
-
-<strong>
-${escapeHTML(student.last_name||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Email</small>
-
-<strong>
-${escapeHTML(student.email||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Phone</small>
-
-<strong>
-${escapeHTML(student.phone||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Gender</small>
-
-<strong>
-${escapeHTML(student.gender||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Date of Birth</small>
-
-<strong>
-${escapeHTML(student.date_of_birth||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>State</small>
-
-<strong>
-${escapeHTML(student.state||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>LGA</small>
-
-<strong>
-${escapeHTML(student.lga||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Country</small>
-
-<strong>
-${escapeHTML(student.country||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Account Status</small>
-
-<strong>
-${escapeHTML(student.account_status||"—")}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Onboarding</small>
-
-<strong>
-${student.onboarding_completed?"Completed":"Not completed"}
-</strong>
-
-</div>
-
-
-<div class="detailItem">
-
-<small>Account Created</small>
-
-<strong>
-${student.created_at
-?new Date(student.created_at).toLocaleDateString()
-:"—"}
-</strong>
-
-</div>
-
-</div>
-
-
-<div style="
-margin-top:25px;
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-">
-
-<button
-class="btn primary"
-onclick="renderStudentManagement()">
-
-← Back to Students
-
-</button>
-
-</div>
-
-</div>
-
-</main>
-
-</div>
+      <p class="muted">
+        Student account information.
+      </p>
+
+
+      <div class="studentCard">
+
+        <h2>
+          👨‍🎓
+          ${escapeHTML(fullName)}
+        </h2>
+
+        <div style="
+          margin-top:8px;
+          color:#718096;
+        ">
+
+          ${escapeHTML(
+            student.email ||
+            "No email"
+          )}
+
+        </div>
+
+
+        <div class="detailGrid">
+
+          <div class="detailItem">
+            <small>First Name</small>
+            <strong>
+              ${escapeHTML(
+                student.first_name||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Last Name</small>
+            <strong>
+              ${escapeHTML(
+                student.last_name||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Email</small>
+            <strong>
+              ${escapeHTML(
+                student.email||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Phone</small>
+            <strong>
+              ${escapeHTML(
+                student.phone||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Gender</small>
+            <strong>
+              ${escapeHTML(
+                student.gender||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Date of Birth</small>
+            <strong>
+              ${escapeHTML(
+                student.date_of_birth||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>State</small>
+            <strong>
+              ${escapeHTML(
+                student.state||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>LGA</small>
+            <strong>
+              ${escapeHTML(
+                student.lga||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Country</small>
+            <strong>
+              ${escapeHTML(
+                student.country||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Account Status</small>
+            <strong>
+              ${escapeHTML(
+                student.account_status||"—"
+              )}
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Onboarding</small>
+            <strong>
+              ${
+                student.onboarding_completed
+                  ? "Completed"
+                  : "Not completed"
+              }
+            </strong>
+          </div>
+
+
+          <div class="detailItem">
+            <small>Account Created</small>
+            <strong>
+              ${
+                student.created_at
+                  ? new Date(
+                      student.created_at
+                    ).toLocaleDateString()
+                  : "—"
+              }
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div style="
+          margin-top:25px;
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+        ">
+
+          <button
+            class="btn primary"
+            onclick="renderStudentManagement()">
+
+            ← Back to Students
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
 
@@ -3182,100 +3301,446 @@ onclick="renderStudentManagement()">
 
 
 /* =========================================================
-   OTHER FEATURE PAGES
+   TUTOR MANAGEMENT
 ========================================================= */
 
-function featurePage(title){
+async function renderTutorManagement(){
 
-if(title==="Student Management"){
-
-renderStudentManagement();
-return;
-
-}
-
-let backFunction="renderStudent()";
-
-if(role==="admin"){
-backFunction="renderAdmin()";
-}
-
-if(role==="tutor"){
-backFunction="renderTutor()";
-}
-
-const nav=sidebar(`
+  const nav =
+    sidebar(`
 
 <button
-class="sideButton"
-onclick="${backFunction}">
+  class="sideButton"
+  onclick="renderAdmin()">
 
-← Dashboard
+  ← Dashboard
+
+</button>
+
+<button
+  class="sideButton active"
+  onclick="renderTutorManagement()">
+
+  👨‍🏫 Tutors
 
 </button>
 
 `);
 
 
-document.getElementById("app").innerHTML=`
+  document.getElementById("app").innerHTML=`
 
 <div class="portal">
 
-${nav}
+  ${nav}
 
-<div class="main">
+  <div class="main">
 
-${portalHeader(title)}
+    ${portalHeader("Tutor Management")}
 
-<main class="content">
+    <main class="content">
 
-<h1>
-${escapeHTML(title)}
-</h1>
+      <h1>
+        Tutor Management 👨‍🏫
+      </h1>
 
-<p class="muted">
-PHILMYSCHOOL ${escapeHTML(title)} module.
-</p>
+      <p class="muted">
+        Manage registered tutor accounts.
+      </p>
 
 
-<div
-class="panel"
-style="margin-top:25px">
+      <div class="stats">
 
-<div class="empty">
+        <div class="stat">
+          <small>Total Tutors</small>
+          <strong id="totalTutors">0</strong>
+        </div>
 
-<div>
+        <div class="stat">
+          <small>Active Tutors</small>
+          <strong id="activeTutors">0</strong>
+        </div>
 
-<h2>
-${escapeHTML(title)}
-</h2>
+        <div class="stat">
+          <small>Inactive Tutors</small>
+          <strong id="inactiveTutors">0</strong>
+        </div>
 
-<p style="margin-top:10px">
+        <div class="stat">
+          <small>Platform</small>
+          <strong>Live</strong>
+        </div>
 
-This module is connected to
-PHILMYSCHOOL and will use the
-existing Supabase database.
+      </div>
 
-</p>
+
+      <div
+        id="tutorManagementArea"
+        class="studentTableWrap">
+
+        <div class="loading">
+          Loading tutors...
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+
+`;
+
+  await loadTutors();
+
+}
+
+
+/* =========================================================
+   LOAD TUTORS
+========================================================= */
+
+async function loadTutors(){
+
+  const area =
+    document.getElementById(
+      "tutorManagementArea"
+    );
+
+  if(!area)return;
+
+
+  const rolesResult =
+    await db
+      .from("user_roles")
+      .select(
+        "id,user_id,role,is_active,created_at"
+      )
+      .eq("role","tutor")
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+
+  if(rolesResult.error){
+
+    area.innerHTML=`
+
+      <div class="errorBox">
+
+        ${escapeHTML(
+          rolesResult.error.message
+        )}
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const roles =
+    rolesResult.data || [];
+
+
+  const ids =
+    roles
+      .map(x=>x.user_id)
+      .filter(Boolean);
+
+
+  const totalEl =
+    document.getElementById(
+      "totalTutors"
+    );
+
+  const activeEl =
+    document.getElementById(
+      "activeTutors"
+    );
+
+  const inactiveEl =
+    document.getElementById(
+      "inactiveTutors"
+    );
+
+
+  const active =
+    roles.filter(
+      x=>x.is_active!==false
+    ).length;
+
+
+  if(totalEl)
+    totalEl.textContent=roles.length;
+
+  if(activeEl)
+    activeEl.textContent=active;
+
+  if(inactiveEl)
+    inactiveEl.textContent=
+      roles.length-active;
+
+
+  if(!ids.length){
+
+    area.innerHTML=`
+
+      <div class="tableEmpty">
+
+        <h3>
+          No tutors yet
+        </h3>
+
+        <p style="margin-top:8px">
+          Registered tutors will appear here.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const profilesResult =
+    await db
+      .from("profiles")
+      .select(
+        "id,email,first_name,last_name,display_name,phone,state,lga,account_status,created_at"
+      )
+      .in("id",ids);
+
+
+  if(profilesResult.error){
+
+    area.innerHTML=`
+
+      <div class="errorBox">
+
+        ${escapeHTML(
+          profilesResult.error.message
+        )}
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const profiles =
+    profilesResult.data || [];
+
+
+  let rows="";
+
+
+  roles.forEach(
+    (r,index)=>{
+
+      const p =
+        profiles.find(
+          x=>x.id===r.user_id
+        ) || {};
+
+
+      const name =
+        p.display_name ||
+        `${p.first_name||""} ${p.last_name||""}`.trim() ||
+        "Unnamed Tutor";
+
+
+      rows += `
+
+<tr>
+
+  <td>${index+1}</td>
+
+  <td>
+
+    <div class="studentName">
+      ${escapeHTML(name)}
+    </div>
+
+    <div class="studentEmail">
+      ${escapeHTML(
+        p.email||"No email"
+      )}
+    </div>
+
+  </td>
+
+  <td>
+    ${escapeHTML(
+      p.phone||"—"
+    )}
+  </td>
+
+  <td>
+    ${escapeHTML(
+      [p.state,p.lga]
+        .filter(Boolean)
+        .join(", ")||"—"
+    )}
+  </td>
+
+  <td>
+
+    <span class="badge ${
+      r.is_active
+        ? "badgeGreen"
+        : "badgeRed"
+    }">
+
+      ${r.is_active
+        ? "Active"
+        : "Inactive"}
+
+    </span>
+
+  </td>
+
+</tr>
+
+`;
+
+    }
+  );
+
+
+  area.innerHTML=`
+
+<table class="studentTable">
+
+<thead>
+
+<tr>
+
+  <th>#</th>
+  <th>Tutor</th>
+  <th>Phone</th>
+  <th>Location</th>
+  <th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${rows}
+
+</tbody>
+
+</table>
+
+`;
+
+}
+
+
+/* =========================================================
+   OTHER MODULES
+========================================================= */
+
+function featurePage(title){
+
+  let backFunction =
+    "renderStudent()";
+
+
+  if(role==="admin"){
+    backFunction="renderAdmin()";
+  }
+
+
+  if(role==="tutor"){
+    backFunction="renderTutor()";
+  }
+
+
+  const nav =
+    sidebar(`
 
 <button
-class="btn primary"
-style="margin-top:20px"
-onclick="${backFunction}">
+  class="sideButton"
+  onclick="${backFunction}">
 
-Back to Dashboard
+  ← Dashboard
 
 </button>
 
-</div>
+`);
 
-</div>
 
-</div>
+  document.getElementById("app").innerHTML=`
 
-</main>
+<div class="portal">
 
-</div>
+  ${nav}
+
+  <div class="main">
+
+    ${portalHeader(title)}
+
+    <main class="content">
+
+      <h1>
+        ${escapeHTML(title)}
+      </h1>
+
+      <p class="muted">
+        PHILMYSCHOOL ${escapeHTML(title)} module.
+      </p>
+
+
+      <div
+        class="panel"
+        style="margin-top:25px">
+
+        <div class="empty">
+
+          <div>
+
+            <h2>
+              ${escapeHTML(title)}
+            </h2>
+
+            <p style="margin-top:10px">
+
+              This module is ready for
+              connection to the existing
+              PHILMYSCHOOL database.
+
+            </p>
+
+            <button
+              class="btn primary"
+              style="margin-top:20px"
+              onclick="${backFunction}">
+
+              Back to Dashboard
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
 
@@ -3290,35 +3755,59 @@ Back to Dashboard
 
 async function logout(){
 
-await db.auth.signOut();
+  try{
 
-user=null;
-profile=null;
-role=null;
+    const result =
+      await db.auth.signOut();
 
-renderLanding();
+
+    if(result.error){
+
+      console.error(
+        "Logout error:",
+        result.error
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Logout exception:",
+      error
+    );
+
+  }
+
+
+  user=null;
+  profile=null;
+  role=null;
+
+
+  renderLanding();
 
 }
 
 
 /* =========================================================
-   AUTH LISTENER
+   AUTH STATE
 ========================================================= */
 
 db.auth.onAuthStateChange(
-(event,session)=>{
+  async (event,session)=>{
 
-if(event==="SIGNED_OUT"){
+    if(event==="SIGNED_OUT"){
 
-user=null;
-profile=null;
-role=null;
+      user=null;
+      profile=null;
+      role=null;
 
-renderLanding();
+      renderLanding();
 
-}
+    }
 
-}
+  }
 );
 
 
@@ -3328,66 +3817,79 @@ renderLanding();
 
 (async function(){
 
-try{
+  try{
 
-const sessionResult=
-await db.auth.getSession();
+    const sessionResult =
+      await db.auth.getSession();
 
-if(sessionResult.error){
 
-console.error(
-sessionResult.error
-);
+    if(sessionResult.error){
 
-renderLanding();
+      console.error(
+        sessionResult.error
+      );
 
-return;
+      renderLanding();
+      return;
 
-}
+    }
 
-if(sessionResult.data.session){
 
-await loadCurrentUser();
+    if(
+      sessionResult.data &&
+      sessionResult.data.session
+    ){
 
-}else{
+      await loadCurrentUser();
 
-renderLanding();
+    }else{
 
-}
+      renderLanding();
 
-}catch(error){
+    }
 
-console.error(error);
+  }catch(error){
 
-document.getElementById("app").innerHTML=`
+    console.error(error);
 
-<div style="
-padding:40px;
-font-family:Arial;
-">
 
-<h2>PHILMYSCHOOL</h2>
+    document.getElementById(
+      "app"
+    ).innerHTML=`
 
-<p style="margin-top:10px;color:#718096">
+      <div style="
+        padding:40px;
+        font-family:Arial;
+      ">
 
-The application could not finish loading.
+        <h2>
+          PHILMYSCHOOL
+        </h2>
 
-</p>
+        <p style="
+          margin-top:10px;
+          color:#718096;
+        ">
 
-<button
-class="btn primary"
-style="margin-top:20px"
-onclick="renderLanding()">
+          The application could not finish loading.
 
-Reload PHILMYSCHOOL
+        </p>
 
-</button>
 
-</div>
+        <button
+          class="btn primary"
+          style="margin-top:20px"
+          onclick="location.reload()">
 
-`;
+          Reload PHILMYSCHOOL
 
-}
+        </button>
+
+      </div>
+
+    `;
+
+  }
 
 })();
 
