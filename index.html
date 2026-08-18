@@ -8,784 +8,219 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#10233f;
-  --blue:#155eef;
-  --light:#f5f7fb;
-  --white:#fff;
-  --muted:#718096;
-  --border:#e3e8ef;
-  --green:#159447;
-  --red:#d92d20;
+ --navy:#10233f;
+ --blue:#155eef;
+ --light:#f5f7fb;
+ --white:#fff;
+ --muted:#718096;
+ --border:#e3e8ef;
+ --green:#159447;
+ --red:#d92d20;
 }
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--light);
-  color:var(--navy);
-}
-
-button,input,select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.hidden{
-  display:none!important;
-}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--navy)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
 
 .navbar{
-  height:74px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-  padding:0 6%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+ height:74px;background:#fff;border-bottom:1px solid var(--border);
+ padding:0 6%;display:flex;align-items:center;justify-content:space-between
 }
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  font-size:19px;
-}
-
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}
 .logoIcon{
-  width:39px;
-  height:39px;
-  border-radius:10px;
-  background:var(--blue);
-  color:white;
-  display:grid;
-  place-items:center;
-  font-weight:900;
+ width:39px;height:39px;border-radius:10px;background:var(--blue);
+ color:#fff;display:grid;place-items:center;font-weight:900
 }
-
-.navButtons{
-  display:flex;
-  gap:10px;
-}
-
-.btn{
-  border:0;
-  border-radius:9px;
-  padding:12px 18px;
-  font-weight:700;
-}
-
-.primary{
-  background:var(--blue);
-  color:#fff;
-}
-
-.secondary{
-  background:#eaf2ff;
-  color:var(--blue);
-}
-
-.danger{
-  background:#fff0ef;
-  color:#b42318;
-}
+.navButtons{display:flex;gap:10px}
+.btn{border:0;border-radius:9px;padding:11px 17px;font-weight:700}
+.primary{background:var(--blue);color:#fff}
+.secondary{background:#eaf2ff;color:var(--blue)}
+.danger{background:#fff0ef;color:#b42318}
+.success{background:#e9f8ef;color:#126b35}
 
 .hero{
-  max-width:1180px;
-  margin:auto;
-  padding:80px 25px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:55px;
-  align-items:center;
+ max-width:1180px;margin:auto;padding:80px 25px;display:grid;
+ grid-template-columns:1fr 1fr;gap:55px;align-items:center
 }
-
-.eyebrow{
-  color:var(--blue);
-  font-weight:800;
-  font-size:12px;
-  letter-spacing:.08em;
-}
-
-.hero h1{
-  font-size:60px;
-  line-height:1;
-  letter-spacing:-2px;
-  margin:18px 0;
-}
-
-.hero h1 span{
-  color:var(--blue);
-}
-
-.heroText{
-  color:#68778c;
-  font-size:18px;
-  line-height:1.7;
-}
-
-.heroButtons{
-  display:flex;
-  gap:10px;
-  margin-top:28px;
-}
-
-.preview{
-  background:var(--navy);
-  color:white;
-  border-radius:25px;
-  padding:27px;
-  box-shadow:0 20px 50px rgba(16,35,63,.2);
-}
-
-.progress{
-  height:8px;
-  background:#2a4260;
-  border-radius:20px;
-  margin:18px 0;
-}
-
-.progress span{
-  display:block;
-  width:82%;
-  height:100%;
-  background:#6ba9ff;
-  border-radius:20px;
-}
-
-.previewGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.previewCard{
-  background:#193756;
-  border-radius:12px;
-  padding:18px;
-}
-
-.previewCard small{
-  color:#b4c2d4;
-}
-
-.previewCard strong{
-  display:block;
-  margin-top:6px;
-  font-size:24px;
-}
-
-.features{
-  padding:75px 6%;
-  background:#fff;
-}
-
-.sectionTitle{
-  text-align:center;
-  max-width:700px;
-  margin:auto;
-}
-
-.sectionTitle h2{
-  font-size:40px;
-  margin:10px 0;
-}
-
-.muted{
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.featureGrid{
-  max-width:1180px;
-  margin:40px auto 0;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-}
-
-.feature{
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:24px;
-  background:#fff;
-}
-
-.featureIcon{
-  font-size:30px;
-}
-
-.feature h3{
-  margin:14px 0 8px;
-}
-
-.feature p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.6;
-}
+.eyebrow{color:var(--blue);font-weight:800;font-size:12px;letter-spacing:.08em}
+.hero h1{font-size:60px;line-height:1;letter-spacing:-2px;margin:18px 0}
+.hero h1 span{color:var(--blue)}
+.heroText{color:#68778c;font-size:18px;line-height:1.7}
+.heroButtons{display:flex;gap:10px;margin-top:28px}
+.preview{background:var(--navy);color:#fff;border-radius:25px;padding:27px}
+.progress{height:8px;background:#2a4260;border-radius:20px;margin:18px 0}
+.progress span{display:block;width:82%;height:100%;background:#6ba9ff;border-radius:20px}
+.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.previewCard{background:#193756;border-radius:12px;padding:18px}
+.previewCard small{color:#b4c2d4}
+.previewCard strong{display:block;margin-top:6px;font-size:24px}
+.features{padding:75px 6%;background:#fff}
+.sectionTitle{text-align:center;max-width:700px;margin:auto}
+.sectionTitle h2{font-size:40px;margin:10px 0}
+.muted{color:var(--muted);line-height:1.6}
+.featureGrid{max-width:1180px;margin:40px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.feature{border:1px solid var(--border);border-radius:16px;padding:24px;background:#fff}
+.featureIcon{font-size:30px}
+.feature h3{margin:14px 0 8px}
+.feature p{color:var(--muted);font-size:13px;line-height:1.6}
 
 /* AUTH */
-
-.authPage{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  background:#fff;
+.authPage{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#fff}
+.authBrand{background:var(--navy);color:#fff;padding:55px 9%;display:flex;flex-direction:column;justify-content:space-between}
+.authBrand .logoIcon{background:#fff;color:var(--navy)}
+.authBrand h1{font-size:55px;line-height:1}
+.authBrand p{color:#b9c7d8;margin-top:20px;line-height:1.7}
+.authBoxWrap{display:grid;place-items:center;padding:30px}
+.authBox{width:min(450px,100%)}
+.authBox h2{font-size:34px;margin:18px 0 7px}
+.formGroup{margin-top:15px}
+.formGroup label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.formGroup input,.formGroup select,.formGroup textarea{
+ width:100%;padding:12px;border:1px solid #d8e0e9;border-radius:9px;
+ outline:none;background:#fff
 }
-
-.authBrand{
-  background:var(--navy);
-  color:white;
-  padding:55px 9%;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.authBrand .logoIcon{
-  background:white;
-  color:var(--navy);
-}
-
-.authBrand h1{
-  font-size:55px;
-  line-height:1;
-}
-
-.authBrand p{
-  color:#b9c7d8;
-  margin-top:20px;
-  line-height:1.7;
-}
-
-.authBoxWrap{
-  display:grid;
-  place-items:center;
-  padding:30px;
-}
-
-.authBox{
-  width:min(430px,100%);
-}
-
-.authBox h2{
-  font-size:34px;
-  margin:18px 0 7px;
-}
-
-.formGroup{
-  margin-top:15px;
-}
-
-.formGroup label{
-  display:block;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:7px;
-}
-
-.formGroup input,
-.formGroup select{
-  width:100%;
-  padding:13px;
-  border:1px solid #d8e0e9;
-  border-radius:9px;
-  outline:none;
-  background:white;
-}
-
-.formGroup input:focus,
-.formGroup select:focus{
-  border-color:var(--blue);
-}
-
-.roleGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:16px;
-}
-
-.roleChoice{
-  border:1px solid var(--border);
-  background:white;
-  padding:13px;
-  border-radius:9px;
-  font-weight:700;
-}
-
-.roleChoice.active{
-  border-color:var(--blue);
-  background:#eaf2ff;
-  color:var(--blue);
-}
-
-.authMessage{
-  margin-top:15px;
-  padding:11px;
-  border-radius:8px;
-  font-size:13px;
-  display:none;
-}
-
-.authMessage.show{
-  display:block;
-  background:#fff3dc;
-  color:#7a510e;
-}
-
-.authMessage.error{
-  display:block;
-  background:#fff0ef;
-  color:#b42318;
-}
-
-.authMessage.success{
-  display:block;
-  background:#e9f8ef;
-  color:#126b35;
-}
-
-.authSwitch{
-  text-align:center;
-  margin-top:18px;
-  font-size:13px;
-}
-
-.linkButton{
-  border:0;
-  background:none;
-  color:var(--blue);
-  font-weight:700;
-}
+.formGroup textarea{min-height:100px;resize:vertical}
+.formGroup input:focus,.formGroup select:focus,.formGroup textarea:focus{border-color:var(--blue)}
+.roleGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.roleChoice{border:1px solid var(--border);background:#fff;padding:13px;border-radius:9px;font-weight:700}
+.roleChoice.active{border-color:var(--blue);background:#eaf2ff;color:var(--blue)}
+.authMessage{margin-top:15px;padding:11px;border-radius:8px;font-size:13px;display:none}
+.authMessage.show{display:block;background:#fff3dc;color:#7a510e}
+.authMessage.error{display:block;background:#fff0ef;color:#b42318}
+.authMessage.success{display:block;background:#e9f8ef;color:#126b35}
+.authSwitch{text-align:center;margin-top:18px;font-size:13px}
+.linkButton{border:0;background:none;color:var(--blue);font-weight:700}
 
 /* PORTAL */
-
-.portal{
-  min-height:100vh;
-}
-
+.portal{min-height:100vh}
 .sidebar{
-  width:250px;
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  background:var(--navy);
-  color:white;
-  padding:20px 14px;
-  z-index:100;
-  overflow-y:auto;
+ width:250px;position:fixed;left:0;top:0;bottom:0;background:var(--navy);
+ color:#fff;padding:20px 14px;z-index:100;overflow-y:auto
 }
-
-.sidebarLogo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  margin-bottom:28px;
-  padding:7px;
-}
-
+.sidebarLogo{display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:28px;padding:7px}
 .sidebarLogoIcon{
-  width:35px;
-  height:35px;
-  border-radius:9px;
-  background:white;
-  color:var(--navy);
-  display:grid;
-  place-items:center;
-  font-weight:900;
+ width:35px;height:35px;border-radius:9px;background:#fff;color:var(--navy);
+ display:grid;place-items:center;font-weight:900
 }
-
-.sideLabel{
-  color:#8196b2;
-  font-size:10px;
-  font-weight:800;
-  margin:0 10px 9px;
-}
-
+.sideLabel{color:#8196b2;font-size:10px;font-weight:800;margin:0 10px 9px}
 .sideButton{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:#b7c6d9;
-  text-align:left;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:3px;
+ width:100%;border:0;background:transparent;color:#b7c6d9;text-align:left;
+ padding:11px;border-radius:8px;margin-bottom:3px
 }
-
-.sideButton:hover,
-.sideButton.active{
-  background:#19395e;
-  color:#fff;
-}
-
-.logoutButton{
-  margin-top:25px;
-  background:#19395e;
-  color:#fff;
-}
-
-.main{
-  margin-left:250px;
-  min-height:100vh;
-}
-
+.sideButton:hover,.sideButton.active{background:#19395e;color:#fff}
+.logoutButton{margin-top:25px;background:#19395e;color:#fff}
+.main{margin-left:250px;min-height:100vh}
 .topbar{
-  height:74px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  padding:0 30px;
-  gap:15px;
+ height:74px;background:#fff;border-bottom:1px solid var(--border);
+ display:flex;align-items:center;padding:0 30px;gap:15px
 }
+.topUser{margin-left:auto;color:var(--muted);font-size:13px;display:flex;align-items:center;gap:12px}
+.mobileLogout{display:none;border:0;border-radius:8px;padding:9px 12px;background:#fff0ef;color:#b42318;font-weight:700}
+.content{max-width:1450px;margin:auto;padding:30px}
+.content h1{font-size:34px;margin-bottom:7px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:25px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px}
+.stat small{color:var(--muted)}
+.stat strong{display:block;font-size:28px;margin-top:7px}
+.panelGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:15px;padding:24px}
+.panel h2{margin-bottom:10px}
+.panel p{color:var(--muted);line-height:1.6}
+.status{margin-top:20px;padding:12px;background:#e9f8ef;color:#126b35;border-radius:9px;font-size:13px}
+.mobileMenu{display:none;border:0;background:#eaf2ff;color:var(--blue);border-radius:8px;padding:9px 12px;font-weight:700}
 
-.topUser{
-  margin-left:auto;
-  color:var(--muted);
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.mobileLogout{
-  display:none;
-  border:0;
-  border-radius:8px;
-  padding:9px 12px;
-  background:#fff0ef;
-  color:#b42318;
-  font-weight:700;
-}
-
-.content{
-  max-width:1350px;
-  margin:auto;
-  padding:35px;
-}
-
-.content h1{
-  font-size:34px;
-  margin-bottom:7px;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-top:28px;
-}
-
-.stat{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:20px;
-}
-
-.stat small{
-  color:var(--muted);
-}
-
-.stat strong{
-  display:block;
-  font-size:28px;
-  margin-top:7px;
-}
-
-.panelGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin-top:18px;
-}
-
-.panel{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:25px;
-  min-height:220px;
-}
-
-.panel h2{
-  margin-bottom:10px;
-}
-
-.panel p{
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.empty{
-  min-height:140px;
-  display:grid;
-  place-items:center;
-  text-align:center;
-  color:var(--muted);
-}
-
-.status{
-  margin-top:20px;
-  padding:12px;
-  background:#e9f8ef;
-  color:#126b35;
-  border-radius:9px;
-  font-size:13px;
-}
-
-/* TABLES */
-
+/* MANAGEMENT */
 .managementHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-top:25px;
-  flex-wrap:wrap;
+ display:flex;justify-content:space-between;align-items:center;gap:15px;
+ margin-top:25px;flex-wrap:wrap
 }
-
 .searchBox{
-  width:min(420px,100%);
-  padding:13px 15px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:white;
-  outline:none;
+ width:min(420px,100%);padding:12px 15px;border:1px solid var(--border);
+ border-radius:9px;background:#fff;outline:none
 }
-
 .studentTableWrap{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:15px;
-  margin-top:18px;
-  overflow-x:auto;
+ background:#fff;border:1px solid var(--border);border-radius:15px;
+ margin-top:18px;overflow-x:auto
 }
-
-.studentTable{
-  width:100%;
-  border-collapse:collapse;
-  min-width:700px;
-}
-
+.studentTable{width:100%;border-collapse:collapse;min-width:800px}
 .studentTable th{
-  background:#f8fafc;
-  text-align:left;
-  padding:15px;
-  font-size:12px;
-  color:#607089;
-  border-bottom:1px solid var(--border);
+ background:#f8fafc;text-align:left;padding:13px;font-size:12px;
+ color:#607089;border-bottom:1px solid var(--border)
 }
-
-.studentTable td{
-  padding:15px;
-  border-bottom:1px solid var(--border);
-  font-size:13px;
-  vertical-align:top;
+.studentTable td{padding:13px;border-bottom:1px solid var(--border);font-size:13px}
+.studentName{font-weight:700}
+.studentEmail{color:var(--muted);margin-top:4px}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badgeGreen{background:#e9f8ef;color:#126b35}
+.badgeRed{background:#fff0ef;color:#b42318}
+.tableEmpty,.loading{text-align:center;padding:45px 20px;color:var(--muted)}
+.detailGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:20px}
+.detailItem{padding:15px;background:#f8fafc;border-radius:9px}
+.detailItem small{color:var(--muted);display:block;margin-bottom:5px}
+.errorBox{margin-top:20px;padding:15px;border-radius:9px;background:#fff0ef;color:#b42318}
+.moduleToolbar{
+ display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+ margin-top:20px
 }
-
-.studentName{
-  font-weight:700;
+.moduleToolbar input,.moduleToolbar select{
+ padding:11px;border:1px solid var(--border);border-radius:8px;background:#fff
 }
-
-.studentEmail{
-  color:var(--muted);
-  margin-top:4px;
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.formGrid .full{grid-column:1/-1}
+.modal{
+ position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;
+ display:grid;place-items:center;padding:20px
 }
-
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:700;
+.modalBox{
+ background:#fff;border-radius:16px;width:min(700px,100%);
+ max-height:90vh;overflow:auto;padding:25px
 }
-
-.badgeGreen{
-  background:#e9f8ef;
-  color:#126b35;
-}
-
-.badgeRed{
-  background:#fff0ef;
-  color:#b42318;
-}
-
-.tableEmpty,
-.loading{
-  text-align:center;
-  padding:45px 20px;
-  color:var(--muted);
-}
-
-.studentCard{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:22px;
-  margin-top:18px;
-}
-
-.detailGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-  margin-top:20px;
-}
-
-.detailItem{
-  padding:15px;
-  background:#f8fafc;
-  border-radius:9px;
-}
-
-.detailItem small{
-  color:var(--muted);
-  display:block;
-  margin-bottom:5px;
-}
-
-.errorBox{
-  margin-top:20px;
-  padding:15px;
-  border-radius:9px;
-  background:#fff0ef;
-  color:#b42318;
-}
-
-.moduleStats{
-  margin-top:25px;
-}
+.modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.closeBtn{border:0;background:#f1f3f6;border-radius:8px;padding:8px 12px}
+.cardList{display:grid;gap:12px;margin-top:18px}
+.dataCard{background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px}
+.dataCard h3{margin-bottom:7px}
+.dataMeta{font-size:12px;color:var(--muted);line-height:1.7}
+.cardActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.notice{padding:13px;border-radius:9px;background:#f8fafc;color:#607089;margin-top:15px;font-size:13px}
 
 /* MOBILE */
-
-.mobileMenu{
-  display:none;
-  border:0;
-  background:#eaf2ff;
-  color:var(--blue);
-  border-radius:8px;
-  padding:9px 12px;
-  font-weight:700;
-}
-
 @media(max-width:900px){
-
-  .hero{
-    grid-template-columns:1fr;
-  }
-
-  .featureGrid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .authPage{
-    grid-template-columns:1fr;
-  }
-
-  .authBrand{
-    display:none;
-  }
-
-  .sidebar{
-    display:none;
-  }
-
-  .main{
-    margin-left:0;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .panelGrid{
-    grid-template-columns:1fr;
-  }
-
-  .mobileLogout{
-    display:block;
-  }
-
-  .mobileMenu{
-    display:block;
-  }
+ .hero{grid-template-columns:1fr}
+ .featureGrid{grid-template-columns:1fr 1fr}
+ .authPage{grid-template-columns:1fr}
+ .authBrand{display:none}
+ .sidebar{display:none}
+ .main{margin-left:0}
+ .stats{grid-template-columns:1fr 1fr}
+ .panelGrid{grid-template-columns:1fr}
+ .mobileLogout{display:block}
+ .mobileMenu{display:block}
+ .formGrid{grid-template-columns:1fr}
+ .formGrid .full{grid-column:auto}
 }
-
 @media(max-width:600px){
-
-  .navbar{
-    padding:0 15px;
-  }
-
-  .hero{
-    padding:55px 18px;
-  }
-
-  .hero h1{
-    font-size:44px;
-  }
-
-  .heroButtons{
-    flex-direction:column;
-  }
-
-  .heroButtons .btn{
-    width:100%;
-  }
-
-  .featureGrid{
-    grid-template-columns:1fr;
-  }
-
-  .content{
-    padding:22px 15px;
-  }
-
-  .topbar{
-    padding:0 15px;
-  }
-
-  .topUser span{
-    display:none;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .detailGrid{
-    grid-template-columns:1fr;
-  }
-
-  .mobileLogout{
-    padding:8px 10px;
-    font-size:12px;
-  }
+ .navbar{padding:0 15px}
+ .hero{padding:55px 18px}
+ .hero h1{font-size:44px}
+ .heroButtons{flex-direction:column}
+ .heroButtons .btn{width:100%}
+ .featureGrid{grid-template-columns:1fr}
+ .content{padding:20px 15px}
+ .topbar{padding:0 15px}
+ .topUser span{display:none}
+ .stats{grid-template-columns:1fr 1fr}
+ .detailGrid{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
-
 <div id="app"></div>
 
 <script>
-
 /* =========================================================
    SUPABASE
 ========================================================= */
@@ -797,3256 +232,1680 @@ const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_-HIg7bCv6G1hLQoh5OWasA_hvhWrYOx";
 
 if(!window.supabase){
-
-  document.getElementById("app").innerHTML=`
-
-    <div style="padding:40px;font-family:Arial">
-
-      <h2>PHILMYSCHOOL Loading Error</h2>
-
-      <p style="margin-top:10px">
-        Supabase could not load.
-      </p>
-
-      <button
-        class="btn primary"
-        style="margin-top:20px"
-        onclick="location.reload()">
-        Reload
-      </button>
-
-    </div>
-
-  `;
-
-  throw new Error("Supabase library failed");
+ document.getElementById("app").innerHTML=`
+ <div style="padding:40px;font-family:Arial">
+ <h2>PHILMYSCHOOL Loading Error</h2>
+ <p style="margin-top:10px">Supabase could not load.</p>
+ <button class="btn primary" style="margin-top:20px"
+ onclick="location.reload()">Reload</button>
+ </div>`;
+ throw new Error("Supabase library failed");
 }
 
-const db =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
+const db=window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_PUBLISHABLE_KEY
 );
-
-
-/* =========================================================
-   STATE
-========================================================= */
 
 let user=null;
 let profile=null;
 let role=null;
 let selectedRole="student";
 let allStudents=[];
-let loggingOut=false;
-
+let currentModuleRows=[];
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
 function escapeHTML(value){
-
-  if(value===null || value===undefined){
-    return "";
-  }
-
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+ if(value===null||value===undefined)return "";
+ return String(value)
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
 }
-
 
 function showAuthMessage(message,type=""){
-
-  const box=document.getElementById("authMessage");
-
-  if(!box)return;
-
-  box.textContent=message;
-  box.className="authMessage show "+type;
+ const box=document.getElementById("authMessage");
+ if(!box)return;
+ box.textContent=message;
+ box.className="authMessage show "+type;
 }
-
 
 function clearAuthMessage(){
-
-  const box=document.getElementById("authMessage");
-
-  if(!box)return;
-
-  box.textContent="";
-  box.className="authMessage";
+ const box=document.getElementById("authMessage");
+ if(!box)return;
+ box.textContent="";
+ box.className="authMessage";
 }
 
+function money(value){
+ const n=Number(value||0);
+ return "₦"+n.toLocaleString("en-NG",{minimumFractionDigits:0});
+}
+
+function dateText(value){
+ if(!value)return "—";
+ const d=new Date(value);
+ return isNaN(d)?"—":d.toLocaleDateString("en-NG");
+}
+
+function safeJSON(value){
+ try{return JSON.stringify(value||{});}
+ catch(e){return "{}";}
+}
 
 /* =========================================================
    LANDING
 ========================================================= */
 
 function renderLanding(){
+ document.getElementById("app").innerHTML=`
+ <header class="navbar">
+  <div class="logo"><div class="logoIcon">P</div>PHILMYSCHOOL</div>
+  <div class="navButtons">
+   <button class="btn secondary" onclick="renderLogin()">Login</button>
+   <button class="btn primary" onclick="renderRegister('student')">Get Started</button>
+  </div>
+ </header>
 
-  document.getElementById("app").innerHTML=`
+ <section class="hero">
+  <div>
+   <div class="eyebrow">STUDENT-FIRST EDUCATION PLATFORM</div>
+   <h1>Learn smarter.<br><span>Perform better.</span></h1>
+   <p class="heroText">
+    PHILMYSCHOOL brings CBT practice, mock examinations,
+    study materials, tutors and educational opportunities
+    together in one platform.
+   </p>
+   <div class="heroButtons">
+    <button class="btn primary" onclick="renderRegister('student')">
+     🎓 Start Learning
+    </button>
+    <button class="btn secondary" onclick="renderRegister('tutor')">
+     👨‍🏫 Become a Tutor
+    </button>
+   </div>
+  </div>
 
-  <header class="navbar">
+  <div class="preview">
+   <div style="display:flex;justify-content:space-between">
+    <strong>Student Progress</strong><strong>82%</strong>
+   </div>
+   <div class="progress"><span></span></div>
+   <div class="previewGrid">
+    <div class="previewCard"><small>Questions</small><strong>128</strong></div>
+    <div class="previewCard"><small>Mock Exams</small><strong>12</strong></div>
+    <div class="previewCard"><small>Subjects</small><strong>9</strong></div>
+    <div class="previewCard"><small>Accuracy</small><strong>86%</strong></div>
+   </div>
+  </div>
+ </section>
 
-    <div class="logo">
-      <div class="logoIcon">P</div>
-      PHILMYSCHOOL
-    </div>
+ <section class="features">
+  <div class="sectionTitle">
+   <div class="eyebrow">EVERYTHING IN ONE PLACE</div>
+   <h2>Built around the student.</h2>
+   <p class="muted">
+    Learn, practice, prepare for examinations,
+    connect with tutors and discover opportunities.
+   </p>
+  </div>
 
-    <div class="navButtons">
-
-      <button
-        class="btn secondary"
-        onclick="renderLogin()">
-        Login
-      </button>
-
-      <button
-        class="btn primary"
-        onclick="renderRegister('student')">
-        Get Started
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <section class="hero">
-
-    <div>
-
-      <div class="eyebrow">
-        STUDENT-FIRST EDUCATION PLATFORM
-      </div>
-
-      <h1>
-        Learn smarter.<br>
-        <span>Perform better.</span>
-      </h1>
-
-      <p class="heroText">
-        PHILMYSCHOOL brings CBT practice,
-        mock examinations, study materials,
-        tutors and educational opportunities
-        together in one platform.
-      </p>
-
-      <div class="heroButtons">
-
-        <button
-          class="btn primary"
-          onclick="renderRegister('student')">
-          🎓 Start Learning
-        </button>
-
-        <button
-          class="btn secondary"
-          onclick="renderRegister('tutor')">
-          👨‍🏫 Become a Tutor
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="preview">
-
-      <div style="
-        display:flex;
-        justify-content:space-between;
-      ">
-
-        <strong>Student Progress</strong>
-        <strong>82%</strong>
-
-      </div>
-
-      <div class="progress">
-        <span></span>
-      </div>
-
-      <div class="previewGrid">
-
-        <div class="previewCard">
-          <small>Questions</small>
-          <strong>128</strong>
-        </div>
-
-        <div class="previewCard">
-          <small>Mock Exams</small>
-          <strong>12</strong>
-        </div>
-
-        <div class="previewCard">
-          <small>Subjects</small>
-          <strong>9</strong>
-        </div>
-
-        <div class="previewCard">
-          <small>Accuracy</small>
-          <strong>86%</strong>
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <section class="features">
-
-    <div class="sectionTitle">
-
-      <div class="eyebrow">
-        EVERYTHING IN ONE PLACE
-      </div>
-
-      <h2>
-        Built around the student.
-      </h2>
-
-      <p class="muted">
-        Learn, practice, prepare for examinations,
-        connect with tutors and discover opportunities.
-      </p>
-
-    </div>
-
-
-    <div class="featureGrid">
-
-      <div class="feature">
-        <div class="featureIcon">📝</div>
-        <h3>CBT & Mock Exams</h3>
-        <p>
-          Timed examinations, practice questions,
-          automatic scoring and results.
-        </p>
-      </div>
-
-      <div class="feature">
-        <div class="featureIcon">📚</div>
-        <h3>Study Materials</h3>
-        <p>
-          Organized resources for your subjects
-          and examination preparation.
-        </p>
-      </div>
-
-      <div class="feature">
-        <div class="featureIcon">👨‍🏫</div>
-        <h3>Professional Tutors</h3>
-        <p>
-          Find tutors and book private lessons.
-        </p>
-      </div>
-
-      <div class="feature">
-        <div class="featureIcon">🎓</div>
-        <h3>Scholarships</h3>
-        <p>
-          Discover scholarships and educational opportunities.
-        </p>
-      </div>
-
-    </div>
-
-  </section>
-
-  `;
+  <div class="featureGrid">
+   <div class="feature"><div class="featureIcon">📝</div>
+    <h3>CBT & Mock Exams</h3><p>Timed examinations and practice.</p>
+   </div>
+   <div class="feature"><div class="featureIcon">📚</div>
+    <h3>Study Materials</h3><p>Organized learning resources.</p>
+   </div>
+   <div class="feature"><div class="featureIcon">👨‍🏫</div>
+    <h3>Professional Tutors</h3><p>Find and connect with tutors.</p>
+   </div>
+   <div class="feature"><div class="featureIcon">🎓</div>
+    <h3>Scholarships</h3><p>Discover educational opportunities.</p>
+   </div>
+  </div>
+ </section>`;
 }
-
 
 /* =========================================================
    LOGIN
 ========================================================= */
 
 function renderLogin(){
-
-  document.getElementById("app").innerHTML=`
-
-  <div class="authPage">
-
-    <div class="authBrand">
-
-      <div class="logo">
-        <div class="logoIcon">P</div>
-        PHILMYSCHOOL
-      </div>
-
-      <div>
-
-        <h1>
-          Welcome<br>
-          back.
-        </h1>
-
-        <p>
-          Continue your learning journey
-          with PHILMYSCHOOL.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="authBoxWrap">
-
-      <div class="authBox">
-
-        <div class="logo">
-          <div class="logoIcon">P</div>
-          PHILMYSCHOOL
-        </div>
-
-        <h2>Sign in</h2>
-
-        <p class="muted">
-          Enter your account details.
-        </p>
-
-
-        <form onsubmit="login(event)">
-
-          <div class="formGroup">
-
-            <label>Email</label>
-
-            <input
-              id="loginEmail"
-              type="email"
-              autocomplete="email"
-              required>
-
-          </div>
-
-
-          <div class="formGroup">
-
-            <label>Password</label>
-
-            <input
-              id="loginPassword"
-              type="password"
-              autocomplete="current-password"
-              required>
-
-          </div>
-
-
-          <div id="authMessage"
-               class="authMessage">
-          </div>
-
-
-          <button
-            id="loginButton"
-            class="btn primary"
-            style="width:100%;margin-top:18px">
-
-            Sign In
-
-          </button>
-
-        </form>
-
-
-        <div class="authSwitch">
-
-          Don't have an account?
-
-          <button
-            class="linkButton"
-            onclick="renderRegister('student')">
-
-            Create account
-
-          </button>
-
-        </div>
-
-
-        <div style="
-          text-align:center;
-          margin-top:12px;
-        ">
-
-          <button
-            class="linkButton"
-            onclick="renderLanding()">
-
-            ← Back to PHILMYSCHOOL
-
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
+ document.getElementById("app").innerHTML=`
+ <div class="authPage">
+  <div class="authBrand">
+   <div class="logo"><div class="logoIcon">P</div>PHILMYSCHOOL</div>
+   <div>
+    <h1>Welcome<br>back.</h1>
+    <p>Continue your learning journey with PHILMYSCHOOL.</p>
+   </div>
   </div>
 
-  `;
-}
+  <div class="authBoxWrap">
+   <div class="authBox">
+    <div class="logo"><div class="logoIcon">P</div>PHILMYSCHOOL</div>
+    <h2>Sign in</h2>
+    <p class="muted">Enter your account details.</p>
 
+    <form onsubmit="login(event)">
+     <div class="formGroup">
+      <label>Email</label>
+      <input id="loginEmail" type="email" autocomplete="email" required>
+     </div>
+
+     <div class="formGroup">
+      <label>Password</label>
+      <input id="loginPassword" type="password"
+       autocomplete="current-password" required>
+     </div>
+
+     <div id="authMessage" class="authMessage"></div>
+
+     <button id="loginButton" class="btn primary"
+      style="width:100%;margin-top:18px">
+      Sign In
+     </button>
+    </form>
+
+    <div class="authSwitch">
+     Don't have an account?
+     <button class="linkButton" onclick="renderRegister('student')">
+      Create account
+     </button>
+    </div>
+
+    <div style="text-align:center;margin-top:12px">
+     <button class="linkButton" onclick="renderLanding()">
+      ← Back to PHILMYSCHOOL
+     </button>
+    </div>
+   </div>
+  </div>
+ </div>`;
+}
 
 /* =========================================================
    REGISTER
 ========================================================= */
 
 function renderRegister(type="student"){
-
-  selectedRole=type;
-
-  document.getElementById("app").innerHTML=`
-
-  <div class="authPage">
-
-    <div class="authBrand">
-
-      <div class="logo">
-
-        <div class="logoIcon">P</div>
-        PHILMYSCHOOL
-
-      </div>
-
-      <div>
-
-        <h1>
-          Start your<br>
-          journey.
-        </h1>
-
-        <p>
-          Learn, practice, teach and grow
-          with PHILMYSCHOOL.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="authBoxWrap">
-
-      <div class="authBox">
-
-        <div class="logo">
-
-          <div class="logoIcon">P</div>
-          PHILMYSCHOOL
-
-        </div>
-
-        <h2>Create account</h2>
-
-        <p class="muted">
-          Choose how you want to use PHILMYSCHOOL.
-        </p>
-
-
-        <div class="roleGrid">
-
-          <button
-            id="studentRole"
-            type="button"
-            class="roleChoice ${type==="student"?"active":""}"
-            onclick="chooseRole('student')">
-
-            🎓 Student
-
-          </button>
-
-
-          <button
-            id="tutorRole"
-            type="button"
-            class="roleChoice ${type==="tutor"?"active":""}"
-            onclick="chooseRole('tutor')">
-
-            👨‍🏫 Tutor
-
-          </button>
-
-        </div>
-
-
-        <form onsubmit="register(event)">
-
-          <div class="formGroup">
-
-            <label>First name</label>
-
-            <input
-              id="firstName"
-              autocomplete="given-name"
-              required>
-
-          </div>
-
-
-          <div class="formGroup">
-
-            <label>Last name</label>
-
-            <input
-              id="lastName"
-              autocomplete="family-name"
-              required>
-
-          </div>
-
-
-          <div class="formGroup">
-
-            <label>Email</label>
-
-            <input
-              id="registerEmail"
-              type="email"
-              autocomplete="email"
-              required>
-
-          </div>
-
-
-          <div class="formGroup">
-
-            <label>Password</label>
-
-            <input
-              id="registerPassword"
-              type="password"
-              minlength="6"
-              autocomplete="new-password"
-              required>
-
-          </div>
-
-
-          <div
-            id="authMessage"
-            class="authMessage">
-          </div>
-
-
-          <button
-            id="registerButton"
-            class="btn primary"
-            style="width:100%;margin-top:18px">
-
-            Create Account
-
-          </button>
-
-        </form>
-
-
-        <div class="authSwitch">
-
-          Already have an account?
-
-          <button
-            class="linkButton"
-            onclick="renderLogin()">
-
-            Sign in
-
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
+ selectedRole=type;
+
+ document.getElementById("app").innerHTML=`
+ <div class="authPage">
+  <div class="authBrand">
+   <div class="logo"><div class="logoIcon">P</div>PHILMYSCHOOL</div>
+   <div>
+    <h1>Start your<br>journey.</h1>
+    <p>Learn, practice, teach and grow with PHILMYSCHOOL.</p>
+   </div>
   </div>
 
-  `;
-}
+  <div class="authBoxWrap">
+   <div class="authBox">
+    <div class="logo"><div class="logoIcon">P</div>PHILMYSCHOOL</div>
+    <h2>Create account</h2>
+    <p class="muted">Choose how you want to use PHILMYSCHOOL.</p>
 
+    <div class="roleGrid">
+     <button id="studentRole" type="button"
+      class="roleChoice ${type==="student"?"active":""}"
+      onclick="chooseRole('student')">🎓 Student</button>
+
+     <button id="tutorRole" type="button"
+      class="roleChoice ${type==="tutor"?"active":""}"
+      onclick="chooseRole('tutor')">👨‍🏫 Tutor</button>
+    </div>
+
+    <form onsubmit="register(event)">
+     <div class="formGroup">
+      <label>First name</label>
+      <input id="firstName" required>
+     </div>
+
+     <div class="formGroup">
+      <label>Last name</label>
+      <input id="lastName" required>
+     </div>
+
+     <div class="formGroup">
+      <label>Email</label>
+      <input id="registerEmail" type="email" required>
+     </div>
+
+     <div class="formGroup">
+      <label>Password</label>
+      <input id="registerPassword" type="password"
+       minlength="6" required>
+     </div>
+
+     <div id="authMessage" class="authMessage"></div>
+
+     <button id="registerButton" class="btn primary"
+      style="width:100%;margin-top:18px">
+      Create Account
+     </button>
+    </form>
+
+    <div class="authSwitch">
+     Already have an account?
+     <button class="linkButton" onclick="renderLogin()">Sign in</button>
+    </div>
+   </div>
+  </div>
+ </div>`;
+}
 
 function chooseRole(type){
-
-  selectedRole=type;
-
-  const student=document.getElementById("studentRole");
-  const tutor=document.getElementById("tutorRole");
-
-  if(student)
-    student.classList.toggle("active",type==="student");
-
-  if(tutor)
-    tutor.classList.toggle("active",type==="tutor");
+ selectedRole=type;
+ document.getElementById("studentRole")
+ .classList.toggle("active",type==="student");
+ document.getElementById("tutorRole")
+ .classList.toggle("active",type==="tutor");
 }
 
-
 /* =========================================================
-   REGISTER
+   AUTH
 ========================================================= */
 
 async function register(event){
+ event.preventDefault();
+ clearAuthMessage();
 
-  event.preventDefault();
+ const firstName=document.getElementById("firstName").value.trim();
+ const lastName=document.getElementById("lastName").value.trim();
+ const email=document.getElementById("registerEmail").value.trim();
+ const password=document.getElementById("registerPassword").value;
+ const button=document.getElementById("registerButton");
 
-  clearAuthMessage();
+ button.disabled=true;
+ button.textContent="Creating account...";
+ showAuthMessage("Creating your account...");
 
-  const firstName=
-    document.getElementById("firstName").value.trim();
-
-  const lastName=
-    document.getElementById("lastName").value.trim();
-
-  const email=
-    document.getElementById("registerEmail").value.trim();
-
-  const password=
-    document.getElementById("registerPassword").value;
-
-  const button=
-    document.getElementById("registerButton");
-
-  button.disabled=true;
-  button.textContent="Creating account...";
-
-  showAuthMessage("Creating your account...","");
-
-  try{
-
-    const result=
-      await db.auth.signUp({
-
-        email,
-        password,
-
-        options:{
-          data:{
-            first_name:firstName,
-            last_name:lastName,
-            requested_role:selectedRole
-          }
-        }
-
-      });
-
-    if(result.error){
-
-      showAuthMessage(
-        result.error.message,
-        "error"
-      );
-
-      button.disabled=false;
-      button.textContent="Create Account";
-
-      return;
+ try{
+  const result=await db.auth.signUp({
+   email,password,
+   options:{
+    data:{
+     first_name:firstName,
+     last_name:lastName,
+     requested_role:selectedRole
     }
+   }
+  });
 
-    if(!result.data.session){
-
-      showAuthMessage(
-        "Account created successfully. Please confirm your email, then sign in.",
-        "success"
-      );
-
-      button.disabled=false;
-      button.textContent="Create Account";
-
-      return;
-    }
-
-    await loadCurrentUser();
-
-  }catch(error){
-
-    console.error(error);
-
-    showAuthMessage(
-      error.message||"Registration failed.",
-      "error"
-    );
-
-    button.disabled=false;
-    button.textContent="Create Account";
+  if(result.error){
+   showAuthMessage(result.error.message,"error");
+   button.disabled=false;
+   button.textContent="Create Account";
+   return;
   }
+
+  if(!result.data.session){
+   showAuthMessage(
+    "Account created. Please confirm your email, then sign in.",
+    "success"
+   );
+   button.disabled=false;
+   button.textContent="Create Account";
+   return;
+  }
+
+  await loadCurrentUser();
+ }catch(error){
+  console.error(error);
+  showAuthMessage(error.message||"Registration failed.","error");
+  button.disabled=false;
+  button.textContent="Create Account";
+ }
 }
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
 
 async function login(event){
+ event.preventDefault();
+ clearAuthMessage();
 
-  event.preventDefault();
+ const email=document.getElementById("loginEmail").value.trim();
+ const password=document.getElementById("loginPassword").value;
+ const button=document.getElementById("loginButton");
 
-  clearAuthMessage();
+ button.disabled=true;
+ button.textContent="Signing in...";
+ showAuthMessage("Signing you in...");
 
-  const email=
-    document.getElementById("loginEmail").value.trim();
+ try{
+  const result=await db.auth.signInWithPassword({email,password});
 
-  const password=
-    document.getElementById("loginPassword").value;
-
-  const button=
-    document.getElementById("loginButton");
-
-  button.disabled=true;
-  button.textContent="Signing in...";
-
-  showAuthMessage("Signing you in...","");
-
-  try{
-
-    const result=
-      await db.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    if(result.error){
-
-      showAuthMessage(
-        result.error.message,
-        "error"
-      );
-
-      button.disabled=false;
-      button.textContent="Sign In";
-
-      return;
-    }
-
-    await loadCurrentUser();
-
-  }catch(error){
-
-    console.error(error);
-
-    showAuthMessage(
-      error.message||"Login failed.",
-      "error"
-    );
-
-    button.disabled=false;
-    button.textContent="Sign In";
+  if(result.error){
+   showAuthMessage(result.error.message,"error");
+   button.disabled=false;
+   button.textContent="Sign In";
+   return;
   }
+
+  await loadCurrentUser();
+ }catch(error){
+  console.error(error);
+  showAuthMessage(error.message||"Login failed.","error");
+  button.disabled=false;
+  button.textContent="Sign In";
+ }
 }
-
-
-/* =========================================================
-   CURRENT USER
-========================================================= */
 
 async function loadCurrentUser(){
+ try{
+  const auth=await db.auth.getUser();
 
-  try{
-
-    const auth=
-      await db.auth.getUser();
-
-    if(auth.error || !auth.data.user){
-
-      user=null;
-      profile=null;
-      role=null;
-
-      renderLanding();
-
-      return;
-    }
-
-    user=auth.data.user;
-
-    const profileResult=
-      await db
-        .from("profiles")
-        .select("*")
-        .eq("id",user.id)
-        .maybeSingle();
-
-    profile=
-      profileResult.data||{
-        id:user.id,
-        email:user.email,
-        display_name:user.email
-      };
-
-    const roleResult=
-      await db
-        .from("user_roles")
-        .select("role,is_active,created_at")
-        .eq("user_id",user.id)
-        .eq("is_active",true)
-        .order("created_at",{ascending:true})
-        .limit(1)
-        .maybeSingle();
-
-    role=
-      roleResult.data?.role||"student";
-
-    openPortal();
-
-  }catch(error){
-
-    console.error(error);
-
-    renderLanding();
+  if(auth.error||!auth.data.user){
+   user=null;profile=null;role=null;
+   renderLanding();
+   return;
   }
+
+  user=auth.data.user;
+
+  const profileResult=await db
+   .from("profiles")
+   .select("*")
+   .eq("id",user.id)
+   .maybeSingle();
+
+  profile=profileResult.data||{
+   id:user.id,email:user.email,display_name:user.email
+  };
+
+  const roleResult=await db
+   .from("user_roles")
+   .select("role,is_active,created_at")
+   .eq("user_id",user.id)
+   .eq("is_active",true)
+   .order("created_at",{ascending:true})
+   .limit(1)
+   .maybeSingle();
+
+  role=roleResult.data?.role||"student";
+
+  openPortal();
+ }catch(error){
+  console.error(error);
+  renderLanding();
+ }
 }
-
-
-/* =========================================================
-   OPEN PORTAL
-========================================================= */
 
 function openPortal(){
-
-  if(!user){
-
-    renderLanding();
-    return;
-
-  }
-
-  if(role==="admin"){
-
-    renderAdmin();
-    return;
-
-  }
-
-  if(role==="tutor"){
-
-    renderTutor();
-    return;
-
-  }
-
-  renderStudent();
+ if(!user){renderLanding();return}
+ if(role==="admin"){renderAdmin();return}
+ if(role==="tutor"){renderTutor();return}
+ renderStudent();
 }
 
-
 /* =========================================================
-   PORTAL HEADER
+   PORTAL
 ========================================================= */
 
 function portalHeader(title){
-
-  return `
-
-    <header class="topbar">
-
-      <button
-        class="mobileMenu"
-        onclick="toggleMobileMenu()">
-
-        ☰
-
-      </button>
-
-      <strong>
-        ${escapeHTML(title)}
-      </strong>
-
-      <div class="topUser">
-
-        <span>
-          ${escapeHTML(
-            profile?.display_name||
-            user?.email||
-            ""
-          )}
-        </span>
-
-        <button
-          class="mobileLogout"
-          onclick="logout()">
-
-          🚪 Logout
-
-        </button>
-
-      </div>
-
-    </header>
-
-  `;
+ return `
+ <header class="topbar">
+  <button class="mobileMenu" onclick="toggleMobileMenu()">☰</button>
+  <strong>${escapeHTML(title)}</strong>
+  <div class="topUser">
+   <span>${escapeHTML(profile?.display_name||user?.email||"")}</span>
+   <button class="mobileLogout" onclick="logout()">🚪 Logout</button>
+  </div>
+ </header>`;
 }
-
-
-/* =========================================================
-   MOBILE MENU
-========================================================= */
 
 function toggleMobileMenu(){
-
-  const sidebar=
-    document.querySelector(".sidebar");
-
-  if(!sidebar)return;
-
-  sidebar.style.display=
-    sidebar.style.display==="block"
-      ?"none"
-      :"block";
+ const sidebar=document.querySelector(".sidebar");
+ if(!sidebar)return;
+ sidebar.style.display=sidebar.style.display==="block"?"none":"block";
 }
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
 
 function sidebar(items){
+ return `
+ <aside class="sidebar">
+  <div class="sidebarLogo">
+   <div class="sidebarLogoIcon">P</div>
+   PHILMYSCHOOL
+  </div>
 
-  return `
+  <div class="sideLabel">
+   ${escapeHTML(
+    role==="admin"?"ADMIN PORTAL":
+    role==="tutor"?"TUTOR PORTAL":"STUDENT PORTAL"
+   )}
+  </div>
 
-    <aside class="sidebar">
+  ${items}
 
-      <div class="sidebarLogo">
-
-        <div class="sidebarLogoIcon">
-          P
-        </div>
-
-        PHILMYSCHOOL
-
-      </div>
-
-
-      <div class="sideLabel">
-
-        ${escapeHTML(
-          role==="admin"
-          ?"ADMIN PORTAL"
-          :role==="tutor"
-          ?"TUTOR PORTAL"
-          :"STUDENT PORTAL"
-        )}
-
-      </div>
-
-
-      ${items}
-
-
-      <button
-        class="sideButton logoutButton"
-        onclick="logout()">
-
-        🚪 Sign Out
-
-      </button>
-
-    </aside>
-
-  `;
+  <button class="sideButton logoutButton" onclick="logout()">
+   🚪 Sign Out
+  </button>
+ </aside>`;
 }
 
-
 /* =========================================================
-   STUDENT PORTAL
+   STUDENT
 ========================================================= */
 
 function renderStudent(){
+ const nav=sidebar(`
+ <button class="sideButton active" onclick="renderStudent()">📊 Dashboard</button>
+ <button class="sideButton" onclick="featurePage('Mock Exams')">📝 Mock Exams</button>
+ <button class="sideButton" onclick="featurePage('Practice Questions')">❓ Practice Questions</button>
+ <button class="sideButton" onclick="featurePage('Study Materials')">📚 Study Materials</button>
+ <button class="sideButton" onclick="featurePage('Study Plans')">📅 Study Plan</button>
+ <button class="sideButton" onclick="featurePage('Find a Tutor')">👨‍🏫 Find a Tutor</button>
+ <button class="sideButton" onclick="featurePage('Scholarships')">🎓 Scholarships</button>
+ <button class="sideButton" onclick="featurePage('My Progress')">📈 My Progress</button>
+ <button class="sideButton" onclick="featurePage('Subscription')">💳 Subscription</button>
+ `);
 
-  const nav=sidebar(`
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${nav}<div class="main">
+ ${portalHeader("Student Dashboard")}
+ <main class="content">
+  <h1>Welcome, ${escapeHTML(profile?.first_name||"Student")} 👋</h1>
+  <p class="muted">Your PHILMYSCHOOL learning dashboard.</p>
 
-    <button class="sideButton active"
-      onclick="renderStudent()">
-      📊 Dashboard
-    </button>
+  <div class="stats">
+   <div class="stat"><small>Questions Practiced</small><strong>0</strong></div>
+   <div class="stat"><small>Mock Exams</small><strong>0</strong></div>
+   <div class="stat"><small>Accuracy</small><strong>—</strong></div>
+   <div class="stat"><small>Study Time</small><strong>0m</strong></div>
+  </div>
 
-    <button class="sideButton"
-      onclick="featurePage('Mock Exams')">
-      📝 Mock Exams
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Practice Questions')">
-      ❓ Practice Questions
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Study Materials')">
-      📚 Study Materials
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Study Plans')">
-      📅 Study Plan
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Find a Tutor')">
-      👨‍🏫 Find a Tutor
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Scholarships')">
-      🎓 Scholarships
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('My Progress')">
-      📈 My Progress
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Subscription')">
-      💳 Subscription
-    </button>
-
-  `);
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader("Student Dashboard")}
-
-        <main class="content">
-
-          <h1>
-            Welcome,
-            ${escapeHTML(profile?.first_name||"Student")} 👋
-          </h1>
-
-          <p class="muted">
-            Your PHILMYSCHOOL learning dashboard.
-          </p>
-
-          <div class="stats">
-
-            <div class="stat">
-              <small>Questions Practiced</small>
-              <strong>0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Mock Exams</small>
-              <strong>0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Accuracy</small>
-              <strong>—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Study Time</small>
-              <strong>0m</strong>
-            </div>
-
-          </div>
-
-          <div class="panelGrid">
-
-            <div class="panel">
-
-              <h2>📝 Mock Exams</h2>
-
-              <p>
-                Take timed practice examinations
-                and receive your results.
-              </p>
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('Mock Exams')">
-
-                Open Mock Exams
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>📚 Study Materials</h2>
-
-              <p>
-                Access organized learning resources
-                for your subjects.
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Study Materials')">
-
-                Browse Materials
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>👨‍🏫 Find a Tutor</h2>
-
-              <p>
-                Discover tutors and book lessons.
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Find a Tutor')">
-
-                Find Tutors
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>🎓 Opportunities</h2>
-
-              <p>
-                Explore scholarships and
-                educational opportunities.
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Scholarships')">
-
-                Explore
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
+  <div class="panelGrid">
+   <div class="panel"><h2>📝 Mock Exams</h2>
+    <p>Take timed practice examinations and receive results.</p>
+    <button class="btn primary" style="margin-top:20px"
+     onclick="featurePage('Mock Exams')">Open Mock Exams</button>
+   </div>
+   <div class="panel"><h2>📚 Study Materials</h2>
+    <p>Access organized learning resources.</p>
+    <button class="btn secondary" style="margin-top:20px"
+     onclick="featurePage('Study Materials')">Browse Materials</button>
+   </div>
+   <div class="panel"><h2>👨‍🏫 Find a Tutor</h2>
+    <p>Discover tutors and book lessons.</p>
+    <button class="btn secondary" style="margin-top:20px"
+     onclick="featurePage('Find a Tutor')">Find Tutors</button>
+   </div>
+   <div class="panel"><h2>🎓 Opportunities</h2>
+    <p>Explore scholarships and educational opportunities.</p>
+    <button class="btn secondary" style="margin-top:20px"
+     onclick="featurePage('Scholarships')">Explore</button>
+   </div>
+  </div>
+ </main></div></div>`;
 }
 
-
 /* =========================================================
-   TUTOR PORTAL
+   TUTOR
 ========================================================= */
 
 function renderTutor(){
+ const nav=sidebar(`
+ <button class="sideButton active" onclick="renderTutor()">📊 Dashboard</button>
+ <button class="sideButton" onclick="featurePage('My Tutor Services')">📚 My Services</button>
+ <button class="sideButton" onclick="featurePage('Tutor Bookings')">📅 Bookings</button>
+ <button class="sideButton" onclick="featurePage('My Students')">👨‍🎓 My Students</button>
+ <button class="sideButton" onclick="featurePage('Tutor Availability')">🗓 Availability</button>
+ <button class="sideButton" onclick="featurePage('Tutor Messages')">💬 Messages</button>
+ <button class="sideButton" onclick="featurePage('Tutor Materials')">📎 Materials</button>
+ <button class="sideButton" onclick="featurePage('Tutor Earnings')">💰 Earnings</button>
+ <button class="sideButton" onclick="featurePage('Withdrawals')">🏦 Withdrawals</button>
+ `);
 
-  const nav=sidebar(`
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${nav}<div class="main">
+ ${portalHeader("Tutor Dashboard")}
+ <main class="content">
+  <h1>Tutor Dashboard 👨‍🏫</h1>
+  <p class="muted">Manage your tutoring business, students and earnings.</p>
 
-    <button class="sideButton active"
-      onclick="renderTutor()">
-      📊 Dashboard
-    </button>
+  <div class="stats">
+   <div class="stat"><small>Students</small><strong>0</strong></div>
+   <div class="stat"><small>Bookings</small><strong>0</strong></div>
+   <div class="stat"><small>Earnings</small><strong>₦0</strong></div>
+   <div class="stat"><small>Rating</small><strong>—</strong></div>
+  </div>
 
-    <button class="sideButton"
-      onclick="featurePage('My Tutor Services')">
-      📚 My Services
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Tutor Bookings')">
-      📅 Bookings
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('My Students')">
-      👨‍🎓 My Students
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Tutor Availability')">
-      🗓 Availability
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Tutor Messages')">
-      💬 Messages
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Tutor Materials')">
-      📎 Materials
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Tutor Earnings')">
-      💰 Earnings
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Withdrawals')">
-      🏦 Withdrawals
-    </button>
-
-  `);
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader("Tutor Dashboard")}
-
-        <main class="content">
-
-          <h1>
-            Tutor Dashboard 👨‍🏫
-          </h1>
-
-          <p class="muted">
-            Manage your tutoring business,
-            students and earnings.
-          </p>
-
-          <div class="stats">
-
-            <div class="stat">
-              <small>Students</small>
-              <strong>0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Bookings</small>
-              <strong>0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Earnings</small>
-              <strong>₦0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Rating</small>
-              <strong>—</strong>
-            </div>
-
-          </div>
-
-          <div class="panelGrid">
-
-            <div class="panel">
-              <h2>📚 My Services</h2>
-              <p>
-                Create and manage tutoring services.
-              </p>
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('My Tutor Services')">
-                Manage Services
-              </button>
-            </div>
-
-            <div class="panel">
-              <h2>📅 Bookings</h2>
-              <p>
-                View upcoming lessons and bookings.
-              </p>
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Bookings')">
-                View Bookings
-              </button>
-            </div>
-
-            <div class="panel">
-              <h2>💬 Messages</h2>
-              <p>
-                Communicate with students.
-              </p>
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Messages')">
-                Open Messages
-              </button>
-            </div>
-
-            <div class="panel">
-              <h2>💰 Earnings</h2>
-              <p>
-                Track tutoring income and withdrawals.
-              </p>
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Earnings')">
-                View Earnings
-              </button>
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
+  <div class="panelGrid">
+   <div class="panel"><h2>📚 My Services</h2>
+    <p>Create and manage tutoring services.</p>
+    <button class="btn primary" style="margin-top:20px"
+     onclick="featurePage('My Tutor Services')">Manage Services</button>
+   </div>
+   <div class="panel"><h2>📅 Bookings</h2>
+    <p>View upcoming lessons and bookings.</p>
+    <button class="btn secondary" style="margin-top:20px"
+     onclick="featurePage('Tutor Bookings')">View Bookings</button>
+   </div>
+   <div class="panel"><h2>💬 Messages</h2>
+    <p>Communicate with students.</p>
+    <button class="btn secondary" style="margin-top:20px"
+     onclick="featurePage('Tutor Messages')">Open Messages</button>
+   </div>
+   <div class="panel"><h2>💰 Earnings</h2>
+    <p>Track tutoring income and withdrawals.</p>
+    <button class="btn secondary" style="margin-top:20px"
+     onclick="featurePage('Tutor Earnings')">View Earnings</button>
+   </div>
+  </div>
+ </main></div></div>`;
 }
 
+/* =========================================================
+   ADMIN SIDEBAR
+========================================================= */
+
+function adminSidebar(){
+ return sidebar(`
+ <button class="sideButton active" onclick="renderAdmin()">📊 Dashboard</button>
+ <button class="sideButton" onclick="renderStudentManagement()">👨‍🎓 Students</button>
+ <button class="sideButton" onclick="adminModule('tutors')">👨‍🏫 Tutors</button>
+ <button class="sideButton" onclick="adminModule('exams')">📝 Exams</button>
+ <button class="sideButton" onclick="adminModule('questions')">❓ Question Bank</button>
+ <button class="sideButton" onclick="adminModule('materials')">📚 Materials</button>
+ <button class="sideButton" onclick="adminModule('scholarships')">🎓 Scholarships</button>
+ <button class="sideButton" onclick="adminModule('subscriptions')">💳 Subscriptions</button>
+ <button class="sideButton" onclick="adminModule('transactions')">💰 Transactions</button>
+ <button class="sideButton" onclick="adminModule('withdrawals')">🏦 Withdrawals</button>
+ <button class="sideButton" onclick="adminModule('reports')">📊 Reports</button>
+ `);
+}
 
 /* =========================================================
-   ADMIN PORTAL
+   ADMIN DASHBOARD
 ========================================================= */
 
 function renderAdmin(){
-
-  const nav=sidebar(`
-
-    <button class="sideButton active"
-      onclick="renderAdmin()">
-      📊 Dashboard
-    </button>
-
-    <button class="sideButton"
-      onclick="renderStudentManagement()">
-      👨‍🎓 Students
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Tutor Management')">
-      👨‍🏫 Tutors
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Exam Management')">
-      📝 Exams
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Question Bank')">
-      ❓ Question Bank
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Study Materials')">
-      📚 Materials
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Scholarship Management')">
-      🎓 Scholarships
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Subscriptions')">
-      💳 Subscriptions
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Transactions')">
-      💰 Transactions
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Withdrawals')">
-      🏦 Withdrawals
-    </button>
-
-    <button class="sideButton"
-      onclick="featurePage('Reports')">
-      📊 Reports
-    </button>
-
-  `);
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader("Admin Dashboard")}
-
-        <main class="content">
-
-          <h1>
-            PHILMYSCHOOL Admin 🛡️
-          </h1>
-
-          <p class="muted">
-            Manage the entire PHILMYSCHOOL ecosystem.
-          </p>
-
-          <div class="status">
-            ✓ Supabase connection configured.
-          </div>
-
-          <div class="stats">
-
-            <div class="stat">
-              <small>Students</small>
-              <strong id="adminStudentCount">—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Tutors</small>
-              <strong id="adminTutorCount">—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Exams</small>
-              <strong id="adminExamCount">—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Questions</small>
-              <strong id="adminQuestionCount">—</strong>
-            </div>
-
-          </div>
-
-
-          <div class="panelGrid">
-
-            <div class="panel">
-
-              <h2>👨‍🎓 Student Management</h2>
-
-              <p>
-                Manage student accounts and profiles.
-              </p>
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="renderStudentManagement()">
-
-                Open Students
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>👨‍🏫 Tutor Management</h2>
-
-              <p>
-                Review tutor accounts and profiles.
-              </p>
-
-              <button
-                class="btn primary"
-                style="margin-top:20px"
-                onclick="featurePage('Tutor Management')">
-
-                Manage Tutors
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>📝 Exam Management</h2>
-
-              <p>
-                Manage examinations and questions.
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Exam Management')">
-
-                Manage Exams
-
-              </button>
-
-            </div>
-
-
-            <div class="panel">
-
-              <h2>💰 Financial Management</h2>
-
-              <p>
-                Monitor subscriptions, transactions
-                and withdrawals.
-              </p>
-
-              <button
-                class="btn secondary"
-                style="margin-top:20px"
-                onclick="featurePage('Transactions')">
-
-                Open Finance
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-  loadAdminCounts();
+ document.getElementById("app").innerHTML=`
+ <div class="portal">
+ ${adminSidebar()}
+ <div class="main">
+ ${portalHeader("Admin Dashboard")}
+ <main class="content">
+
+ <h1>PHILMYSCHOOL Admin 🛡️</h1>
+ <p class="muted">Manage the entire PHILMYSCHOOL ecosystem.</p>
+
+ <div class="status">✓ Supabase connection configured.</div>
+
+ <div class="stats">
+  <div class="stat"><small>Students</small><strong id="adminStudentCount">—</strong></div>
+  <div class="stat"><small>Tutors</small><strong id="adminTutorCount">—</strong></div>
+  <div class="stat"><small>Transactions</small><strong id="adminTransactionCount">—</strong></div>
+  <div class="stat"><small>Withdrawals</small><strong id="adminWithdrawalCount">—</strong></div>
+ </div>
+
+ <div class="panelGrid">
+  <div class="panel">
+   <h2>👨‍🎓 Student Management</h2>
+   <p>Manage student accounts and profiles.</p>
+   <button class="btn primary" style="margin-top:20px"
+    onclick="renderStudentManagement()">Open Students</button>
+  </div>
+
+  <div class="panel">
+   <h2>👨‍🏫 Tutor Management</h2>
+   <p>View registered tutors and their accounts.</p>
+   <button class="btn primary" style="margin-top:20px"
+    onclick="adminModule('tutors')">Manage Tutors</button>
+  </div>
+
+  <div class="panel">
+   <h2>📝 Examination System</h2>
+   <p>Manage exams and the question bank.</p>
+   <button class="btn secondary" style="margin-top:20px"
+    onclick="adminModule('exams')">Manage Exams</button>
+  </div>
+
+  <div class="panel">
+   <h2>💰 Finance</h2>
+   <p>Monitor subscriptions, transactions and withdrawals.</p>
+   <button class="btn secondary" style="margin-top:20px"
+    onclick="adminModule('transactions')">Open Finance</button>
+  </div>
+ </div>
+
+ </main></div></div>`;
+
+ loadAdminStats();
 }
 
-
-/* =========================================================
-   ADMIN COUNTS
-========================================================= */
-
-async function loadAdminCounts(){
-
-  try{
-
-    const students=
-      await db
-        .from("user_roles")
-        .select("*",{count:"exact",head:true})
-        .eq("role","student")
-        .eq("is_active",true);
-
-    const tutors=
-      await db
-        .from("user_roles")
-        .select("*",{count:"exact",head:true})
-        .eq("role","tutor")
-        .eq("is_active",true);
-
-    const exams=
-      await db
-        .from("exams")
-        .select("*",{count:"exact",head:true});
-
-    const questions=
-      await db
-        .from("questions")
-        .select("*",{count:"exact",head:true});
-
-    const s=document.getElementById("adminStudentCount");
-    const t=document.getElementById("adminTutorCount");
-    const e=document.getElementById("adminExamCount");
-    const q=document.getElementById("adminQuestionCount");
-
-    if(s)
-      s.textContent=
-        students.error?"—":students.count??0;
-
-    if(t)
-      t.textContent=
-        tutors.error?"—":tutors.count??0;
-
-    if(e)
-      e.textContent=
-        exams.error?"—":exams.count??0;
-
-    if(q)
-      q.textContent=
-        questions.error?"—":questions.count??0;
-
-  }catch(error){
-
-    console.error("Admin counts:",error);
-
-  }
+async function countTable(table,filters=[]){
+ try{
+  let q=db.from(table).select("*",{count:"exact",head:true});
+  filters.forEach(([column,value])=>q=q.eq(column,value));
+  const r=await q;
+  return r.error?0:(r.count||0);
+ }catch(e){return 0}
 }
 
+async function loadAdminStats(){
+ const s=await countTable("user_roles",[["role","student"],["is_active",true]]);
+ const t=await countTable("user_roles",[["role","tutor"],["is_active",true]]);
+ const tr=await countTable("transactions");
+ const w=await countTable("withdrawals");
+
+ if(document.getElementById("adminStudentCount"))
+  document.getElementById("adminStudentCount").textContent=s;
+ if(document.getElementById("adminTutorCount"))
+  document.getElementById("adminTutorCount").textContent=t;
+ if(document.getElementById("adminTransactionCount"))
+  document.getElementById("adminTransactionCount").textContent=tr;
+ if(document.getElementById("adminWithdrawalCount"))
+  document.getElementById("adminWithdrawalCount").textContent=w;
+}
 
 /* =========================================================
    STUDENT MANAGEMENT
 ========================================================= */
 
 async function renderStudentManagement(){
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${adminSidebar()}<div class="main">
+ ${portalHeader("Student Management")}
+ <main class="content">
+  <h1>Student Management 👨‍🎓</h1>
+  <p class="muted">View registered PHILMYSCHOOL students.</p>
 
-  const nav=sidebar(`
+  <div class="stats">
+   <div class="stat"><small>Total</small><strong id="totalStudents">0</strong></div>
+   <div class="stat"><small>Active</small><strong id="activeStudents">0</strong></div>
+   <div class="stat"><small>Inactive</small><strong id="inactiveStudents">0</strong></div>
+   <div class="stat"><small>Showing</small><strong id="showingStudents">0</strong></div>
+  </div>
 
-    <button
-      class="sideButton"
-      onclick="renderAdmin()">
-      ← Dashboard
-    </button>
+  <div class="managementHeader">
+   <div><h2>Registered Students</h2>
+   <p class="muted">Search student accounts.</p></div>
+   <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <input id="studentSearch" class="searchBox"
+     placeholder="Search name, email or phone..."
+     oninput="filterStudents()">
+    <button class="btn secondary" onclick="loadStudents()">↻ Refresh</button>
+   </div>
+  </div>
 
-    <button
-      class="sideButton active"
-      onclick="renderStudentManagement()">
-      👨‍🎓 Students
-    </button>
+  <div id="studentManagementArea" class="studentTableWrap">
+   <div class="loading">Loading students...</div>
+  </div>
+ </main></div></div>`;
 
-  `);
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader("Student Management")}
-
-        <main class="content">
-
-          <h1>
-            Student Management 👨‍🎓
-          </h1>
-
-          <p class="muted">
-            View registered PHILMYSCHOOL students.
-          </p>
-
-          <div class="stats">
-
-            <div class="stat">
-              <small>Total Students</small>
-              <strong id="totalStudents">0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Active Students</small>
-              <strong id="activeStudents">0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Inactive Students</small>
-              <strong id="inactiveStudents">0</strong>
-            </div>
-
-            <div class="stat">
-              <small>Showing</small>
-              <strong id="showingStudents">0</strong>
-            </div>
-
-          </div>
-
-          <div class="managementHeader">
-
-            <div>
-
-              <h2>
-                Registered Students
-              </h2>
-
-            </div>
-
-            <div style="
-              display:flex;
-              gap:10px;
-              flex-wrap:wrap;
-            ">
-
-              <input
-                id="studentSearch"
-                class="searchBox"
-                placeholder="Search name or email..."
-                oninput="filterStudents()">
-
-              <button
-                class="btn secondary"
-                onclick="loadStudents()">
-                ↻ Refresh
-              </button>
-
-            </div>
-
-          </div>
-
-          <div
-            id="studentManagementArea"
-            class="studentTableWrap">
-
-            <div class="loading">
-              Loading students...
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-  await loadStudents();
+ await loadStudents();
 }
-
 
 async function loadStudents(){
-
-  const area=
-    document.getElementById("studentManagementArea");
-
-  if(!area)return;
-
-  area.innerHTML=`
-
-    <div class="loading">
-      Loading students...
-    </div>
-
-  `;
-
-  try{
-
-    const rolesResult=
-      await db
-        .from("user_roles")
-        .select("id,user_id,role,is_active,created_at")
-        .eq("role","student")
-        .order("created_at",{ascending:false});
-
-    if(rolesResult.error){
-
-      area.innerHTML=`
-
-        <div class="errorBox">
-
-          <strong>
-            Unable to load students.
-          </strong>
-
-          <br><br>
-
-          ${escapeHTML(
-            rolesResult.error.message
-          )}
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-    const roles=rolesResult.data||[];
-
-    const ids=
-      roles.map(x=>x.user_id).filter(Boolean);
-
-    if(!ids.length){
-
-      allStudents=[];
-
-      updateStudentStats();
-
-      area.innerHTML=`
-
-        <div class="tableEmpty">
-
-          <h3>No students yet</h3>
-
-          <p style="margin-top:8px">
-            Registered students will appear here.
-          </p>
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-    const profilesResult=
-      await db
-        .from("profiles")
-        .select("*")
-        .in("id",ids);
-
-    if(profilesResult.error){
-
-      area.innerHTML=`
-
-        <div class="errorBox">
-
-          <strong>
-            Student profiles could not be loaded.
-          </strong>
-
-          <br><br>
-
-          ${escapeHTML(
-            profilesResult.error.message
-          )}
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-    const profiles=
-      profilesResult.data||[];
-
-    allStudents=
-      roles.map(r=>{
-
-        const p=
-          profiles.find(x=>x.id===r.user_id)||{};
-
-        return{
-
-          ...p,
-
-          user_id:r.user_id,
-          role:r.role,
-          is_active:r.is_active,
-          role_created_at:r.created_at
-
-        };
-
-      });
-
-    updateStudentStats();
-    renderStudentTable(allStudents);
-
-  }catch(error){
-
-    area.innerHTML=`
-
-      <div class="errorBox">
-
-        ${escapeHTML(
-          error.message||
-          "Unable to load students."
-        )}
-
-      </div>
-
-    `;
-  }
-}
-
-
-function updateStudentStats(){
-
-  const total=allStudents.length;
-
-  const active=
-    allStudents.filter(
-      x=>x.is_active!==false
-    ).length;
-
-  const inactive=total-active;
-
-  const a=document.getElementById("totalStudents");
-  const b=document.getElementById("activeStudents");
-  const c=document.getElementById("inactiveStudents");
-  const d=document.getElementById("showingStudents");
-
-  if(a)a.textContent=total;
-  if(b)b.textContent=active;
-  if(c)c.textContent=inactive;
-  if(d)d.textContent=total;
-}
-
-
-function filterStudents(){
-
-  const input=
-    document.getElementById("studentSearch");
-
-  if(!input)return;
-
-  const search=
-    input.value.trim().toLowerCase();
-
-  if(!search){
-
-    renderStudentTable(allStudents);
-
-    const el=
-      document.getElementById("showingStudents");
-
-    if(el)
-      el.textContent=allStudents.length;
-
-    return;
+ const area=document.getElementById("studentManagementArea");
+ if(!area)return;
+
+ area.innerHTML=`<div class="loading">Loading students...</div>`;
+
+ try{
+  const rolesResult=await db.from("user_roles")
+   .select("id,user_id,role,is_active,created_at")
+   .eq("role","student")
+   .order("created_at",{ascending:false});
+
+  if(rolesResult.error){
+   area.innerHTML=`<div class="errorBox">${escapeHTML(rolesResult.error.message)}</div>`;
+   return;
   }
 
-  const filtered=
-    allStudents.filter(student=>{
+  const roles=rolesResult.data||[];
+  const ids=roles.map(x=>x.user_id).filter(Boolean);
 
-      const text=`
-
-        ${student.first_name||""}
-        ${student.last_name||""}
-        ${student.display_name||""}
-        ${student.email||""}
-        ${student.phone||""}
-
-      `.toLowerCase();
-
-      return text.includes(search);
-    });
-
-  const el=
-    document.getElementById("showingStudents");
-
-  if(el)
-    el.textContent=filtered.length;
-
-  renderStudentTable(filtered);
-}
-
-
-function renderStudentTable(students){
-
-  const area=
-    document.getElementById("studentManagementArea");
-
-  if(!area)return;
-
-  if(!students.length){
-
-    area.innerHTML=`
-
-      <div class="tableEmpty">
-
-        <h3>No students found</h3>
-
-        <p style="margin-top:8px">
-          Try another search.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
+  if(!ids.length){
+   allStudents=[];
+   updateStudentStats();
+   area.innerHTML=`<div class="tableEmpty"><h3>No students yet</h3></div>`;
+   return;
   }
 
-  let rows="";
+  const profilesResult=await db.from("profiles")
+   .select("*").in("id",ids);
 
-  students.forEach((student,index)=>{
+  if(profilesResult.error){
+   area.innerHTML=`<div class="errorBox">${escapeHTML(profilesResult.error.message)}</div>`;
+   return;
+  }
 
-    const name=
-      student.display_name||
-      `${student.first_name||""} ${student.last_name||""}`.trim()||
-      "Unnamed Student";
-
-    const status=
-      student.is_active!==false;
-
-    const location=
-      [student.state,student.lga]
-        .filter(Boolean)
-        .join(", ")||"—";
-
-    rows+=`
-
-      <tr>
-
-        <td>${index+1}</td>
-
-        <td>
-
-          <div class="studentName">
-            ${escapeHTML(name)}
-          </div>
-
-          <div class="studentEmail">
-            ${escapeHTML(student.email||"No email")}
-          </div>
-
-        </td>
-
-        <td>
-          ${escapeHTML(student.phone||"—")}
-        </td>
-
-        <td>
-          ${escapeHTML(location)}
-        </td>
-
-        <td>
-
-          <span class="badge ${
-            status
-              ?"badgeGreen"
-              :"badgeRed"
-          }">
-
-            ${status?"Active":"Inactive"}
-
-          </span>
-
-        </td>
-
-        <td>
-
-          <button
-            class="btn secondary"
-            style="padding:8px 12px"
-            onclick="viewStudent('${student.id||student.user_id}')">
-
-            View
-
-          </button>
-
-        </td>
-
-      </tr>
-
-    `;
+  allStudents=roles.map(r=>{
+   const p=(profilesResult.data||[]).find(x=>x.id===r.user_id)||{};
+   return {...p,user_id:r.user_id,role:r.role,is_active:r.is_active};
   });
 
-  area.innerHTML=`
-
-    <table class="studentTable">
-
-      <thead>
-
-        <tr>
-          <th>#</th>
-          <th>Student</th>
-          <th>Phone</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-
-      </thead>
-
-      <tbody>
-        ${rows}
-      </tbody>
-
-    </table>
-
-  `;
+  updateStudentStats();
+  renderStudentTable(allStudents);
+ }catch(error){
+  area.innerHTML=`<div class="errorBox">${escapeHTML(error.message)}</div>`;
+ }
 }
 
+function updateStudentStats(){
+ const total=allStudents.length;
+ const active=allStudents.filter(x=>x.is_active!==false).length;
+
+ if(document.getElementById("totalStudents"))
+  document.getElementById("totalStudents").textContent=total;
+ if(document.getElementById("activeStudents"))
+  document.getElementById("activeStudents").textContent=active;
+ if(document.getElementById("inactiveStudents"))
+  document.getElementById("inactiveStudents").textContent=total-active;
+ if(document.getElementById("showingStudents"))
+  document.getElementById("showingStudents").textContent=total;
+}
+
+function filterStudents(){
+ const search=(document.getElementById("studentSearch")?.value||"").toLowerCase().trim();
+
+ if(!search){
+  renderStudentTable(allStudents);
+  if(document.getElementById("showingStudents"))
+   document.getElementById("showingStudents").textContent=allStudents.length;
+  return;
+ }
+
+ const rows=allStudents.filter(s=>{
+  const text=[
+   s.first_name,s.last_name,s.display_name,s.email,s.phone
+  ].filter(Boolean).join(" ").toLowerCase();
+  return text.includes(search);
+ });
+
+ if(document.getElementById("showingStudents"))
+  document.getElementById("showingStudents").textContent=rows.length;
+
+ renderStudentTable(rows);
+}
+
+function renderStudentTable(students){
+ const area=document.getElementById("studentManagementArea");
+ if(!area)return;
+
+ if(!students.length){
+  area.innerHTML=`<div class="tableEmpty"><h3>No students found</h3></div>`;
+  return;
+ }
+
+ area.innerHTML=`
+ <table class="studentTable">
+ <thead><tr>
+  <th>#</th><th>Student</th><th>Phone</th><th>Location</th><th>Status</th><th>Action</th>
+ </tr></thead>
+ <tbody>
+ ${students.map((s,i)=>{
+  const name=s.display_name||
+   `${s.first_name||""} ${s.last_name||""}`.trim()||"Unnamed Student";
+  const active=s.is_active!==false;
+  return `<tr>
+   <td>${i+1}</td>
+   <td><div class="studentName">${escapeHTML(name)}</div>
+   <div class="studentEmail">${escapeHTML(s.email||"No email")}</div></td>
+   <td>${escapeHTML(s.phone||"—")}</td>
+   <td>${escapeHTML([s.state,s.lga].filter(Boolean).join(", ")||"—")}</td>
+   <td><span class="badge ${active?"badgeGreen":"badgeRed"}">
+   ${active?"Active":"Inactive"}</span></td>
+   <td><button class="btn secondary" style="padding:7px 11px"
+   onclick="viewStudent('${s.id||s.user_id}')">View</button></td>
+  </tr>`;
+ }).join("")}
+ </tbody></table>`;
+}
 
 function viewStudent(id){
+ const s=allStudents.find(x=>x.id===id||x.user_id===id);
+ if(!s){alert("Student not found.");return}
 
-  const student=
-    allStudents.find(
-      x=>x.id===id||x.user_id===id
-    );
+ const name=s.display_name||
+ `${s.first_name||""} ${s.last_name||""}`.trim()||"Student";
 
-  if(!student){
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${adminSidebar()}<div class="main">
+ ${portalHeader("Student Details")}
+ <main class="content">
+  <h1>Student Details</h1>
+  <p class="muted">${escapeHTML(name)}</p>
 
-    alert("Student information could not be found.");
-    return;
-  }
+  <div class="panel" style="margin-top:20px">
+   <div class="detailGrid">
+    ${[
+     ["First Name",s.first_name],
+     ["Last Name",s.last_name],
+     ["Email",s.email],
+     ["Phone",s.phone],
+     ["Gender",s.gender],
+     ["Date of Birth",s.date_of_birth],
+     ["State",s.state],
+     ["LGA",s.lga],
+     ["Country",s.country],
+     ["Account Status",s.account_status],
+     ["Onboarding",s.onboarding_completed?"Completed":"Not completed"],
+     ["Created",dateText(s.created_at)]
+    ].map(x=>`
+     <div class="detailItem">
+      <small>${escapeHTML(x[0])}</small>
+      <strong>${escapeHTML(x[1]??"—")}</strong>
+     </div>`).join("")}
+   </div>
 
-  const nav=sidebar(`
-
-    <button
-      class="sideButton"
-      onclick="renderStudentManagement()">
-
-      ← Students
-
-    </button>
-
-  `);
-
-  const name=
-    student.display_name||
-    `${student.first_name||""} ${student.last_name||""}`.trim()||
-    "Student";
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader("Student Details")}
-
-        <main class="content">
-
-          <h1>
-            Student Details
-          </h1>
-
-          <div class="studentCard">
-
-            <h2>
-              👨‍🎓 ${escapeHTML(name)}
-            </h2>
-
-            <div
-              style="
-                margin-top:8px;
-                color:#718096;
-              ">
-
-              ${escapeHTML(
-                student.email||"No email"
-              )}
-
-            </div>
-
-            <div class="detailGrid">
-
-              <div class="detailItem">
-                <small>First Name</small>
-                <strong>
-                  ${escapeHTML(student.first_name||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Last Name</small>
-                <strong>
-                  ${escapeHTML(student.last_name||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Email</small>
-                <strong>
-                  ${escapeHTML(student.email||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Phone</small>
-                <strong>
-                  ${escapeHTML(student.phone||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Gender</small>
-                <strong>
-                  ${escapeHTML(student.gender||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Date of Birth</small>
-                <strong>
-                  ${escapeHTML(student.date_of_birth||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>State</small>
-                <strong>
-                  ${escapeHTML(student.state||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>LGA</small>
-                <strong>
-                  ${escapeHTML(student.lga||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Country</small>
-                <strong>
-                  ${escapeHTML(student.country||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Account Status</small>
-                <strong>
-                  ${escapeHTML(student.account_status||"—")}
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Onboarding</small>
-                <strong>
-                  ${
-                    student.onboarding_completed
-                    ?"Completed"
-                    :"Not completed"
-                  }
-                </strong>
-              </div>
-
-              <div class="detailItem">
-                <small>Account Created</small>
-                <strong>
-                  ${
-                    student.created_at
-                    ?new Date(student.created_at)
-                      .toLocaleDateString()
-                    :"—"
-                  }
-                </strong>
-              </div>
-
-            </div>
-
-            <button
-              class="btn primary"
-              style="margin-top:25px"
-              onclick="renderStudentManagement()">
-
-              ← Back to Students
-
-            </button>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
+   <button class="btn primary" style="margin-top:20px"
+    onclick="renderStudentManagement()">← Back to Students</button>
+  </div>
+ </main></div></div>`;
 }
 
-
 /* =========================================================
-   REAL ADMIN MODULE SYSTEM
+   GENERIC ADMIN MODULE SYSTEM
 ========================================================= */
 
-const ADMIN_MODULES={
-
-  "Exam Management":{
-    table:"exams",
-    icon:"📝",
-    label:"Exams"
-  },
-
-  "Question Bank":{
-    table:"questions",
-    icon:"❓",
-    label:"Question Bank"
-  },
-
-  "Study Materials":{
-    table:"materials",
-    icon:"📚",
-    label:"Materials"
-  },
-
-  "Scholarship Management":{
-    table:"scholarships",
-    icon:"🎓",
-    label:"Scholarships"
-  },
-
-  "Subscriptions":{
-    table:"subscriptions",
-    icon:"💳",
-    label:"Subscriptions"
-  },
-
-  "Transactions":{
-    table:"transactions",
-    icon:"💰",
-    label:"Transactions"
-  },
-
-  "Withdrawals":{
-    table:"withdrawals",
-    icon:"🏦",
-    label:"Withdrawals"
+const MODULES={
+ exams:{
+  title:"Exams",
+  icon:"📝",
+  table:"exams",
+  columns:[
+   ["title","Title"],["exam_type","Exam Type"],["mode","Mode"],
+   ["duration_minutes","Duration"],["total_questions","Questions"],
+   ["access_level","Access"],["price","Price"],["status","Status"]
+  ],
+  fields:[
+   ["title","Title","text",true],
+   ["slug","Slug","text",true],
+   ["description","Description","textarea",false],
+   ["exam_type","Exam Type","text",true],
+   ["mode","Mode","text",false],
+   ["duration_minutes","Duration (minutes)","number",true],
+   ["total_questions","Total Questions","number",false],
+   ["total_marks","Total Marks","number",false],
+   ["pass_mark","Pass Mark","number",false],
+   ["instructions","Instructions","textarea",false],
+   ["randomize_questions","Randomize Questions","checkbox",false],
+   ["randomize_options","Randomize Options","checkbox",false],
+   ["allow_back_navigation","Allow Back Navigation","checkbox",false],
+   ["show_result_immediately","Show Result Immediately","checkbox",false],
+   ["access_level","Access Level","text",false],
+   ["price","Price","number",false],
+   ["currency","Currency","text",false],
+   ["status","Status","text",false],
+   ["start_at","Start At","datetime-local",false],
+   ["end_at","End At","datetime-local",false]
+  ],
+  defaults:{
+   mode:"mock",access_level:"free",price:0,currency:"NGN",
+   status:"draft",randomize_questions:true,
+   randomize_options:true,allow_back_navigation:true,
+   show_result_immediately:true,total_questions:0,total_marks:0
   }
+ },
 
+ questions:{
+  title:"Question Bank",
+  icon:"❓",
+  table:"questions",
+  columns:[
+   ["question_text","Question"],["exam_type","Exam Type"],
+   ["difficulty","Difficulty"],["marks","Marks"],
+   ["source_type","Source"],["status","Status"]
+  ],
+  fields:[
+   ["question_text","Question","textarea",true],
+   ["subject_id","Subject ID","text",false],
+   ["topic_id","Topic ID","text",false],
+   ["exam_type","Exam Type","text",false],
+   ["explanation","Explanation","textarea",false],
+   ["image_url","Image URL","text",false],
+   ["difficulty","Difficulty","text",false],
+   ["marks","Marks","number",false],
+   ["source_type","Source Type","text",false],
+   ["source_name","Source Name","text",false],
+   ["source_year","Source Year","number",false],
+   ["status","Status","text",false]
+  ],
+  defaults:{difficulty:"medium",marks:1,source_type:"original",status:"draft"}
+ },
+
+ materials:{
+  title:"Materials",
+  icon:"📚",
+  table:"materials",
+  columns:[
+   ["title","Title"],["subject","Subject"],["file_type","File Type"],["status","Status"]
+  ],
+  fields:[
+   ["title","Title","text",true],
+   ["description","Description","textarea",false],
+   ["subject","Subject","text",false],
+   ["file_url","File URL","text",false],
+   ["file_type","File Type","text",false],
+   ["status","Status","text",false]
+  ],
+  defaults:{status:"published"}
+ },
+
+ scholarships:{
+  title:"Scholarships",
+  icon:"🎓",
+  table:"scholarships",
+  columns:[
+   ["opportunity_id","Opportunity ID"],["education_level","Education Level"],
+   ["field_of_study","Field"],["minimum_grade","Minimum Grade"],
+   ["funding_details","Funding Details"]
+  ],
+  fields:[
+   ["opportunity_id","Opportunity ID","text",true],
+   ["education_level","Education Level","text",false],
+   ["field_of_study","Field of Study","text",false],
+   ["eligible_states","Eligible States (comma separated)","text",false],
+   ["eligible_countries","Eligible Countries (comma separated)","text",false],
+   ["minimum_grade","Minimum Grade","text",false],
+   ["funding_details","Funding Details","textarea",false]
+  ],
+  defaults:{}
+ },
+
+ subscriptions:{
+  title:"Subscriptions",
+  icon:"💳",
+  table:"subscriptions",
+  columns:[
+   ["student_id","Student ID"],["plan_id","Plan ID"],["status","Status"],
+   ["current_period_end","Period End"],["provider","Provider"]
+  ],
+  fields:[
+   ["student_id","Student Profile ID","text",true],
+   ["plan_id","Subscription Plan ID","text",true],
+   ["status","Status","text",false],
+   ["current_period_start","Period Start","datetime-local",false],
+   ["current_period_end","Period End","datetime-local",false],
+   ["cancelled_at","Cancelled At","datetime-local",false],
+   ["auto_renew","Auto Renew","checkbox",false],
+   ["provider","Provider","text",false],
+   ["provider_subscription_id","Provider Subscription ID","text",false]
+  ],
+  defaults:{status:"active",auto_renew:true}
+ },
+
+ transactions:{
+  title:"Transactions",
+  icon:"💰",
+  table:"transactions",
+  columns:[
+   ["user_id","User"],["transaction_type","Type"],["reference","Reference"],
+   ["amount","Amount"],["currency","Currency"],["status","Status"],["created_at","Date"]
+  ],
+  fields:[
+   ["user_id","User Profile ID","text",false],
+   ["payment_id","Payment ID","text",false],
+   ["transaction_type","Transaction Type","text",true],
+   ["reference","Reference","text",false],
+   ["amount","Amount","number",true],
+   ["currency","Currency","text",false],
+   ["status","Status","text",false],
+   ["description","Description","textarea",false],
+   ["metadata","Metadata JSON","textarea",false]
+  ],
+  defaults:{currency:"NGN",status:"pending",metadata:"{}"}
+ },
+
+ withdrawals:{
+  title:"Withdrawals",
+  icon:"🏦",
+  table:"withdrawals",
+  columns:[
+   ["tutor_id","Tutor"],["amount","Amount"],["currency","Currency"],
+   ["bank_name","Bank"],["account_name","Account Name"],
+   ["status","Status"],["created_at","Date"]
+  ],
+  fields:[
+   ["tutor_id","Tutor Profile ID","text",true],
+   ["amount","Amount","number",true],
+   ["currency","Currency","text",false],
+   ["bank_name","Bank Name","text",false],
+   ["account_name","Account Name","text",false],
+   ["account_number_last4","Account Last 4 Digits","text",false],
+   ["status","Status","text",false],
+   ["processed_at","Processed At","datetime-local",false]
+  ],
+  defaults:{currency:"NGN",status:"pending"}
+ }
 };
 
-
-function featurePage(title){
-
-  if(title==="Student Management"){
-
-    renderStudentManagement();
-    return;
-
-  }
-
-
-  if(role==="admin" && ADMIN_MODULES[title]){
-
-    renderAdminModule(
-      title,
-      ADMIN_MODULES[title]
-    );
-
-    return;
-
-  }
-
-
-  let back="renderStudent()";
-
-  if(role==="admin")
-    back="renderAdmin()";
-
-  if(role==="tutor")
-    back="renderTutor()";
-
-
-  const nav=sidebar(`
-
-    <button
-      class="sideButton"
-      onclick="${back}">
-
-      ← Dashboard
-
-    </button>
-
-  `);
-
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader(title)}
-
-        <main class="content">
-
-          <h1>
-            ${escapeHTML(title)}
-          </h1>
-
-          <div
-            class="panel"
-            style="margin-top:25px">
-
-            <div class="empty">
-
-              <div>
-
-                <h2>
-                  ${escapeHTML(title)}
-                </h2>
-
-                <p style="margin-top:10px">
-
-                  This section is ready for the
-                  next PHILMYSCHOOL feature.
-
-                </p>
-
-                <button
-                  class="btn primary"
-                  style="margin-top:20px"
-                  onclick="${back}">
-
-                  Back to Dashboard
-
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-}
-
-
 /* =========================================================
-   ADMIN DATABASE MODULE
+   ADMIN MODULE
 ========================================================= */
 
-function renderAdminModule(title,config){
+async function adminModule(module){
+ if(module==="reports"){renderReports();return}
+ if(module==="tutors"){renderTutors();return}
 
-  const nav=sidebar(`
+ const cfg=MODULES[module];
+ if(!cfg)return;
 
-    <button
-      class="sideButton"
-      onclick="renderAdmin()">
+ document.getElementById("app").innerHTML=`
+ <div class="portal">
+ ${adminSidebar()}
+ <div class="main">
+ ${portalHeader(cfg.title)}
+ <main class="content">
 
-      ← Dashboard
+  <h1>${cfg.icon} ${escapeHTML(cfg.title)}</h1>
+  <p class="muted">Manage ${escapeHTML(cfg.title.toLowerCase())} using Supabase.</p>
 
-    </button>
+  <div class="moduleToolbar">
+   <input id="moduleSearch" class="searchBox"
+    placeholder="Search..." oninput="filterModuleRows()">
+   <button class="btn primary" onclick="openModuleForm('${module}')">
+    + Add ${escapeHTML(cfg.title.replace(/s$/,""))}
+   </button>
+   <button class="btn secondary" onclick="loadModule('${module}')">
+    ↻ Refresh
+   </button>
+  </div>
 
-    <button
-      class="sideButton active">
+  <div id="moduleArea" class="studentTableWrap">
+   <div class="loading">Loading...</div>
+  </div>
 
-      ${config.icon}
-      ${escapeHTML(config.label)}
+ </main></div></div>`;
 
-    </button>
-
-  `);
-
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader(config.label)}
-
-        <main class="content">
-
-          <h1>
-            ${config.icon}
-            ${escapeHTML(config.label)}
-          </h1>
-
-          <p class="muted">
-            Live data from the Supabase
-            <strong>${escapeHTML(config.table)}</strong>
-            table.
-          </p>
-
-
-          <div class="stats">
-
-            <div class="stat">
-
-              <small>
-                Total Records
-              </small>
-
-              <strong id="moduleCount">
-                —
-              </strong>
-
-            </div>
-
-          </div>
-
-
-          <div class="managementHeader">
-
-            <div>
-
-              <h2>
-                ${escapeHTML(config.label)}
-              </h2>
-
-              <p class="muted">
-                Records currently stored in Supabase.
-              </p>
-
-            </div>
-
-
-            <button
-              class="btn secondary"
-              onclick="loadAdminModule('${config.table}')">
-
-              ↻ Refresh
-
-            </button>
-
-          </div>
-
-
-          <div
-            id="moduleArea"
-            class="studentTableWrap">
-
-            <div class="loading">
-              Loading ${escapeHTML(config.label)}...
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  loadAdminModule(config.table);
+ await loadModule(module);
 }
 
+async function loadModule(module){
+ const cfg=MODULES[module];
+ const area=document.getElementById("moduleArea");
+ if(!area)return;
 
-/* =========================================================
-   LOAD ANY ADMIN TABLE
-========================================================= */
+ area.innerHTML=`<div class="loading">Loading ${escapeHTML(cfg.title)}...</div>`;
 
-async function loadAdminModule(table){
+ try{
+  const result=await db.from(cfg.table)
+   .select("*")
+   .order("created_at",{ascending:false})
+   .limit(500);
 
-  const area=
-    document.getElementById("moduleArea");
+  if(result.error){
+   area.innerHTML=`
+   <div class="errorBox">
+    <strong>Could not load ${escapeHTML(cfg.title)}.</strong>
+    <br><br>${escapeHTML(result.error.message)}
+   </div>`;
+   return;
+  }
 
-  if(!area)return;
+  currentModuleRows=result.data||[];
+  renderModuleTable(module,currentModuleRows);
+ }catch(error){
+  area.innerHTML=`<div class="errorBox">${escapeHTML(error.message)}</div>`;
+ }
+}
 
+function filterModuleRows(){
+ const q=(document.getElementById("moduleSearch")?.value||"")
+ .toLowerCase().trim();
 
+ if(!q){
+  const title=document.querySelector(".topbar strong")?.textContent||"";
+  const module=Object.keys(MODULES).find(k=>MODULES[k].title===title);
+  if(module)renderModuleTable(module,currentModuleRows);
+  return;
+ }
+
+ const rows=currentModuleRows.filter(row=>
+  JSON.stringify(row).toLowerCase().includes(q)
+ );
+
+ const title=document.querySelector(".topbar strong")?.textContent||"";
+ const module=Object.keys(MODULES).find(k=>MODULES[k].title===title);
+ if(module)renderModuleTable(module,rows);
+}
+
+function renderModuleTable(module,rows){
+ const cfg=MODULES[module];
+ const area=document.getElementById("moduleArea");
+ if(!area)return;
+
+ if(!rows.length){
   area.innerHTML=`
-
-    <div class="loading">
-      Loading data from ${escapeHTML(table)}...
-    </div>
-
-  `;
-
-
-  try{
-
-    /*
-      IMPORTANT:
-      We use select("*") without assuming
-      specific columns. This makes the module
-      work with the actual columns in your
-      existing tables.
-    */
-
-    const result=
-      await db
-        .from(table)
-        .select("*");
-
-
-    if(result.error){
-
-      area.innerHTML=`
-
-        <div class="errorBox">
-
-          <strong>
-            Supabase could not load this table.
-          </strong>
-
-          <br><br>
-
-          Table:
-          <strong>
-            ${escapeHTML(table)}
-          </strong>
-
-          <br><br>
-
-          Error:
-
-          ${escapeHTML(
-            result.error.message
-          )}
-
-        </div>
-
-      `;
-
-      const count=
-        document.getElementById("moduleCount");
-
-      if(count)
-        count.textContent="—";
-
-      return;
-
-    }
-
-
-    const rows=result.data||[];
-
-
-    const count=
-      document.getElementById("moduleCount");
-
-    if(count)
-      count.textContent=rows.length;
-
-
-    if(!rows.length){
-
-      area.innerHTML=`
-
-        <div class="tableEmpty">
-
-          <h3>
-            No records yet
-          </h3>
-
-          <p style="margin-top:8px">
-
-            The
-            <strong>
-              ${escapeHTML(table)}
-            </strong>
-            table exists, but it currently has
-            no records.
-
-          </p>
-
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-
-    /*
-      Get column names directly from
-      the actual returned Supabase data.
-    */
-
-    const columns=
-      Object.keys(rows[0]);
-
-
-    /*
-      Display the most useful columns first.
-    */
-
-    const priority=[
-      "title",
-      "name",
-      "email",
-      "amount",
-      "status",
-      "role",
-      "subject",
-      "description",
-      "type",
-      "created_at"
-    ];
-
-
-    const sortedColumns=
-      columns.slice().sort((a,b)=>{
-
-        const ai=
-          priority.indexOf(a);
-
-        const bi=
-          priority.indexOf(b);
-
-        const av=
-          ai===-1?999:ai;
-
-        const bv=
-          bi===-1?999:bi;
-
-        return av-bv;
-
-      });
-
-
-    const visibleColumns=
-      sortedColumns.slice(0,7);
-
-
-    let html=`
-
-      <table class="studentTable">
-
-        <thead>
-
-          <tr>
-
-            <th>#</th>
-
-    `;
-
-
-    visibleColumns.forEach(column=>{
-
-      html+=`
-
-        <th>
-          ${escapeHTML(
-            formatColumnName(column)
-          )}
-        </th>
-
-      `;
-
-    });
-
-
-    html+=`
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-    `;
-
-
-    rows.forEach((row,index)=>{
-
-      html+=`
-
-        <tr>
-
-          <td>
-            ${index+1}
-          </td>
-
-      `;
-
-
-      visibleColumns.forEach(column=>{
-
-        let value=row[column];
-
-
-        if(value===null ||
-           value===undefined ||
-           value===""){
-
-          value="—";
-
-        }
-
-
-        if(
-          column==="created_at" &&
-          value!=="—"
-        ){
-
-          try{
-
-            value=
-              new Date(value)
-                .toLocaleString();
-
-          }catch(e){}
-
-        }
-
-
-        if(
-          typeof value==="object"
-        ){
-
-          try{
-
-            value=
-              JSON.stringify(value);
-
-          }catch(e){
-
-            value="[object]";
-
-          }
-
-        }
-
-
-        const text=
-          String(value);
-
-
-        html+=`
-
-          <td>
-
-            ${escapeHTML(
-              text.length>120
-                ?text.substring(0,120)+"..."
-                :text
-            )}
-
-          </td>
-
-        `;
-
-      });
-
-
-      html+=`
-
-        </tr>
-
-      `;
-
-    });
-
-
-    html+=`
-
-        </tbody>
-
-      </table>
-
-    `;
-
-
-    area.innerHTML=html;
-
-
-  }catch(error){
-
-    area.innerHTML=`
-
-      <div class="errorBox">
-
-        <strong>
-          Something went wrong.
-        </strong>
-
-        <br><br>
-
-        ${escapeHTML(
-          error.message||
-          "Unable to load data."
-        )}
-
-      </div>
-
-    `;
-
-  }
-
+  <div class="tableEmpty">
+   <h3>No ${escapeHTML(cfg.title.toLowerCase())} found</h3>
+   <p style="margin-top:8px">Click + Add to create the first record.</p>
+  </div>`;
+  return;
+ }
+
+ area.innerHTML=`
+ <table class="studentTable">
+ <thead>
+ <tr>
+  ${cfg.columns.map(c=>`<th>${escapeHTML(c[1])}</th>`).join("")}
+  <th>Actions</th>
+ </tr>
+ </thead>
+ <tbody>
+ ${rows.map(row=>`
+ <tr>
+  ${cfg.columns.map(c=>{
+   let v=row[c[0]];
+   if(c[0].includes("at"))v=dateText(v);
+   if(Array.isArray(v))v=v.join(", ");
+   if(typeof v==="object"&&v!==null)v=safeJSON(v);
+   return `<td>${escapeHTML(v??"—")}</td>`;
+  }).join("")}
+  <td>
+   <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <button class="btn secondary" style="padding:7px 10px"
+     onclick='editModuleRecord("${module}","${row.id}")'>Edit</button>
+    <button class="btn danger" style="padding:7px 10px"
+     onclick='deleteModuleRecord("${module}","${row.id}")'>Delete</button>
+   </div>
+  </td>
+ </tr>`).join("")}
+ </tbody>
+ </table>`;
 }
-
 
 /* =========================================================
-   COLUMN NAME FORMATTER
+   MODULE FORM
 ========================================================= */
 
-function formatColumnName(value){
+function openModuleForm(module,id=null){
+ const cfg=MODULES[module];
+ const existing=id?currentModuleRows.find(x=>x.id===id):null;
 
-  return String(value)
-    .replaceAll("_"," ")
-    .replace(
-      /\w\S*/g,
-      word=>
-        word.charAt(0).toUpperCase()+
-        word.substring(1).toLowerCase()
-    );
+ const fields=cfg.fields.map(f=>{
+  const [key,label,type,required]=f;
+  let value=existing?.[key];
+
+  if(value===undefined||value===null)
+   value=cfg.defaults?.[key]??"";
+
+  if(type==="checkbox"){
+   return `
+   <div class="formGroup">
+    <label>
+     <input type="checkbox" id="field_${key}"
+      ${value?"checked":""} style="width:auto">
+     ${escapeHTML(label)}
+    </label>
+   </div>`;
+  }
+
+  if(type==="textarea"){
+   return `
+   <div class="formGroup full">
+    <label>${escapeHTML(label)}</label>
+    <textarea id="field_${key}" ${required?"required":""}>${escapeHTML(
+     typeof value==="object"?safeJSON(value):value
+    )}</textarea>
+   </div>`;
+  }
+
+  return `
+  <div class="formGroup">
+   <label>${escapeHTML(label)}</label>
+   <input id="field_${key}" type="${type}"
+    value="${escapeHTML(
+     type==="datetime-local"&&value
+     ?String(value).slice(0,16)
+     :value
+    )}" ${required?"required":""}>
+  </div>`;
+ }).join("");
+
+ document.body.insertAdjacentHTML("beforeend",`
+ <div class="modal" id="moduleModal">
+  <div class="modalBox">
+   <div class="modalHead">
+    <h2>${id?"Edit":"Add"} ${escapeHTML(cfg.title)}</h2>
+    <button class="closeBtn" onclick="closeModal()">✕</button>
+   </div>
+
+   <p class="muted">
+    ${id?"Update this record.":"Create a new record."}
+   </p>
+
+   <div class="formGrid">
+    ${fields}
+   </div>
+
+   <div id="moduleFormMessage"></div>
+
+   <div style="display:flex;gap:10px;margin-top:20px">
+    <button class="btn secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn primary"
+     onclick="saveModuleRecord('${module}','${id||""}')">
+     ${id?"Save Changes":"Create Record"}
+    </button>
+   </div>
+  </div>
+ </div>`);
 }
 
+function editModuleRecord(module,id){
+ openModuleForm(module,id);
+}
+
+function closeModal(){
+ document.getElementById("moduleModal")?.remove();
+}
+
+/* =========================================================
+   SAVE MODULE
+========================================================= */
+
+async function saveModuleRecord(module,id){
+ const cfg=MODULES[module];
+ const payload={};
+
+ for(const f of cfg.fields){
+  const key=f[0];
+  const type=f[2];
+  const el=document.getElementById("field_"+key);
+  if(!el)continue;
+
+  if(type==="checkbox"){
+   payload[key]=el.checked;
+   continue;
+  }
+
+  let value=el.value;
+
+  if(value===""){
+   payload[key]=null;
+   continue;
+  }
+
+  if(type==="number"){
+   payload[key]=Number(value);
+   continue;
+  }
+
+  if(key==="eligible_states"||key==="eligible_countries"){
+   payload[key]=value.split(",").map(x=>x.trim()).filter(Boolean);
+   continue;
+  }
+
+  if(key==="metadata"){
+   try{
+    payload[key]=JSON.parse(value||"{}");
+   }catch(e){
+    showModuleMessage("Metadata must contain valid JSON.","error");
+    return;
+   }
+   continue;
+  }
+
+  if(key==="created_by"||key==="reviewed_by"){
+   continue;
+  }
+
+  payload[key]=value;
+ }
+
+ /*
+  Automatically attach the logged-in admin
+  where the database requires created_by.
+ */
+ if((module==="exams"||module==="questions")&&!id){
+  payload.created_by=user.id;
+ }
+
+ try{
+  let result;
+
+  if(id){
+   result=await db.from(cfg.table)
+    .update(payload)
+    .eq("id",id);
+  }else{
+   result=await db.from(cfg.table)
+    .insert(payload);
+  }
+
+  if(result.error){
+   showModuleMessage(result.error.message,"error");
+   return;
+  }
+
+  closeModal();
+  await loadModule(module);
+
+ }catch(error){
+  showModuleMessage(error.message||"Save failed.","error");
+ }
+}
+
+function showModuleMessage(message,type){
+ const box=document.getElementById("moduleFormMessage");
+ if(!box)return;
+ box.innerHTML=`
+ <div class="authMessage ${type==="error"?"error":"success"} show">
+ ${escapeHTML(message)}
+ </div>`;
+}
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteModuleRecord(module,id){
+ const cfg=MODULES[module];
+
+ if(!confirm(`Delete this ${cfg.title.toLowerCase()} record?`))
+  return;
+
+ try{
+  const result=await db.from(cfg.table)
+   .delete()
+   .eq("id",id);
+
+  if(result.error){
+   alert("Delete failed:\n\n"+result.error.message);
+   return;
+  }
+
+  await loadModule(module);
+ }catch(error){
+  alert("Delete failed:\n\n"+error.message);
+ }
+}
+
+/* =========================================================
+   TUTOR MANAGEMENT
+========================================================= */
+
+let tutorRows=[];
+
+async function renderTutors(){
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${adminSidebar()}<div class="main">
+ ${portalHeader("Tutor Management")}
+ <main class="content">
+  <h1>👨‍🏫 Tutor Management</h1>
+  <p class="muted">Registered tutor accounts.</p>
+
+  <div class="moduleToolbar">
+   <input id="tutorSearch" class="searchBox"
+    placeholder="Search tutors..." oninput="filterTutors()">
+   <button class="btn secondary" onclick="loadTutors()">↻ Refresh</button>
+  </div>
+
+  <div id="tutorArea" class="studentTableWrap">
+   <div class="loading">Loading tutors...</div>
+  </div>
+ </main></div></div>`;
+
+ await loadTutors();
+}
+
+async function loadTutors(){
+ const area=document.getElementById("tutorArea");
+ if(!area)return;
+
+ const roles=await db.from("user_roles")
+  .select("user_id,role,is_active,created_at")
+  .eq("role","tutor")
+  .order("created_at",{ascending:false});
+
+ if(roles.error){
+  area.innerHTML=`<div class="errorBox">${escapeHTML(roles.error.message)}</div>`;
+  return;
+ }
+
+ const ids=(roles.data||[]).map(x=>x.user_id);
+
+ if(!ids.length){
+  tutorRows=[];
+  area.innerHTML=`<div class="tableEmpty"><h3>No tutors yet</h3></div>`;
+  return;
+ }
+
+ const profiles=await db.from("profiles")
+  .select("*").in("id",ids);
+
+ if(profiles.error){
+  area.innerHTML=`<div class="errorBox">${escapeHTML(profiles.error.message)}</div>`;
+  return;
+ }
+
+ tutorRows=(roles.data||[]).map(r=>{
+  const p=(profiles.data||[]).find(x=>x.id===r.user_id)||{};
+  return {...p,user_id:r.user_id,is_active:r.is_active};
+ });
+
+ renderTutorTable(tutorRows);
+}
+
+function filterTutors(){
+ const q=(document.getElementById("tutorSearch")?.value||"")
+ .toLowerCase().trim();
+
+ const rows=!q?tutorRows:tutorRows.filter(t=>
+  JSON.stringify(t).toLowerCase().includes(q)
+ );
+
+ renderTutorTable(rows);
+}
+
+function renderTutorTable(rows){
+ const area=document.getElementById("tutorArea");
+ if(!area)return;
+
+ if(!rows.length){
+  area.innerHTML=`<div class="tableEmpty"><h3>No tutors found</h3></div>`;
+  return;
+ }
+
+ area.innerHTML=`
+ <table class="studentTable">
+ <thead><tr>
+  <th>Tutor</th><th>Email</th><th>Phone</th><th>State</th><th>Status</th>
+ </tr></thead>
+ <tbody>
+ ${rows.map(t=>{
+  const name=t.display_name||
+   `${t.first_name||""} ${t.last_name||""}`.trim()||"Tutor";
+  return `<tr>
+   <td><strong>${escapeHTML(name)}</strong></td>
+   <td>${escapeHTML(t.email||"—")}</td>
+   <td>${escapeHTML(t.phone||"—")}</td>
+   <td>${escapeHTML(t.state||"—")}</td>
+   <td><span class="badge ${t.is_active?"badgeGreen":"badgeRed"}">
+    ${t.is_active?"Active":"Inactive"}
+   </span></td>
+  </tr>`;
+ }).join("")}
+ </tbody>
+ </table>`;
+}
 
 /* =========================================================
    REPORTS
 ========================================================= */
 
 async function renderReports(){
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${adminSidebar()}<div class="main">
+ ${portalHeader("Reports")}
+ <main class="content">
 
-  const nav=sidebar(`
+ <h1>📊 Reports</h1>
+ <p class="muted">Live statistics from your PHILMYSCHOOL database.</p>
 
-    <button
-      class="sideButton"
-      onclick="renderAdmin()">
+ <div class="stats">
+  <div class="stat"><small>Students</small><strong id="reportStudents">—</strong></div>
+  <div class="stat"><small>Tutors</small><strong id="reportTutors">—</strong></div>
+  <div class="stat"><small>Exams</small><strong id="reportExams">—</strong></div>
+  <div class="stat"><small>Questions</small><strong id="reportQuestions">—</strong></div>
+ </div>
 
-      ← Dashboard
+ <div class="stats">
+  <div class="stat"><small>Materials</small><strong id="reportMaterials">—</strong></div>
+  <div class="stat"><small>Scholarships</small><strong id="reportScholarships">—</strong></div>
+  <div class="stat"><small>Subscriptions</small><strong id="reportSubscriptions">—</strong></div>
+  <div class="stat"><small>Transactions</small><strong id="reportTransactions">—</strong></div>
+ </div>
 
-    </button>
+ <div class="panelGrid">
+  <div class="panel">
+   <h2>💰 Financial Overview</h2>
+   <p>Total transaction amount recorded.</p>
+   <h2 style="margin-top:15px" id="reportRevenue">₦0</h2>
+  </div>
 
-    <button
-      class="sideButton active">
+  <div class="panel">
+   <h2>🏦 Withdrawals</h2>
+   <p>Total withdrawal records.</p>
+   <h2 style="margin-top:15px" id="reportWithdrawals">0</h2>
+  </div>
+ </div>
 
-      📊 Reports
+ <button class="btn secondary" style="margin-top:20px"
+  onclick="renderReports()">↻ Refresh Reports</button>
 
-    </button>
+ </main></div></div>`;
 
-  `);
-
-
-  document.getElementById("app").innerHTML=`
-
-    <div class="portal">
-
-      ${nav}
-
-      <div class="main">
-
-        ${portalHeader("Reports")}
-
-        <main class="content">
-
-          <h1>
-            📊 Reports
-          </h1>
-
-          <p class="muted">
-            Live summary of your PHILMYSCHOOL database.
-          </p>
-
-
-          <div class="stats">
-
-            <div class="stat">
-              <small>Students</small>
-              <strong id="reportStudents">—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Tutors</small>
-              <strong id="reportTutors">—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Exams</small>
-              <strong id="reportExams">—</strong>
-            </div>
-
-            <div class="stat">
-              <small>Questions</small>
-              <strong id="reportQuestions">—</strong>
-            </div>
-
-          </div>
-
-
-          <div class="panelGrid">
-
-            <div class="panel">
-              <h2>📚 Materials</h2>
-              <p>Total material records.</p>
-              <strong
-                id="reportMaterials"
-                style="
-                  display:block;
-                  font-size:30px;
-                  margin-top:20px;
-                ">
-                —
-              </strong>
-            </div>
-
-
-            <div class="panel">
-              <h2>🎓 Scholarships</h2>
-              <p>Total scholarship records.</p>
-              <strong
-                id="reportScholarships"
-                style="
-                  display:block;
-                  font-size:30px;
-                  margin-top:20px;
-                ">
-                —
-              </strong>
-            </div>
-
-
-            <div class="panel">
-              <h2>💳 Subscriptions</h2>
-              <p>Total subscription records.</p>
-              <strong
-                id="reportSubscriptions"
-                style="
-                  display:block;
-                  font-size:30px;
-                  margin-top:20px;
-                ">
-                —
-              </strong>
-            </div>
-
-
-            <div class="panel">
-              <h2>💰 Transactions</h2>
-              <p>Total transaction records.</p>
-              <strong
-                id="reportTransactions"
-                style="
-                  display:block;
-                  font-size:30px;
-                  margin-top:20px;
-                ">
-                —
-              </strong>
-            </div>
-
-
-            <div class="panel">
-              <h2>🏦 Withdrawals</h2>
-              <p>Total withdrawal records.</p>
-              <strong
-                id="reportWithdrawals"
-                style="
-                  display:block;
-                  font-size:30px;
-                  margin-top:20px;
-                ">
-                —
-              </strong>
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  await loadReports();
+ await loadReports();
 }
-
-
-async function countTable(table){
-
-  try{
-
-    const result=
-      await db
-        .from(table)
-        .select("*",{count:"exact",head:true});
-
-    if(result.error){
-
-      console.warn(
-        table,
-        result.error.message
-      );
-
-      return "—";
-    }
-
-    return result.count??0;
-
-  }catch(error){
-
-    return "—";
-  }
-}
-
 
 async function loadReports(){
+ const ids=[
+  ["reportStudents","user_roles",[["role","student"]]],
+  ["reportTutors","user_roles",[["role","tutor"]]],
+  ["reportExams","exams",[]],
+  ["reportQuestions","questions",[]],
+  ["reportMaterials","materials",[]],
+  ["reportScholarships","scholarships",[]],
+  ["reportSubscriptions","subscriptions",[]],
+  ["reportTransactions","transactions",[]],
+  ["reportWithdrawals","withdrawals",[]]
+ ];
 
-  try{
+ for(const [id,table,filters] of ids){
+  const n=await countTable(table,filters);
+  const el=document.getElementById(id);
+  if(el)el.textContent=n;
+ }
 
-    const students=
-      await db
-        .from("user_roles")
-        .select("*",{count:"exact",head:true})
-        .eq("role","student")
-        .eq("is_active",true);
-
-    const tutors=
-      await db
-        .from("user_roles")
-        .select("*",{count:"exact",head:true})
-        .eq("role","tutor")
-        .eq("is_active",true);
-
-
-    const exams=
-      await countTable("exams");
-
-    const questions=
-      await countTable("questions");
-
-    const materials=
-      await countTable("materials");
-
-    const scholarships=
-      await countTable("scholarships");
-
-    const subscriptions=
-      await countTable("subscriptions");
-
-    const transactions=
-      await countTable("transactions");
-
-    const withdrawals=
-      await countTable("withdrawals");
-
-
-    const values={
-
-      reportStudents:
-        students.error
-          ?"—"
-          :(students.count??0),
-
-      reportTutors:
-        tutors.error
-          ?"—"
-          :(tutors.count??0),
-
-      reportExams:exams,
-
-      reportQuestions:questions,
-
-      reportMaterials:materials,
-
-      reportScholarships:scholarships,
-
-      reportSubscriptions:subscriptions,
-
-      reportTransactions:transactions,
-
-      reportWithdrawals:withdrawals
-
-    };
-
-
-    Object.entries(values)
-      .forEach(([id,value])=>{
-
-        const el=
-          document.getElementById(id);
-
-        if(el)
-          el.textContent=value;
-
-      });
-
-
-  }catch(error){
-
-    console.error(
-      "Reports error:",
-      error
-    );
-
-  }
+ try{
+  const r=await db.from("transactions").select("amount");
+  const total=(r.data||[]).reduce((sum,x)=>sum+Number(x.amount||0),0);
+  const el=document.getElementById("reportRevenue");
+  if(el)el.textContent=money(total);
+ }catch(e){}
 }
 
+/* =========================================================
+   OTHER MODULES FOR STUDENTS/TUTORS
+========================================================= */
+
+function featurePage(title){
+ let back="renderStudent()";
+ if(role==="admin")back="renderAdmin()";
+ if(role==="tutor")back="renderTutor()";
+
+ document.getElementById("app").innerHTML=`
+ <div class="portal">${sidebar(`
+  <button class="sideButton" onclick="${back}">← Dashboard</button>
+ `)}
+ <div class="main">
+ ${portalHeader(title)}
+ <main class="content">
+  <h1>${escapeHTML(title)}</h1>
+  <p class="muted">PHILMYSCHOOL ${escapeHTML(title)} module.</p>
+
+  <div class="panel" style="margin-top:25px">
+   <div class="empty">
+    <div>
+     <h2>${escapeHTML(title)}</h2>
+     <p style="margin-top:10px">
+      This section is ready for the next student/tutor functionality.
+     </p>
+     <button class="btn primary" style="margin-top:20px"
+      onclick="${back}">Back to Dashboard</button>
+    </div>
+   </div>
+  </div>
+ </main></div></div>`;
+}
 
 /* =========================================================
    LOGOUT
 ========================================================= */
 
+let loggingOut=false;
+
 async function logout(){
+ if(loggingOut)return;
+ loggingOut=true;
 
-  if(loggingOut)return;
+ try{
+  await db.auth.signOut();
+ }catch(error){
+  console.error("Logout:",error);
+ }
 
-  loggingOut=true;
+ user=null;
+ profile=null;
+ role=null;
+ allStudents=[];
+ tutorRows=[];
+ currentModuleRows=[];
 
-  try{
+ loggingOut=false;
+ renderLogin();
+}
 
-    await db.auth.signOut();
+/* =========================================================
+   AUTH STATE
+========================================================= */
 
-  }catch(error){
+db.auth.onAuthStateChange((event,session)=>{
+ console.log("AUTH EVENT:",event);
 
-    console.error(
-      "Logout error:",
-      error
-    );
-
-  }
-
+ if(event==="SIGNED_OUT"){
   user=null;
   profile=null;
   role=null;
   allStudents=[];
-
-  loggingOut=false;
-
   renderLogin();
-}
-
-
-/* =========================================================
-   AUTH STATE LISTENER
-========================================================= */
-
-db.auth.onAuthStateChange(
-  async(event,session)=>{
-
-    console.log(
-      "AUTH EVENT:",
-      event
-    );
-
-    if(event==="SIGNED_OUT"){
-
-      user=null;
-      profile=null;
-      role=null;
-      allStudents=[];
-
-      renderLogin();
-
-    }
-
-  }
-);
-
+ }
+});
 
 /* =========================================================
    INITIAL LOAD
 ========================================================= */
 
 (async function(){
+ try{
+  const result=await db.auth.getSession();
 
-  try{
-
-    const result=
-      await db.auth.getSession();
-
-    if(result.error){
-
-      console.error(result.error);
-
-      renderLanding();
-
-      return;
-    }
-
-    if(result.data.session){
-
-      await loadCurrentUser();
-
-    }else{
-
-      renderLanding();
-
-    }
-
-  }catch(error){
-
-    console.error(error);
-
-    renderLanding();
-
+  if(result.error){
+   console.error(result.error);
+   renderLanding();
+   return;
   }
 
+  if(result.data.session){
+   await loadCurrentUser();
+  }else{
+   renderLanding();
+  }
+ }catch(error){
+  console.error(error);
+  renderLanding();
+ }
 })();
-
 </script>
-
 </body>
 </html>
