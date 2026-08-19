@@ -5777,15 +5777,33 @@ async function updateExamQuestionChoices(exam,subjects,jamb){
         ?`<strong>Paid access:</strong> You can select up to <strong>100 questions</strong>.`
         :`<strong>Free access:</strong> You can select up to <strong>20 questions</strong>. Pay/subscribe to unlock up to 100 questions.`;
       msg.innerHTML=`<div class="successBox"><strong>${count}</strong> published questions are linked and available for random selection.<br><span style="display:block;margin-top:6px">${accessText}</span></div>`;
-      const base=[10,20,30,40,50,60,70,80,90,100];
-      const choices=base.filter(n=>n<=availableForSelection);
-      if(availableForSelection>0 && !choices.includes(availableForSelection))choices.push(availableForSelection);
-      choices.sort((a,b)=>a-b);
-      select.innerHTML=choices.length
-        ?choices.map(n=>`<option value="${n}">${n} Questions</option>`).join('')
+      // Keep the student-facing selector simple and fixed.
+      // The question bank may contain hundreds of questions, but students
+      // should only see the approved exam sizes: 3, 20, 30 and 100.
+      // Free students can use 3 or 20; 30 and 100 remain visible but locked
+      // until an active paid subscription is detected.
+      const approved=[3,20,30,100];
+      const options=[];
+      approved.forEach(n=>{
+        if(n>count)return;
+        const locked=n>maxAllowed;
+        options.push(
+          `<option value="${n}" ${locked?'disabled':''}>${n} Questions${locked?' ð':''}</option>`
+        );
+      });
+
+      select.innerHTML=options.length
+        ?options.join('')
         :'<option value="">Not enough questions</option>';
       select.style.display='block';
-      select.disabled=!choices.length;
+      select.disabled=!options.length;
+
+      // Default to the largest permitted approved option, without ever
+      // exposing the actual question-bank count (e.g. 499) as a choice.
+      const permitted=approved.filter(n=>n<=count && n<=maxAllowed);
+      if(permitted.length){
+        select.value=String(permitted[permitted.length-1]);
+      }
     }
   }catch(error){msg.innerHTML=`<div class="errorBox">Could not check linked questions: ${escapeHTML(error.message||'')}</div>`;select.innerHTML='<option value="">Unable to load questions</option>';select.style.display='block';select.disabled=true;}}
 
