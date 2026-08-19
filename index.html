@@ -4280,15 +4280,13 @@ async function autoLinkPublishedSubjectQuestions(examId, subjectId, examType="",
   ]);
   if(qRes.error) throw new Error("Could not load published questions for automatic linking: "+qRes.error.message);
   if(linkRes.error) throw new Error("Could not load existing examination question links: "+linkRes.error.message);
-  /*
-   * IMPORTANT: The selected exam + subject are the routing authority.
-   * Do NOT filter by source_type/source_name here. Different CSV uploads
-   * may use different source labels, but every published question belonging
-   * to the selected subject must be linked to this exact examination.
-   * This makes automatic linking work consistently for Mathematics, English,
-   * Physics and every other subject without any SQL/manual reconciliation.
-   */
-  const questions=(qRes.data||[]);
+  const typeText=String(examType||"").toLowerCase().trim();
+  const labelText=String(examLabel||"").toLowerCase().trim();
+  const questions=(qRes.data||[]).filter(q=>{
+    const st=String(q.source_type||"").toLowerCase().trim();
+    const sn=String(q.source_name||"").toLowerCase().trim();
+    return (typeText && st===typeText) || (labelText && sn===labelText) || (labelText && sn.includes(labelText));
+  });
   const existingLinks=linkRes.data||[];
   const existingIds=new Set(existingLinks.map(x=>String(x.question_id)).filter(Boolean));
   let nextNumber=existingLinks.reduce((m,x)=>Math.max(m,Number(x.question_number)||0),0)+1;
@@ -5908,32 +5906,42 @@ async function updateExamQuestionChoices(exam,subjects,jamb){
         ?`<strong>Paid access:</strong> You can select up to <strong>100 questions</strong>.`
         :`<strong>Free access:</strong> You can select up to <strong>20 questions</strong>. Pay/subscribe to unlock up to 100 questions.`;
       msg.innerHTML=`<div class="successBox">Questions are ready. Select the number of questions you want to answer.<br><span style="display:block;margin-top:6px">${accessText}</span></div>`;
-      // Keep the student-facing selector simple and fixed.
-      // The question bank may contain hundreds of questions, but students
-      // should only see the approved exam sizes: 3, 20, 30 and 100.
-      // Free students can use 3 or 20; 30 and 100 remain visible but locked
-      // until an active paid subscription is detected.
+      // STUDENT-FACING QUESTION SELECTOR
+      // Never expose the real question-bank size (499, 1497, etc.).
+      // Students only choose from these four approved exam sizes.
       const approved=[3,20,30,100];
       const options=[];
+
       approved.forEach(n=>{
-        if(n>count)return;
-        const locked=n>maxAllowed;
+        // The option is only unavailable when the database pool genuinely
+        // contains fewer questions than the requested size.
+        const insufficient=n>count;
+        // Free students may use 3 or 20. Paid students may use up to 100.
+        const lockedByAccess=n>maxAllowed;
+        const locked=insufficient || lockedByAccess;
+
+        let label=`${n} Questions`;
+        if(lockedByAccess) label += ' ð';
+        else if(insufficient) label += ' (unavailable)';
+
         options.push(
-          `<option value="${n}" ${locked?'disabled':''}>${n} Questions${locked?' ð':''}</option>`
+          `<option value="${n}" ${locked?'disabled':''}>${label}</option>`
         );
       });
 
-      select.innerHTML=options.length
-        ?options.join('')
-        :'<option value="">Not enough questions</option>';
+      select.innerHTML=options.join('');
       select.style.display='block';
-      select.disabled=!options.length;
+      select.disabled=false;
 
-      // Default to the largest permitted approved option, without ever
-      // exposing the actual question-bank count (e.g. 499) as a choice.
+      // Free: default to 20. Paid: default to 100.
+      // If the pool is smaller, fall back to the largest valid option.
+      const preferred=paid?100:20;
       const permitted=approved.filter(n=>n<=count && n<=maxAllowed);
       if(permitted.length){
-        select.value=String(permitted[permitted.length-1]);
+        const defaultChoice=permitted.includes(preferred)
+          ?preferred
+          :permitted[permitted.length-1];
+        select.value=String(defaultChoice);
       }
     }
   }catch(error){msg.innerHTML=`<div class="errorBox">Could not check linked questions: ${escapeHTML(error.message||'')}</div>`;select.innerHTML='<option value="">Unable to load questions</option>';select.style.display='block';select.disabled=true;}}
@@ -5956,6 +5964,14 @@ async function confirmExamSetup(examId,jamb){
 
   if(!jamb){
     const maxAllowed=await getStudentQuestionSelectionLimit({id:examId,exam_type:"WAEC"});
+    const approved=[3,20,30,100];
+
+    // Do not accept arbitrary numbers even if someone edits the HTML.
+    if(!approved.includes(count)){
+      alert("Please select one of the available options: 3, 20, 30 or 100 questions.");
+      return;
+    }
+
     if(count>maxAllowed){
       alert(`Your current access allows a maximum of ${maxAllowed} questions. Subscribe/pay to unlock up to 100 questions.`);
       return;
