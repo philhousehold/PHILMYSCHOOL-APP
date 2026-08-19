@@ -4280,13 +4280,15 @@ async function autoLinkPublishedSubjectQuestions(examId, subjectId, examType="",
   ]);
   if(qRes.error) throw new Error("Could not load published questions for automatic linking: "+qRes.error.message);
   if(linkRes.error) throw new Error("Could not load existing examination question links: "+linkRes.error.message);
-  const typeText=String(examType||"").toLowerCase().trim();
-  const labelText=String(examLabel||"").toLowerCase().trim();
-  const questions=(qRes.data||[]).filter(q=>{
-    const st=String(q.source_type||"").toLowerCase().trim();
-    const sn=String(q.source_name||"").toLowerCase().trim();
-    return (typeText && st===typeText) || (labelText && sn===labelText) || (labelText && sn.includes(labelText));
-  });
+  /*
+   * IMPORTANT: The selected exam + subject are the routing authority.
+   * Do NOT filter by source_type/source_name here. Different CSV uploads
+   * may use different source labels, but every published question belonging
+   * to the selected subject must be linked to this exact examination.
+   * This makes automatic linking work consistently for Mathematics, English,
+   * Physics and every other subject without any SQL/manual reconciliation.
+   */
+  const questions=(qRes.data||[]);
   const existingLinks=linkRes.data||[];
   const existingIds=new Set(existingLinks.map(x=>String(x.question_id)).filter(Boolean));
   let nextNumber=existingLinks.reduce((m,x)=>Math.max(m,Number(x.question_number)||0),0)+1;
