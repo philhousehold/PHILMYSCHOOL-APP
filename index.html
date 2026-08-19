@@ -4448,13 +4448,32 @@ async function importCSV(){
   if(!selectedSubjectId){message.innerHTML='<div class="errorBox">Select the particular subject before importing.</div>';return;}
   if(!file){message.innerHTML='<div class="errorBox">Select a CSV file first.</div>';return;}
 
-  if(button){button.disabled=true;button.textContent="Importing...";}
-  message.innerHTML='<div class="panel">Reading, validating and linking your questions...</div>';
+  if(button){button.disabled=true;button.textContent="Importing 0%";}
+  message.innerHTML=`<div class="panel" id="csvProgressPanel">
+    <div style="font-weight:800;font-size:16px">Preparing import...</div>
+    <div style="margin-top:10px;background:#e5e7eb;border-radius:999px;height:14px;overflow:hidden">
+      <div id="csvProgressBar" style="width:0%;height:100%;background:var(--primary,#2563eb);transition:width .15s"></div>
+    </div>
+    <div id="csvProgressText" style="margin-top:9px;font-weight:700">0% â Reading CSV...</div>
+    <div id="csvProgressCount" class="muted" style="margin-top:5px">0 / 0 questions processed</div>
+  </div>`;
+
+  const setImportProgress=(done,total,inserted=0,failed=0,linked=0,status="Processing...")=>{
+    const pct=total>0?Math.min(100,Math.round((done/total)*100)):0;
+    const bar=document.getElementById("csvProgressBar");
+    const textEl=document.getElementById("csvProgressText");
+    const countEl=document.getElementById("csvProgressCount");
+    if(bar)bar.style.width=pct+"%";
+    if(textEl)textEl.innerHTML=`<strong>${pct}%</strong> â ${escapeHTML(status)}`;
+    if(countEl)countEl.textContent=`${done} / ${total} questions processed â¢ Added ${inserted} â¢ Linked ${linked} â¢ Failed ${failed}`;
+    if(button)button.textContent=`Importing ${pct}%`;
+  };
 
   try{
     const text=await file.text();
     const rows=csvObjects(text);
     if(!rows.length)throw new Error("No CSV records were found. Make sure the first row contains column headers.");
+    setImportProgress(0,rows.length,0,0,0,"CSV loaded. Checking examination and subject...");
 
     const [subjectsResult,topicsResult,examSubjectResult]=await Promise.all([
       db.from("subjects").select("id,name,code,is_active"),
@@ -4500,11 +4519,17 @@ async function importCSV(){
     }catch(_){ }
 
     let inserted=0,failed=0,linkedCount=0;const errors=[];
+    const totalRows=rows.length;
 
     for(let i=0;i<rows.length;i++){
       const r=rows[i]||{};
       try{
-        const subjectId=findSubjectId(r.subject_id||r.subject||r.subject_name||r.subject_code);
+        setImportProgress(i,totalRows,inserted,failed,linkedCount,`Importing question ${i+1} of ${totalRows}...`);
+        // IMPORTANT: the subject selected in the import window is the authoritative route.
+        // Do not let a stale/blank/different subject_id in the CSV redirect the questions.
+        // This is what keeps WAEC Mathematics separate from JAMB Mathematics.
+        const csvSubjectRaw=String(r.subject||r.subject_name||r.subject_code||"").trim();
+        const subjectId=selectedSubjectId;
         const topicId=findTopicId(r.topic_id||r.topic||r.topic_name,subjectId);
         const questionText=String(r.question_text||r.question||r.text||"").trim();
         const optionA=String(r.option_a||r.a||"").trim();
@@ -4513,8 +4538,24 @@ async function importCSV(){
         const optionD=String(r.option_d||r.d||"").trim();
         const correctAnswer=normalizeAnswer(r.correct_answer||r.answer||r.correct);
 
-        if(!subjectId)throw new Error("Subject was not found.");
-        if(String(subjectId)!==String(selectedSubjectId))throw new Error(`CSV subject does not match selected subject ${subjectDisplayName(selectedSubject)}.`);
+        if(!subjectId)throw new Error("Subject was not selected. Please select the subject before importing.");
+
+        // If the CSV contains a subject name/code, validate it only when it is
+        // recognizable. An old UUID in subject_id must never break an import,
+        // because the Admin-selected subject is the routing authority.
+        if(csvSubjectRaw){
+          const normalizedCSV=csvSubjectRaw.toLowerCase().trim();
+          const selectedName=String(selectedSubject.name||"").toLowerCase().trim();
+          const selectedCode=String(selectedSubject.code||"").toLowerCase().trim();
+          const csvMatch=subjectList.find(x=>
+            String(x.name||"").toLowerCase().trim()===normalizedCSV ||
+            String(x.code||"").toLowerCase().trim()===normalizedCSV
+          );
+          if(csvMatch && String(csvMatch.id)!==String(selectedSubjectId)){
+            throw new Error(`CSV subject "${csvSubjectRaw}" does not match the selected subject ${subjectDisplayName(selectedSubject)}.`);
+          }
+          // Unknown CSV subject text is tolerated; the selected Admin subject wins.
+        }
         if(!questionText)throw new Error("Question text is missing.");
         if(!optionA||!optionB||!optionC||!optionD)throw new Error("Options A, B, C and D are all required.");
         if(!["A","B","C","D"].includes(correctAnswer))throw new Error("Correct answer must be A, B, C or D.");
@@ -4556,10 +4597,15 @@ async function importCSV(){
 
         nextQuestionNumber++;inserted++;linkedCount++;
       }catch(rowError){failed++;errors.push(`Row ${i+2}: ${rowError.message||"Unknown error"}`);}
+      finally{
+        setImportProgress(i+1,totalRows,inserted,failed,linkedCount,`Processed question ${i+1} of ${totalRows}`);
+      }
     }
 
+    setImportProgress(totalRows,totalRows,inserted,failed,linkedCount,failed?"Import finished with some errors.":"Import completed successfully.");
+
     const errorBlock=errors.length?`<div style="margin-top:14px;max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px">${escapeHTML(errors.slice(0,30).join("\n"))}</div>`:"";
-    message.innerHTML=`<div class="${failed?"errorBox":"successBox"}"><strong>Import complete</strong><br><br>Exam: <strong>${escapeHTML(csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId))))}</strong><br>Subject: <strong>${escapeHTML(subjectDisplayName(selectedSubject))}</strong><br>Added: <strong>${inserted}</strong><br>Linked to student exam: <strong>${linkedCount}</strong><br>Failed: <strong>${failed}</strong>${errorBlock}</div>`;
+    message.innerHTML=`<div class="${failed?"errorBox":"successBox"}"><strong>Import complete â ${Math.round((inserted/Math.max(1,totalRows))*100)}% of rows added</strong><br><br>Exam: <strong>${escapeHTML(csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId))))}</strong><br>Subject: <strong>${escapeHTML(subjectDisplayName(selectedSubject))}</strong><br>CSV rows: <strong>${totalRows}</strong><br>Added to Question Bank: <strong>${inserted}</strong><br>Linked to Student Exam: <strong>${linkedCount}</strong><br>Failed: <strong>${failed}</strong><br><br><strong>Student side:</strong> These linked questions are now available to the live exam question pool. Students will receive a random selection from all valid linked questions when randomization is enabled.${errorBlock}</div>`;
     await loadQuestionBank();
   }catch(error){
     console.error("CSV IMPORT ERROR",error);
@@ -5948,149 +5994,63 @@ async function loadStudentExamQuestionsLive(examId){
 async function loadExamQuestionPool(examId,subjectIds=[]){
 
   /*
-   * IMPORTANT:
-   * Do not trust get_exam_questions alone. Some installations
-   * return only a small subset or return rows without the
-   * question text/options. The source of truth is:
-   *
-   * exam_questions -> questions -> question_options
-   *
-   * The RPC is only used as a last-resort fallback.
+   * SOURCE OF TRUTH FOR THE STUDENT: exam_questions -> questions.
+   * We intentionally read every link first instead of trusting an RPC
+   * that may return a limited/subset of rows. This makes every imported
+   * question available for random selection.
    */
-
   let questions=[];
-  try{
-    const rpc=await db.rpc("get_student_exam_questions",{
-      p_exam_id:String(examId),
-      p_subject_ids:Array.isArray(subjectIds)?subjectIds:[]
-    });
-    let data=rpc.data;
-    if(typeof data==="string"){try{data=JSON.parse(data);}catch(_){}}
-    if(!rpc.error && Array.isArray(data)) questions=data;
-  }catch(error){
-    console.warn("Student question pool RPC:",error);
-  }
-
-  if(!questions.length && !subjectIds.length) questions=await loadStudentExamQuestionsLive(examId);
-
-  if(questions.length){
-    /*
-     * Direct option_a/b/c/d fields remain the primary option source.
-     * question_options is only a supplement.
-     */
-    try{
-      const ids=questions.map(q=>q.id).filter(Boolean);
-
-      if(ids.length){
-        const optionsResult=await db
-          .from("question_options")
-          .select("*")
-          .in("question_id",ids);
-
-        if(!optionsResult.error){
-          const optionMap={};
-
-          (optionsResult.data||[]).forEach(o=>{
-            if(!optionMap[o.question_id])
-              optionMap[o.question_id]=[];
-
-            optionMap[o.question_id].push(o);
-          });
-
-          questions=questions.map(q=>({
-            ...q,
-            question_options:
-              optionMap[q.id]||
-              q.question_options||
-              []
-          }));
-        }
-      }
-    }catch(error){
-      console.warn("Question options:",error);
-    }
-
-    questions=questions.filter(q=>{
-      const questionText=String(
-        q.question_text||
-        q.question||
-        q.text||
-        ""
-      ).trim();
-
-      const options=getQuestionOptions(q);
-
-      return Boolean(
-        q.id &&
-        questionText &&
-        options.length>=2
-      );
-    });
-
-    if(questions.length)
-      return questions;
-  }
-
   let links=[];
-  let linkResult=await db
+
+  const linkResult=await db
     .from("exam_questions")
     .select("*")
     .eq("exam_id",examId)
-    .order("question_number",{ascending:true});
+    .order("question_number",{ascending:true})
+    .limit(10000);
 
   if(!linkResult.error){
     links=linkResult.data||[];
   }else{
-    console.warn(
-      "exam_questions:",
-      linkResult.error
-    );
+    console.warn("exam_questions direct load:",linkResult.error);
   }
 
   if(links.length){
-
-    const ids=links
-      .map(x=>x.question_id||x.questionId)
-      .filter(Boolean);
-
+    const ids=[...new Set(links.map(x=>x.question_id||x.questionId).filter(Boolean).map(String))];
     if(ids.length){
-
-      const qr=await db
-        .from("questions")
-        .select("*")
-        .in("id",ids);
-
-      if(qr.error){
-        throw new Error(
-          "Could not load exam questions: "+
-          qr.error.message
-        );
+      const qr=await db.from("questions").select("*").in("id",ids);
+      if(!qr.error){
+        const map={};
+        (qr.data||[]).forEach(q=>{map[String(q.id)]=q;});
+        questions=links.map(link=>{
+          const questionId=link.question_id||link.questionId;
+          const q=map[String(questionId)];
+          if(!q)return null;
+          return {...q,exam_question_id:link.id,question_number:link.question_number};
+        }).filter(Boolean);
+      }else{
+        console.warn("questions linked to exam:",qr.error);
       }
-
-      const map={};
-      (qr.data||[]).forEach(q=>{
-        map[q.id]=q;
-      });
-
-      questions=links.map(link=>{
-
-        const questionId=
-          link.question_id||
-          link.questionId;
-
-        const q=map[questionId];
-
-        if(!q)return null;
-
-        return {
-          ...q,
-          exam_question_id:link.id,
-          question_number:
-            link.question_number
-        };
-
-      }).filter(Boolean);
     }
+  }
+
+  /* If direct tables are protected by RLS, use the student RPC as fallback. */
+  if(!questions.length){
+    try{
+      const rpc=await db.rpc("get_student_exam_questions",{
+        p_exam_id:String(examId),
+        p_subject_ids:Array.isArray(subjectIds)?subjectIds:[]
+      });
+      let data=rpc.data;
+      if(typeof data==="string"){try{data=JSON.parse(data);}catch(_) {}}
+      if(!rpc.error && Array.isArray(data))questions=data;
+    }catch(error){
+      console.warn("Student question pool RPC:",error);
+    }
+  }
+
+  if(!questions.length && !subjectIds.length){
+    questions=await loadStudentExamQuestionsLive(examId);
   }
 
   /*
