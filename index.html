@@ -4201,6 +4201,104 @@ async function deleteQuestion(id){
 }
 
 /* =========================================================
+   AUTOMATIC QUESTION -> EXAM LINKING
+   Every imported question is automatically attached to the
+   selected examination/subject. Existing published questions
+   for that subject are also reconciled so an upload never leaves
+   questions sitting only in the Question Bank.
+========================================================= */
+async function autoLinkQuestionToExam(examId, questionId, subjectId, marks=1){
+  if(!examId || !questionId || !subjectId)
+    throw new Error("Exam, question and subject are required for automatic linking.");
+
+  const existing=await db
+    .from("exam_questions")
+    .select("id,question_number")
+    .eq("exam_id",String(examId))
+    .eq("question_id",String(questionId))
+    .maybeSingle();
+
+  if(existing.error && existing.error.code!=="PGRST116")
+    throw new Error("Could not check existing exam question link: "+existing.error.message);
+
+  if(existing.data) return {linked:false,alreadyLinked:true,id:existing.data.id};
+
+  let nextNumber=1;
+  const maxRes=await db
+    .from("exam_questions")
+    .select("question_number")
+    .eq("exam_id",String(examId))
+    .order("question_number",{ascending:false})
+    .limit(1);
+
+  if(!maxRes.error && maxRes.data?.length)
+    nextNumber=Number(maxRes.data[0].question_number||0)+1;
+
+  // Retry a few times in case another import is running at the same time.
+  for(let attempt=0;attempt<5;attempt++){
+    const link=await db
+      .from("exam_questions")
+      .insert({
+        exam_id:String(examId),
+        question_id:String(questionId),
+        question_number:nextNumber,
+        marks:Number(marks||1)
+      })
+      .select("id")
+      .single();
+
+    if(!link.error) return {linked:true,alreadyLinked:false,id:link.data?.id};
+
+    // If the unique (exam_id, question_id) constraint was hit, the
+    // question was linked by another process; treat that as success.
+    if(link.error.code==="23505" && /question_id/i.test(link.error.message||"")){
+      const again=await db
+        .from("exam_questions")
+        .select("id")
+        .eq("exam_id",String(examId))
+        .eq("question_id",String(questionId))
+        .maybeSingle();
+      if(!again.error && again.data) return {linked:false,alreadyLinked:true,id:again.data.id};
+    }
+
+    if(link.error.code==="23505" && /question_number/i.test(link.error.message||"")){
+      nextNumber++;
+      continue;
+    }
+
+    throw new Error("Automatic exam linking failed: "+link.error.message);
+  }
+
+  throw new Error("Automatic exam linking could not find a unique question number.");
+}
+
+async function autoLinkPublishedSubjectQuestions(examId, subjectId){
+  if(!examId || !subjectId) return {linked:0,alreadyLinked:0,failed:0};
+
+  const qRes=await db
+    .from("questions")
+    .select("id,marks")
+    .eq("subject_id",String(subjectId))
+    .eq("status","published")
+    .limit(10000);
+
+  if(qRes.error)
+    throw new Error("Could not load published questions for automatic linking: "+qRes.error.message);
+
+  let linked=0,alreadyLinked=0,failed=0;
+  for(const q of (qRes.data||[])){
+    try{
+      const result=await autoLinkQuestionToExam(examId,q.id,subjectId,q.marks);
+      if(result.alreadyLinked) alreadyLinked++; else if(result.linked) linked++;
+    }catch(error){
+      failed++;
+      console.warn("Automatic question link failed",q.id,error);
+    }
+  }
+  return {linked,alreadyLinked,failed};
+}
+
+/* =========================================================
    CSV IMPORT â EXAM / SUBJECT LINKED IMPORT
    Questions imported here are attached to a specific examination
    and subject so JAMB and WAEC question banks stay separated.
@@ -4587,12 +4685,14 @@ async function importCSV(){
         const optionResult=await saveQuestionOptions(questionId,[["A",optionA],["B",optionB],["C",optionC],["D",optionD]],correctAnswer);
         if(!optionResult.success){await db.from("questions").delete().eq("id",questionId);throw new Error(optionResult.error||"Could not save answer options.");}
 
-        // Critical routing step: attach the question to the selected exam.
-        const link=await db.from("exam_questions").insert({exam_id:examId,question_id:questionId,question_number:nextQuestionNumber}).select("id").single();
-        if(link.error){
+        // Critical routing step: automatically attach the question to the selected exam.
+        // The helper is duplicate-safe and also protects against question-number collisions.
+        try{
+          await autoLinkQuestionToExam(examId,questionId,selectedSubjectId,Number(r.marks||1));
+        }catch(linkError){
           await db.from("question_options").delete().eq("question_id",questionId);
           await db.from("questions").delete().eq("id",questionId);
-          throw new Error("Question was saved but could not be linked to the selected examination: "+link.error.message);
+          throw linkError;
         }
 
         nextQuestionNumber++;inserted++;linkedCount++;
@@ -4602,10 +4702,21 @@ async function importCSV(){
       }
     }
 
+    // FINAL RECONCILIATION: if questions were already saved by an older
+    // upload path but were not linked, attach every published question
+    // belonging to the selected subject to this exact examination now.
+    let reconciliation={linked:0,alreadyLinked:0,failed:0};
+    try{
+      reconciliation=await autoLinkPublishedSubjectQuestions(examId,selectedSubjectId);
+      linkedCount += reconciliation.linked;
+    }catch(reconcileError){
+      console.warn("Automatic reconciliation warning:",reconcileError);
+    }
+
     setImportProgress(totalRows,totalRows,inserted,failed,linkedCount,failed?"Import finished with some errors.":"Import completed successfully.");
 
     const errorBlock=errors.length?`<div style="margin-top:14px;max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px">${escapeHTML(errors.slice(0,30).join("\n"))}</div>`:"";
-    message.innerHTML=`<div class="${failed?"errorBox":"successBox"}"><strong>Import complete â ${Math.round((inserted/Math.max(1,totalRows))*100)}% of rows added</strong><br><br>Exam: <strong>${escapeHTML(csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId))))}</strong><br>Subject: <strong>${escapeHTML(subjectDisplayName(selectedSubject))}</strong><br>CSV rows: <strong>${totalRows}</strong><br>Added to Question Bank: <strong>${inserted}</strong><br>Linked to Student Exam: <strong>${linkedCount}</strong><br>Failed: <strong>${failed}</strong><br><br><strong>Student side:</strong> These linked questions are now available to the live exam question pool. Students will receive a random selection from all valid linked questions when randomization is enabled.${errorBlock}</div>`;
+    message.innerHTML=`<div class="${failed?"errorBox":"successBox"}"><strong>Import complete â ${Math.round((inserted/Math.max(1,totalRows))*100)}% of rows added</strong><br><br>Exam: <strong>${escapeHTML(csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId))))}</strong><br>Subject: <strong>${escapeHTML(subjectDisplayName(selectedSubject))}</strong><br>CSV rows: <strong>${totalRows}</strong><br>Added to Question Bank: <strong>${inserted}</strong><br>Linked to Student Exam: <strong>${linkedCount}</strong><br>Existing links confirmed: <strong>${reconciliation.alreadyLinked}</strong><br>Failed: <strong>${failed+reconciliation.failed}</strong><br><br><strong>Student side:</strong> These linked questions are now available to the live exam question pool. Students will receive a random selection from all valid linked questions when randomization is enabled.${errorBlock}</div>`;
     await loadQuestionBank();
   }catch(error){
     console.error("CSV IMPORT ERROR",error);
@@ -5609,39 +5720,45 @@ async function getStudentExamSubjects(exam){
   if(!examId)return [];
 
   /*
-   * IMPORTANT: The picker must use the real subjects.id values.
-   * Some versions of get_student_exam_subjects return an "id" field
-   * that is not subjects.id. That makes the student picker look correct
-   * but causes the question-pool lookup to return zero questions.
-   *
-   * Therefore exam_subjects.subject_id -> subjects.id is the authoritative
-   * source for the student subject picker. The RPC is only a fallback.
+   * IMPORTANT:
+   * Students must only see subjects that are actually connected
+   * to the published examination. The central subjects table is
+   * the master list, but it must NOT be used as a fallback for an
+   * exam selector because that would expose unrelated subjects.
    */
+  try{
+    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:examId});
+    if(!rpc.error){
+      let data=rpc.data;
+      if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){}}
+      if(Array.isArray(data)&&data.length)return data;
+    }
+  }catch(error){
+    console.warn("Student exam subjects RPC:",error);
+  }
+
+  /* Direct fallback: Admin-configured exam_subjects -> subjects. */
   try{
     const link=await db
       .from("exam_subjects")
       .select("subject_id,is_compulsory,question_limit,sort_order,subject_order,is_active")
-      .eq("exam_id",examId)
-      .eq("is_active",true);
+      .eq("exam_id",examId);
 
-    if(!link.error && Array.isArray(link.data) && link.data.length){
-      const ids=[...new Set(link.data.map(x=>x.subject_id).filter(Boolean).map(String))];
+    if(!link.error&&(link.data||[]).length){
+      const ids=[...(link.data||[]).map(x=>x.subject_id).filter(Boolean)];
       if(ids.length){
         const sr=await db
           .from("subjects")
           .select("*")
           .in("id",ids)
           .order("name",{ascending:true});
-
-        if(!sr.error && Array.isArray(sr.data)){
+        if(!sr.error){
           const byId={};
-          link.data.forEach(x=>{byId[String(x.subject_id)]=x;});
-          return sr.data
+          (link.data||[]).forEach(x=>byId[String(x.subject_id)]=x);
+          return (sr.data||[])
             .filter(s=>byId[String(s.id)]?.is_active!==false)
             .map(s=>({
               ...s,
-              /* id MUST remain subjects.id for the question pool lookup. */
-              id:s.id,
               is_compulsory:Boolean(byId[String(s.id)]?.is_compulsory),
               question_limit:Number(byId[String(s.id)]?.question_limit||0),
               sort_order:byId[String(s.id)]?.sort_order??byId[String(s.id)]?.subject_order??0
@@ -5650,26 +5767,7 @@ async function getStudentExamSubjects(exam){
       }
     }
   }catch(error){
-    console.warn("Direct exam subject links:",error);
-  }
-
-  /* RPC fallback for installations where direct exam_subjects access is restricted. */
-  try{
-    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:examId});
-    if(!rpc.error){
-      let data=rpc.data;
-      if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){} }
-      if(Array.isArray(data)&&data.length){
-        /* Prefer subject_id from the RPC. Never replace it with exam_subjects.id. */
-        return data.map(row=>({
-          ...row,
-          id:row.subject_id||row.id,
-          subject_id:row.subject_id||row.id
-        }));
-      }
-    }
-  }catch(error){
-    console.warn("Student exam subjects RPC:",error);
+    console.warn("Exam subject links:",error);
   }
 
   return [];
@@ -5764,31 +5862,6 @@ async function updateExamQuestionChoices(exam,subjects,jamb){
           count=(qRes.data||[]).filter(q=>allowed.has(String(q.subject_id))).length;
         }
       }
-    }
-    /*
-     * Robust fallback for uploaded subjects such as WAEC English Language.
-     * If the normal linked-question read is affected by RLS or an older RPC,
-     * first resolve the real subjects.id values and then ask the question bank
-     * for published questions belonging to the selected subject. We only count
-     * questions that are actually linked to this exam when the link list is
-     * available; this never makes an unlinked question appear in the exam.
-     */
-    if(!count){
-      try{
-        const subj=[...new Set(selected.map(String).filter(Boolean))];
-        if(subj.length){
-          const bank=await db.from('questions').select('id,subject_id,status').in('subject_id',subj).eq('status','published').limit(10000);
-          if(!bank.error && Array.isArray(bank.data) && bank.data.length){
-            if(!linkRes.error && Array.isArray(linkRes.data) && linkRes.data.length){
-              const linked=new Set(linkRes.data.map(x=>String(x.question_id||'')).filter(Boolean));
-              count=(bank.data||[]).filter(q=>linked.has(String(q.id))).length;
-            } else if(linkRes.error){
-              /* If exam_questions itself is protected, fall through to the RPC. */
-              count=0;
-            }
-          }
-        }
-      }catch(_){ }
     }
     // Fallback only when direct tables are protected by RLS.
     if(!count){
