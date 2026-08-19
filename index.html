@@ -152,6 +152,12 @@ textarea{
   resize:vertical;
 }
 
+
+/* SEARCHABLE SUBJECT PICKERS */
+.bulkQuestionBar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 14px;padding:10px 0}.bulkQuestionBar label{display:flex;align-items:center;gap:8px;font-weight:700}.bulkQuestionBar input[type="checkbox"],.questionSelectBox{width:19px;height:19px;accent-color:#1677ed}.bulkDeleteBtn{border:0;border-radius:9px;padding:10px 14px;background:#dc2626;color:#fff;font-weight:800;cursor:pointer}.bulkDeleteBtn:disabled{background:#cbd5e1;color:#64748b;cursor:not-allowed}.questionSelectedCount{font-weight:700;color:var(--muted)}.questionSelectCell{width:42px;text-align:center}.jambEnglishLine{display:flex;align-items:center;gap:10px;margin:14px 0 12px;font-weight:700}.jambEnglishLine .check{width:20px;height:20px;border-radius:5px;background:#1677ed;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px}.jambEnglishLine small{display:block;color:var(--muted);font-weight:600;margin-top:2px}.jambStandardLine{margin-top:14px;font-size:14px;color:var(--muted)}
+.subjectPicker{position:relative;width:100%}.subjectPickerSearch{margin-bottom:8px}.subjectPickerList{max-height:280px;overflow:auto;border:1px solid var(--border);border-radius:10px;background:#fff}.subjectPickerItem{display:flex;align-items:center;gap:10px;width:100%;padding:12px 13px;border:0;border-bottom:1px solid #eef2f7;background:#fff;text-align:left;cursor:pointer}.subjectPickerItem:hover{background:#eff6ff}.subjectPickerItem.selected{background:#dbeafe}.subjectPickerItem input{width:18px;height:18px;flex:0 0 auto;padding:0}.subjectPickerEmpty{padding:18px;text-align:center;color:var(--muted)}.subjectPickerSelected{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.subjectChip{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:6px 9px;font-size:13px;font-weight:700}.subjectChip button{border:0;background:transparent;color:inherit;font-weight:900;padding:0 2px}.studentSubjectPicker{margin-top:15px}.studentSubjectPicker .subjectPickerList{max-height:48vh}.examSelectedSummary{margin-top:10px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)}
+@media(max-width:700px){.modal{align-items:flex-start;padding:10px}.modalBox{max-height:96vh;padding:17px;border-radius:14px}.formGrid{grid-template-columns:1fr}.formGroup.full{grid-column:auto}.subjectPickerList{max-height:48vh}}
+
 /* AUTH */
 
 .authPage{
@@ -756,6 +762,15 @@ textarea{
 .examQuestionSelector{
   margin-top:8px;
 }
+.jambSubjectSummary{
+  margin-top:12px;
+  padding:12px;
+  border-radius:10px;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  color:#1e3a8a;
+  font-weight:700;
+}
 .examQuestionSelector select{
   font-weight:700;
 }
@@ -869,6 +884,7 @@ let role=null;
 let subjects=[];
 let topics=[];
 let questionRows=[];
+let selectedQuestionIds=new Set();
 let allStudents=[];
 let tutorRows=[];
 let currentModuleRows=[];
@@ -2235,6 +2251,7 @@ function renderSubjectTable(){
 
     </div>`;
 
+    updateQuestionBulkUI(rows);
     return;
   }
 
@@ -3118,6 +3135,15 @@ async function adminQuestionBank(){
 
      </div>
 
+     <div class="bulkQuestionBar">
+      <label>
+       <input type="checkbox" id="selectAllQuestions" onchange="toggleSelectAllVisibleQuestions(this.checked)">
+       Select all visible
+      </label>
+      <button type="button" id="bulkDeleteQuestionsBtn" class="bulkDeleteBtn" disabled onclick="bulkDeleteQuestions()">Delete Selected</button>
+      <span id="questionSelectedCount" class="questionSelectedCount">0 selected</span>
+     </div>
+
      <div
       id="questionArea"
       class="studentTableWrap">
@@ -3180,6 +3206,8 @@ async function loadQuestionBank(){
   }
 
   questionRows=result.data||[];
+  const validQuestionIds=new Set(questionRows.map(q=>String(q.id)).filter(Boolean));
+  selectedQuestionIds=new Set([...selectedQuestionIds].filter(id=>validQuestionIds.has(String(id))));
 
   /*
    * If question_options exists, attempt to attach
@@ -3241,41 +3269,7 @@ async function loadQuestionBank(){
 }
 
 function filterQuestionBank(){
-
-  const search=
-    document.getElementById(
-      "questionSearch"
-    )?.value
-      .toLowerCase()
-      .trim()||"";
-
-  const subject=
-    document.getElementById(
-      "questionSubjectFilter"
-    )?.value||"";
-
-  const rows=
-    questionRows.filter(q=>{
-
-      const text=
-        JSON.stringify(q)
-          .toLowerCase();
-
-      const matchesSearch=
-        !search||
-        text.includes(search);
-
-      const matchesSubject=
-        !subject||
-        String(q.subject_id)===String(subject);
-
-      return (
-        matchesSearch&&
-        matchesSubject
-      );
-    });
-
-  renderQuestionBank(rows);
+  renderQuestionBank(getFilteredQuestionRows());
 }
 
 function renderQuestionBank(rows){
@@ -3341,6 +3335,10 @@ function renderQuestionBank(rows){
       return `
 
       <tr>
+
+       <td class="questionSelectCell">
+        <input class="questionSelectBox" type="checkbox" data-question-select="${escapeHTML(String(q.id))}" ${selectedQuestionIds.has(String(q.id))?'checked':''} onchange="toggleQuestionSelection('${escapeHTML(String(q.id))}',this.checked)">
+       </td>
 
        <td>${i+1}</td>
 
@@ -3436,6 +3434,89 @@ function renderQuestionBank(rows){
    </tbody>
 
   </table>`;
+
+  updateQuestionBulkUI(rows);
+}
+
+/* =========================================================
+   BULK QUESTION SELECTION / DELETE
+========================================================= */
+
+function updateQuestionBulkUI(rows=[]){
+  const count=selectedQuestionIds.size;
+  const countEl=document.getElementById("questionSelectedCount");
+  const btn=document.getElementById("bulkDeleteQuestionsBtn");
+  const selectAll=document.getElementById("selectAllQuestions");
+  if(countEl)countEl.textContent=`${count} selected`;
+  if(btn){btn.disabled=count===0;btn.textContent=count?`Delete Selected (${count})`:`Delete Selected`;}
+  const visibleIds=(rows||[]).map(q=>String(q.id)).filter(Boolean);
+  const selectedVisible=visibleIds.filter(id=>selectedQuestionIds.has(id)).length;
+  if(selectAll){
+    selectAll.checked=visibleIds.length>0 && selectedVisible===visibleIds.length;
+    selectAll.indeterminate=selectedVisible>0 && selectedVisible<visibleIds.length;
+  }
+}
+
+function toggleQuestionSelection(id,checked){
+  id=String(id||"");
+  if(!id)return;
+  if(checked)selectedQuestionIds.add(id);
+  else selectedQuestionIds.delete(id);
+  const current=getFilteredQuestionRows();
+  updateQuestionBulkUI(current);
+}
+
+function toggleSelectAllVisibleQuestions(checked){
+  const rows=getFilteredQuestionRows();
+  rows.forEach(q=>{
+    const id=String(q.id||"");
+    if(!id)return;
+    if(checked)selectedQuestionIds.add(id);
+    else selectedQuestionIds.delete(id);
+  });
+  renderQuestionBank(rows);
+}
+
+function getFilteredQuestionRows(){
+  const search=(document.getElementById("questionSearch")?.value||"").toLowerCase().trim();
+  const subject=document.getElementById("questionSubjectFilter")?.value||"";
+  return questionRows.filter(q=>{
+    const text=JSON.stringify(q).toLowerCase();
+    return (!search||text.includes(search)) && (!subject||String(q.subject_id)===String(subject));
+  });
+}
+
+async function bulkDeleteQuestions(){
+  const ids=[...selectedQuestionIds].filter(Boolean);
+  if(!ids.length)return;
+  const count=ids.length;
+  if(!confirm(`Delete ${count} selected question${count===1?'':'s'} permanently? This cannot be undone.`))return;
+
+  const btn=document.getElementById("bulkDeleteQuestionsBtn");
+  if(btn){btn.disabled=true;btn.textContent="Deleting...";}
+
+  try{
+    // Remove linked answer options first where that table exists.
+    for(let i=0;i<ids.length;i+=100){
+      const chunk=ids.slice(i,i+100);
+      try{await db.from("question_options").delete().in("question_id",chunk);}catch(_){}
+    }
+
+    // Delete questions in small batches to avoid URL/request-size limits.
+    for(let i=0;i<ids.length;i+=100){
+      const chunk=ids.slice(i,i+100);
+      const result=await db.from("questions").delete().in("id",chunk);
+      if(result.error)throw new Error(result.error.message);
+    }
+
+    selectedQuestionIds.clear();
+    await adminQuestionBank();
+    alert(`${count} question${count===1?'':'s'} deleted successfully.`);
+  }catch(error){
+    console.error("Bulk question delete:",error);
+    alert(`Bulk delete failed: ${error.message||"Unknown error"}`);
+    updateQuestionBulkUI(getFilteredQuestionRows());
+  }
 }
 
 /* =========================================================
@@ -3526,39 +3607,7 @@ function openQuestionModal(id=null){
          Subject
         </label>
 
-        <select
-         id="qSubject"
-         required>
-
-         <option value="">
-          Select Subject
-         </option>
-
-         ${subjects.map(s=>`
-
-          <option
-           value="${s.id}"
-           ${
-             String(
-               existing?.subject_id||
-               ""
-             )===String(s.id)
-             ?"selected"
-             :""
-           }>
-
-           ${escapeHTML(
-             s.name||
-             s.subject_name||
-             s.code||
-             ""
-           )}
-
-          </option>
-
-         `).join("")}
-
-        </select>
+        ${subjectPickerHTML(subjects,"qSubjectPicker",existing?.subject_id?[String(existing.subject_id)]:[],false,"Search subject...")}
 
        </div>
 
@@ -3839,10 +3888,7 @@ function closeQuestionModal(){
 
 async function saveQuestion(id){
 
-  const subject_id=
-    document.getElementById(
-      "qSubject"
-    ).value;
+  const subject_id=getSubjectPickerIds("qSubjectPicker")[0]||"";
 
   const topic=
     document.getElementById(
@@ -5559,16 +5605,61 @@ function isPublishedStudentExam(exam){
 }
 
 async function getStudentExamSubjects(exam){
+  const examId=String(exam?.id||"");
+  if(!examId)return [];
+
+  /*
+   * IMPORTANT:
+   * Students must only see subjects that are actually connected
+   * to the published examination. The central subjects table is
+   * the master list, but it must NOT be used as a fallback for an
+   * exam selector because that would expose unrelated subjects.
+   */
   try{
-    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:String(exam?.id||"")});
-    if(!rpc.error){let data=rpc.data;if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){}}if(Array.isArray(data))return data;}
-  }catch(error){console.warn("Student exam subjects RPC:",error)}
+    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:examId});
+    if(!rpc.error){
+      let data=rpc.data;
+      if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){}}
+      if(Array.isArray(data)&&data.length)return data;
+    }
+  }catch(error){
+    console.warn("Student exam subjects RPC:",error);
+  }
+
+  /* Direct fallback: Admin-configured exam_subjects -> subjects. */
   try{
-    const rpc=await db.rpc("get_student_subjects");
-    if(!rpc.error){let data=rpc.data;if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){}}if(Array.isArray(data))return data;}
-  }catch(error){console.warn("Central subjects RPC:",error)}
-  const sr=await db.from("subjects").select("*").order("name",{ascending:true});
-  return sr.error?[]:(sr.data||[]);
+    const link=await db
+      .from("exam_subjects")
+      .select("subject_id,is_compulsory,question_limit,sort_order,subject_order,is_active")
+      .eq("exam_id",examId);
+
+    if(!link.error&&(link.data||[]).length){
+      const ids=[...(link.data||[]).map(x=>x.subject_id).filter(Boolean)];
+      if(ids.length){
+        const sr=await db
+          .from("subjects")
+          .select("*")
+          .in("id",ids)
+          .order("name",{ascending:true});
+        if(!sr.error){
+          const byId={};
+          (link.data||[]).forEach(x=>byId[String(x.subject_id)]=x);
+          return (sr.data||[])
+            .filter(s=>byId[String(s.id)]?.is_active!==false)
+            .map(s=>({
+              ...s,
+              is_compulsory:Boolean(byId[String(s.id)]?.is_compulsory),
+              question_limit:Number(byId[String(s.id)]?.question_limit||0),
+              sort_order:byId[String(s.id)]?.sort_order??byId[String(s.id)]?.subject_order??0
+            }));
+        }
+      }
+    }
+  }catch(error){
+    console.warn("Exam subject links:",error);
+  }
+
+  return [];
 }
 
 function isJambExam(exam){
@@ -5580,245 +5671,63 @@ function subjectDisplayName(s){
   return String(s?.name||s?.subject_name||s?.code||"Subject").trim();
 }
 
+
+function subjectPickerHTML(options,pickerId,selectedIds=[],multiple=true,placeholder="Search subjects..."){
+  const selected=new Set((selectedIds||[]).map(String));
+  const list=(options||[]).map(s=>{const id=String(s.id),name=subjectDisplayName(s),code=String(s.code||s.subject_code||"");return `<button type="button" class="subjectPickerItem ${selected.has(id)?'selected':''}" data-picker="${escapeHTML(pickerId)}" data-subject-id="${escapeHTML(id)}" data-subject-name="${escapeHTML(name)}" onclick="toggleSubjectPickerItem('${escapeHTML(pickerId)}','${escapeHTML(id)}',${multiple})"><input type="${multiple?'checkbox':'radio'}" tabindex="-1" ${selected.has(id)?'checked':''} onclick="event.preventDefault()"><span style="min-width:0;display:block"><strong style="display:block;white-space:normal;overflow-wrap:anywhere">${escapeHTML(name)}</strong>${code?`<small class="muted">${escapeHTML(code)}</small>`:''}</span></button>`}).join('');
+  return `<div class="subjectPicker" id="${escapeHTML(pickerId)}"><input class="subjectPickerSearch" id="${escapeHTML(pickerId)}_search" placeholder="${escapeHTML(placeholder)}" autocomplete="off" oninput="filterSubjectPicker('${escapeHTML(pickerId)}')"><div class="subjectPickerSelected" id="${escapeHTML(pickerId)}_selected"></div><div class="subjectPickerList" id="${escapeHTML(pickerId)}_list">${list||'<div class="subjectPickerEmpty">No subjects available.</div>'}</div><input type="hidden" id="${escapeHTML(pickerId)}_value" value="${escapeHTML([...selected].join(','))}"></div>`;
+}
+function getSubjectPickerIds(id){const e=document.getElementById(id+'_value');return e?e.value.split(',').filter(Boolean):[]}
+function setSubjectPickerIds(id,ids){const e=document.getElementById(id+'_value');if(!e)return;const clean=[...new Set((ids||[]).map(String).filter(Boolean))];e.value=clean.join(',');document.querySelectorAll('[data-picker="'+id+'"]').forEach(item=>{const on=clean.includes(String(item.dataset.subjectId));item.classList.toggle('selected',on);const cb=item.querySelector('input');if(cb)cb.checked=on});renderSubjectPickerSelected(id)}
+function renderSubjectPickerSelected(id){const wrap=document.getElementById(id+'_selected');if(!wrap)return;const picker=document.getElementById(id);const ids=getSubjectPickerIds(id);const items=[...(picker?.querySelectorAll('.subjectPickerItem')||[])];wrap.innerHTML=ids.map(x=>{const item=items.find(i=>String(i.dataset.subjectId)===String(x));return `<span class="subjectChip">${escapeHTML(item?.dataset.subjectName||subjectName(x)||'Subject')}<button type="button" onclick="removeSubjectPickerItem('${escapeHTML(id)}','${escapeHTML(x)}')">Ã</button></span>`}).join('')}
+function toggleSubjectPickerItem(id,subjectId,multiple=true){const current=getSubjectPickerIds(id);const next=multiple?(current.includes(String(subjectId))?current.filter(x=>x!==String(subjectId)):[...current,String(subjectId)]):[String(subjectId)];setSubjectPickerIds(id,next)}
+function removeSubjectPickerItem(id,subjectId){setSubjectPickerIds(id,getSubjectPickerIds(id).filter(x=>x!==String(subjectId)))}
+function filterSubjectPicker(id){const q=(document.getElementById(id+'_search')?.value||'').toLowerCase().trim();document.querySelectorAll('[data-picker="'+id+'"]').forEach(item=>{item.style.display=((item.dataset.subjectName||'')+' '+item.textContent).toLowerCase().includes(q)?'flex':'none'})}
+function selectAllSubjectsInPicker(id){const p=document.getElementById(id);if(p)setSubjectPickerIds(id,[...p.querySelectorAll('.subjectPickerItem')].map(x=>x.dataset.subjectId))}
+
 async function openExamSetup(examId){
-  const live=await getPublishedStudentExamsLive();
-  const exam=(live.data||[]).find(e=>String(e.id)===String(examId));
-  if(!exam || !isPublishedStudentExam(exam)){
-    alert("This examination is not currently available to students.");
-    return;
-  }
-
-  const subjects=await getStudentExamSubjects(exam);
-  if(!subjects.length){
-    alert("No subjects are registered yet. Add subjects in Admin Subject Management.");
-    return;
-  }
-
-  const jamb=isJambExam(exam);
-  /* Always use the real English Language subject, never JAMB Use of English. */
-  const english=subjects.find(s=>{
-    const n=subjectDisplayName(s).trim().toLowerCase();
-    const c=String(s?.code||s?.subject_code||"").trim().toLowerCase();
-    return n==="english language" || c==="eng";
-  });
-
-  if(jamb && !english){
-    alert("English Language is not linked to this JAMB examination. Add/link English Language in Admin.");
-    return;
-  }
-
-  const box=document.createElement("div");
-  box.className="modal";
-  box.id="examSetupModal";
-
-  const listSubjects=jamb
-    ? subjects.filter(s=>{
-        const n=subjectDisplayName(s).trim().toLowerCase();
-        const c=String(s?.code||s?.subject_code||"").trim().toLowerCase();
-        return !(n==="jamb use of english" || n==="use of english" || c==="jambeng" || c==="useeng");
-      })
-    : subjects;
-
-  box.innerHTML=`
-    <div class="modalBox" style="max-width:680px">
-      <div class="modalHead">
-        <h2>${escapeHTML(exam.title||"Examination")}</h2>
-        <button class="closeBtn" onclick="document.getElementById('examSetupModal')?.remove()">X</button>
-      </div>
-
-      <p class="muted" style="margin-top:8px">
-        ${jamb
-          ?"English Language is compulsory. Search and select 3 other subjects."
-          :"Search and select the subject you want to answer."}
-      </p>
-
-      <div class="examSetupClean">
-        ${jamb ? `
-          <div style="font-weight:800;margin-bottom:10px">Compulsory Subject</div>
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 0 14px;border-bottom:1px solid #e2e8f0">
-            <input type="checkbox" checked disabled style="width:22px;height:22px;accent-color:var(--primary);margin:0">
-            <div class="examSubjectInfo">
-              <span class="examSubjectName">English Language <span class="examSubjectRequired">COMPULSORY</span></span>
-              <span class="examSubjectCode">${escapeHTML(english?.code||english?.subject_code||"ENG")} - 60 questions</span>
-            </div>
-          </div>
-          <div style="font-weight:800;margin:18px 0 10px">Choose your other 3 subjects</div>
-        ` : `
-          <div style="font-weight:800;margin-bottom:10px">Choose your subject</div>
-        `}
-
-        <div class="examSetupSearch">
-          <input id="examSubjectSearch" type="search" autocomplete="off" placeholder="Search ${jamb?'JAMB':'exam'} subjects...">
-        </div>
-
-        <div id="examSubjectChoices" class="examSubjectList">
-          ${listSubjects.map(s=>{
-            const id=String(s.id);
-            const name=subjectDisplayName(s);
-            const code=s?.code||s?.subject_code||"";
-            return `
-              <label class="examSubjectRow" data-subject-name="${escapeHTML(name)}" data-subject-code="${escapeHTML(code)}">
-                <input type="checkbox" class="examSubjectChoice" value="${escapeHTML(id)}">
-                <span class="examSubjectInfo">
-                  <span class="examSubjectName">${escapeHTML(name)}</span>
-                  ${code?`<span class="examSubjectCode">${escapeHTML(code)}</span>`:""}
-                </span>
-              </label>`;
-          }).join("")}
-        </div>
-
-        <div id="examSubjectEmpty" class="examSubjectEmpty hidden">No subject matches your search.</div>
-        <div id="examSetupMessage" class="examSetupSummary"></div>
-
-        <div class="formGroup" style="margin-top:16px">
-          <label>Number of Questions</label>
-          <div id="examRequestedCountWrap"></div>
-          <select id="examRequestedCount" style="display:none"></select>
-        </div>
-      </div>
-
-      <button class="btn primary" style="margin-top:16px;width:100%" onclick="confirmExamSetup('${exam.id}',${jamb})">
-        Start Examination
-      </button>
-    </div>`;
-
-  document.body.appendChild(box);
-
-  const search=document.getElementById("examSubjectSearch");
-  const rows=[...box.querySelectorAll(".examSubjectRow")];
-  const empty=document.getElementById("examSubjectEmpty");
-
-  const applySearch=()=>{
-    const q=String(search?.value||"").trim().toLowerCase();
-    let shown=0;
-    rows.forEach(row=>{
-      const hay=(row.dataset.subjectName||"")+" "+(row.dataset.subjectCode||"");
-      const match=!q || hay.toLowerCase().includes(q);
-      row.style.display=match?"flex":"none";
-      if(match)shown++;
-    });
-    if(empty)empty.classList.toggle("hidden",shown!==0);
-  };
-
-  search?.addEventListener("input",applySearch);
-
-  rows.forEach(el=>{
-    const cb=el.querySelector(".examSubjectChoice");
-    el.addEventListener("click",event=>{
-      if(event.target===cb)return;
-      if(cb.disabled)return;
-      cb.checked=!cb.checked;
-      cb.dispatchEvent(new Event("change",{bubbles:true}));
-    });
-    cb.addEventListener("change",()=>{
-      el.classList.toggle("selected",cb.checked);
-      updateExamQuestionChoices(exam,subjects,jamb);
-    });
-  });
-
-  updateExamQuestionChoices(exam,subjects,jamb);
+  const live=await getPublishedStudentExamsLive();const exam=(live.data||[]).find(e=>String(e.id)===String(examId));
+  if(!exam||!isPublishedStudentExam(exam)){alert("This examination is not currently available to students.");return;}
+  const subjects=await getStudentExamSubjects(exam);if(!subjects.length){alert("No subjects are registered yet. Link subjects to this examination in Admin.");return;}
+  const jamb=isJambExam(exam);const english=subjects.find(s=>{const n=subjectDisplayName(s).toLowerCase(),c=String(s?.code||s?.subject_code||'').toLowerCase();return n==='english language'||c==='eng'});
+  if(jamb&&!english){alert("English Language is not linked to this JAMB examination. Link it in Admin Exam Subjects first.");return;}
+  const options=jamb?subjects.filter(s=>{const n=subjectDisplayName(s).toLowerCase();return String(s.id)!==String(english.id)&&n!=='use of english'&&n!=='jamb use of english';}):subjects;
+  const box=document.createElement('div');box.className='modal';box.id='examSetupModal';box.innerHTML=`<div class="modalBox" style="max-width:680px"><div class="modalHead"><h2>${escapeHTML(exam.title||'Examination')}</h2><button class="closeBtn" onclick="document.getElementById('examSetupModal')?.remove()">X</button></div><p class="muted" style="margin-top:8px">${jamb?'English Language is compulsory. Search and select 3 other subjects.':'Search and select the subject you want to answer.'}</p>${jamb?`<div class="jambEnglishLine"><span class="check">â</span><div>${escapeHTML(subjectDisplayName(english))}<small>ENG Â· 60 questions Â· Compulsory</small></div></div><div class="studentSubjectPicker"><label style="font-weight:800;display:block;margin-bottom:7px">Choose your other 3 subjects</label>${subjectPickerHTML(options,'studentJambPicker',[],true,'Search JAMB subjects...')}</div><div id="studentJambSummary" class="examSelectedSummary">Selected: 0 / 3</div>`:`<div class="studentSubjectPicker"><label style="font-weight:700;display:block;margin-bottom:7px">Choose a subject</label>${subjectPickerHTML(options,'studentWaecPicker',[],false,'Search WAEC subjects...')}</div>`}<div id="examSetupMessage" style="margin-top:14px"></div><div class="formGroup" style="margin-top:16px"><label>Number of Questions</label><div id="examRequestedCountWrap"></div><select id="examRequestedCount" style="display:none"></select></div><button class="btn primary" style="margin-top:16px;width:100%" onclick="confirmExamSetup('${exam.id}',${jamb})">${jamb?'Start JAMB Examination':'Start Examination'}</button></div>`;
+  document.body.appendChild(box);renderSubjectPickerSelected(jamb?'studentJambPicker':'studentWaecPicker');const pid=jamb?'studentJambPicker':'studentWaecPicker';box.querySelectorAll('#'+pid+' .subjectPickerItem').forEach(el=>el.addEventListener('click',()=>setTimeout(()=>updateExamQuestionChoices(exam,subjects,jamb),0)));await updateExamQuestionChoices(exam,subjects,jamb);
 }
 
 async function updateExamQuestionChoices(exam,subjects,jamb){
-  const selected=[...document.querySelectorAll(".examSubjectChoice:checked")].map(x=>x.value).filter(Boolean);
-  const msg=document.getElementById("examSetupMessage");
-  const select=document.getElementById("examRequestedCount");
-  if(!select)return;
-
-  if(jamb && selected.length!==3){
-    if(msg)msg.textContent=`Select ${Math.max(0,3-selected.length)} more subject${(3-selected.length)===1?"":"s"}. English Language is already compulsory.`;
-    select.innerHTML=`<option value="">Select 3 other subjects first</option>`;
-    const wrap=document.getElementById("examRequestedCountWrap");
-    if(wrap)wrap.innerHTML="";
-    return;
-  }
-
-  if(!jamb && selected.length!==1){
-    if(msg)msg.textContent="Select one subject to continue.";
-    select.innerHTML=`<option value="">Select one subject first</option>`;
-    return;
-  }
-
-  if(msg)msg.textContent="Checking available questions...";
-
-  try{
-    const allSelected=jamb
-      ? (()=>{
-          const english=document.querySelector('.examSetupClean input[type="checkbox"][disabled]');
-          const englishId=subjects.find(s=>{
-            const n=subjectDisplayName(s).trim().toLowerCase();
-            const c=String(s?.code||s?.subject_code||"").trim().toLowerCase();
-            return n==="english language"||c==="eng";
-          })?.id;
-          return englishId?[String(englishId),...selected]:selected;
-        })()
-      : selected;
-
-    const rpc=await db.rpc("get_student_exam_questions",{
-      p_exam_id:String(exam.id),
-      p_subject_ids:allSelected
-    });
-    let data=rpc.data;
-    if(typeof data==="string"){
-      try{data=JSON.parse(data)}catch(_){}
-    }
-    const count=(!rpc.error&&Array.isArray(data))?data.length:0;
-
-    if(!count){
-      if(msg)msg.textContent="No published questions are available under the selected subject(s). Add/import questions under those subjects in Admin.";
-      select.innerHTML=`<option value="">No questions available</option>`;
-      return;
-    }
-
-    if(jamb){
-      const wrap=document.getElementById("examRequestedCountWrap");
-      if(wrap)wrap.innerHTML=`<div class="examSetupQuestionInfo">JAMB standard: English Language 60 questions + 40 questions for each of the other 3 selected subjects = 180 questions.</div>`;
-      select.innerHTML=`<option value="180">180 Questions</option>`;
-      if(msg)msg.textContent="Your 4 JAMB subjects are ready. Tap Start Examination.";
-    }else{
-      const wrap=document.getElementById("examRequestedCountWrap");
-      if(wrap)wrap.innerHTML="";
-      if(msg)msg.textContent="Questions are ready. Tap Start Examination.";
-      const choices=[10,20,30,40,50,60,75,100,120,150,180,200].filter(n=>n<=count);
-      if(!choices.includes(count))choices.push(count);
-      choices.sort((a,b)=>a-b);
-      select.innerHTML=choices.map(n=>`<option value="${n}">${n} Questions</option>`).join("");
-    }
-  }catch(error){
-    if(msg)msg.textContent=`Could not check questions: ${error.message||""}`;
-    select.innerHTML=`<option value="">Unable to load questions</option>`;
-  }
-}
+  let selected=jamb?getSubjectPickerIds('studentJambPicker'):getSubjectPickerIds('studentWaecPicker');
+  if(jamb){const english=subjects.find(s=>{const n=subjectDisplayName(s).toLowerCase(),c=String(s?.code||s?.subject_code||'').toLowerCase();return n==='english language'||c==='eng'});if(english)selected=[String(english.id),...selected.filter(x=>String(x)!==String(english.id))];const summary=document.getElementById('studentJambSummary');if(summary)summary.textContent=`Selected: ${Math.max(0,selected.length-1)} / 3`;}
+  const msg=document.getElementById('examSetupMessage'),select=document.getElementById('examRequestedCount');if(!select)return;
+  if(jamb&&selected.length!==4){msg.innerHTML='<div class="errorBox">Select exactly 3 other subjects. English Language is already compulsory.</div>';select.innerHTML='<option value="">Select subjects first</option>';return;}
+  if(!jamb&&selected.length!==1){msg.innerHTML='<div class="errorBox">Select one subject to continue.</div>';select.innerHTML='<option value="">Select a subject first</option>';return;}
+  msg.innerHTML='<div class="panel">Checking available questions...</div>';try{const rpc=await db.rpc('get_student_exam_questions',{p_exam_id:String(exam.id),p_subject_ids:selected});let data=rpc.data;if(typeof data==='string'){try{data=JSON.parse(data)}catch(_){}}const count=(!rpc.error&&Array.isArray(data))?data.length:0;if(!count){msg.innerHTML='<div class="errorBox">No published questions are available under the selected subject(s). Add/import questions under those subjects in Admin Question Bank.</div>';select.innerHTML='<option value="">No questions available</option>';return;}if(jamb){document.getElementById('examRequestedCountWrap').innerHTML='<div class="jambStandardLine"><strong>JAMB standard:</strong> English Language 60 + 3 selected subjects Ã 40 = 180 questions.</div>';select.innerHTML='<option value="180">180 Questions</option>';msg.innerHTML='<div class="successBox">All 4 subjects are selected and questions are linked. You can start the examination.</div>';}else{document.getElementById('examRequestedCountWrap').innerHTML='';msg.innerHTML='<div class="successBox">Subject selected and questions are available. You can start the examination.</div>';const choices=[10,20,30,40,50,60,75,100,120,150,180,200].filter(n=>n<=count);if(!choices.includes(count))choices.push(count);choices.sort((a,b)=>a-b);select.innerHTML=choices.map(n=>`<option value="${n}">${n} Questions</option>`).join('');}}catch(error){msg.innerHTML=`<div class="errorBox">Could not check questions: ${escapeHTML(error.message||'')}</div>`;select.innerHTML='<option value="">Unable to load questions</option>';}}
 
 async function confirmExamSetup(examId,jamb){
-  const selected=[...document.querySelectorAll(".examSubjectChoice:checked")].map(x=>x.value).filter(Boolean);
+  let selected=jamb?getSubjectPickerIds('studentJambPicker'):getSubjectPickerIds('studentWaecPicker');
+
+  if(jamb){
+    const subjects=await getStudentExamSubjects({id:examId});
+    const english=subjects.find(s=>{
+      const n=subjectDisplayName(s).toLowerCase();
+      const c=String(s?.code||s?.subject_code||"").toLowerCase();
+      return n==="english language" || c==="eng";
+    });
+    if(english&&!selected.map(String).includes(String(english.id)))
+      selected.unshift(String(english.id));
+  }
+
   const count=jamb?180:Number(document.getElementById("examRequestedCount")?.value||0);
 
-  if(jamb && selected.length!==3){
-    alert("Select exactly 3 other JAMB subjects. English Language is compulsory.");
+  if(jamb && selected.length!==4){
+    alert("Select exactly 4 JAMB subjects: English Language plus 3 other subjects.");
     return;
   }
-  if(!jamb && selected.length!==1){
-    alert("Select one subject.");
-    return;
-  }
-  if(!count){
-    alert("Select the number of questions.");
-    return;
-  }
-
-  const englishId=jamb?subjects.find(s=>{
-    const n=subjectDisplayName(s).trim().toLowerCase();
-    const c=String(s?.code||s?.subject_code||"").trim().toLowerCase();
-    return n==="english language"||c==="eng";
-  })?.id:null;
-
-  const finalSubjectIds=jamb&&englishId
-    ?[String(englishId),...selected]
-    :selected;
-
+  if(!jamb && selected.length!==1){alert("Select one subject.");return;}
+  if(!count){alert("Select the number of questions.");return;}
   document.getElementById("examSetupModal")?.remove();
-  await startExam(examId,count,finalSubjectIds);
+  await startExam(examId,count,selected);
 }
 
 /* =========================================================
@@ -6417,12 +6326,26 @@ async function startExam(examId,requestedCount=0,subjectIds=[]){
    */
   if(isJambExam(currentExam)){
     const subjectRows=await getStudentExamSubjects(currentExam);
+    const uniqueIds=[...new Set((subjectIds||[]).map(String).filter(Boolean))];
+    if(uniqueIds.length!==4){
+      alert("JAMB requires exactly 4 different subjects.");
+      return;
+    }
+
     const selectedRows=subjectRows.filter(s=>
-      subjectIds.map(String).includes(String(s.id))
+      uniqueIds.includes(String(s.id))
     );
-    const englishRow=selectedRows.find(s=>
-      subjectDisplayName(s).toLowerCase().includes("english")
-    );
+
+    if(selectedRows.length!==4){
+      alert("One or more selected JAMB subjects are not linked to this examination.");
+      return;
+    }
+
+    const englishRow=selectedRows.find(s=>{
+      const n=subjectDisplayName(s).toLowerCase();
+      const c=String(s?.code||s?.subject_code||"").toLowerCase();
+      return n==="english language" || c==="eng";
+    });
     if(!englishRow){
       alert("English Language is compulsory for JAMB.");
       return;
@@ -6432,6 +6355,9 @@ async function startExam(examId,requestedCount=0,subjectIds=[]){
       alert("JAMB requires English Language plus three other subjects.");
       return;
     }
+    /* Never allow questions from an unselected subject into JAMB. */
+    questions=questions.filter(q=>uniqueIds.includes(String(q.subject_id||"")));
+
     const bySubject={};
     questions.forEach(q=>{
       const sid=String(q.subject_id||"");
@@ -8537,6 +8463,18 @@ function openModuleForm(
        ${fields}
       </div>
 
+      ${module==="exams" ? `
+        <div class="formGroup full" style="margin-top:18px">
+          <label>Subjects linked to this examination</label>
+          <p class="muted" style="margin-bottom:8px">Search and select the subjects students are allowed to see. For JAMB, link English Language plus the other subjects you want available.</p>
+          ${subjectPickerHTML(subjects,"adminExamSubjectPicker",[],true,"Search subjects to link...")}
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px">
+            <button type="button" class="btn secondary" onclick="selectAllSubjectsInPicker('adminExamSubjectPicker')">Link All Subjects</button>
+            <button type="button" class="btn secondary" onclick="setSubjectPickerIds('adminExamSubjectPicker',[])">Clear</button>
+          </div>
+        </div>
+      ` : ""}
+
       <div
        id="moduleFormMessage">
       </div>
@@ -8570,6 +8508,15 @@ function openModuleForm(
 
     </div>`
   );
+
+  if(module==="exams"){
+    (async()=>{
+      await loadSubjects();
+      let ids=[];
+      if(id){try{const r=await db.from("exam_subjects").select("subject_id").eq("exam_id",id);if(!r.error)ids=(r.data||[]).map(x=>x.subject_id).filter(Boolean)}catch(_){} }
+      setSubjectPickerIds("adminExamSubjectPicker",ids);
+    })();
+  }
 }
 
 function closeModal(){
@@ -8638,21 +8585,13 @@ async function saveModuleRecord(
   }
 
   let result;
+  let savedId=id||"";
 
   if(id){
-
-    result=
-      await db
-        .from(cfg.table)
-        .update(payload)
-        .eq("id",id);
-
+    result=await db.from(cfg.table).update(payload).eq("id",id).select("id").single();
   }else{
-
-    result=
-      await db
-        .from(cfg.table)
-        .insert(payload);
+    result=await db.from(cfg.table).insert(payload).select("id").single();
+    if(!result.error)savedId=result.data?.id||"";
   }
 
   if(result.error){
@@ -8668,6 +8607,21 @@ async function saveModuleRecord(
     </div>`;
 
     return;
+  }
+
+  if(module==="exams" && savedId){
+    const ids=getSubjectPickerIds("adminExamSubjectPicker");
+    try{
+      const del=await db.from("exam_subjects").delete().eq("exam_id",savedId);
+      if(del.error)throw del.error;
+      if(ids.length){
+        const rows=ids.map((subject_id,index)=>({exam_id:savedId,subject_id,is_compulsory:false,question_limit:40,sort_order:index+1,subject_order:index+1,is_active:true}));
+        const text=(String(payload.exam_type||"")+" "+String(payload.title||"")).toLowerCase();
+        if(text.includes("jamb")){rows.forEach(r=>{const sub=subjects.find(x=>String(x.id)===String(r.subject_id));const n=subjectDisplayName(sub).toLowerCase();const c=String(sub?.code||sub?.subject_code||"").toLowerCase();if(n==="english language"||c==="eng"){r.is_compulsory=true;r.question_limit=60;}})}
+        const ins=await db.from("exam_subjects").insert(rows);
+        if(ins.error)throw ins.error;
+      }
+    }catch(error){alert("Exam saved, but subject links could not be saved: "+(error.message||""));return;}
   }
 
   closeModal();
