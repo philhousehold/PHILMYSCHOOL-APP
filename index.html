@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#2563eb">
 
@@ -338,36 +337,6 @@ textarea{
   display:block;
   font-size:28px;
   margin-top:8px;
-}
-
-.adminQuickActions{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:25px;
-}
-
-.adminQuickActions .btn{
-  min-width:150px;
-}
-
-.adminWelcome{
-  margin-top:25px;
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:28px;
-  box-shadow:0 4px 15px rgba(15,23,42,.03);
-}
-
-.adminWelcome h2{
-  font-size:20px;
-}
-
-.adminWelcome p{
-  color:var(--muted);
-  margin-top:10px;
-  line-height:1.7;
 }
 
 .panelGrid{
@@ -783,6 +752,26 @@ textarea{
     font-size:18px;
   }
 }
+
+.examQuestionSelector{
+  margin-top:8px;
+}
+.examQuestionSelector select{
+  font-weight:700;
+}
+.btn:disabled,
+select:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+.questionText{
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.option{
+  user-select:none;
+}
+
 </style>
 </head>
 
@@ -1807,7 +1796,7 @@ function portalHeader(title){
     <button
      class="mobileMenu"
      onclick="toggleSidebar()">
-     &#9776;
+     â°
     </button>
 
     <div class="headerTitle">
@@ -1855,7 +1844,7 @@ async function renderAdmin(){
     <main class="content">
 
      <h1>
-      Admin Dashboard
+      Admin Dashboard ð
      </h1>
 
      <p class="muted">
@@ -1863,43 +1852,152 @@ async function renderAdmin(){
       examinations and learning content.
      </p>
 
-     <div class="adminQuickActions">
+     <div class="stats">
 
-      <button
-       class="btn primary"
-       onclick="adminQuestionBank()">
-       Question Bank
-      </button>
+      <div class="stat">
+       <small>Students</small>
+       <strong id="dashStudents">â</strong>
+      </div>
 
-      <button
-       class="btn secondary"
-       onclick="adminSubjects()">
-       Subjects & Topics
-      </button>
+      <div class="stat">
+       <small>Tutors</small>
+       <strong id="dashTutors">â</strong>
+      </div>
 
-      <button
-       class="btn secondary"
-       onclick="adminModule('exams')">
-       Exams
-      </button>
+      <div class="stat">
+       <small>Subjects</small>
+       <strong id="dashSubjects">â</strong>
+      </div>
 
-      <button
-       class="btn secondary"
-       onclick="renderReports()">
-       Reports
-      </button>
+      <div class="stat">
+       <small>Questions</small>
+       <strong id="dashQuestions">â</strong>
+      </div>
 
      </div>
 
-     <div class="adminWelcome">
+     <div class="stats">
 
-      <h2>Welcome to PHILMYSCHOOL Admin</h2>
+      <div class="stat">
+       <small>Exams</small>
+       <strong id="dashExams">â</strong>
+      </div>
 
-      <p>
-       Use the menu on the left to manage students,
-       tutors, subjects, questions, examinations,
-       results and other school settings.
-      </p>
+      <div class="stat">
+       <small>Attempts</small>
+       <strong id="dashAttempts">â</strong>
+      </div>
+
+      <div class="stat">
+       <small>Transactions</small>
+       <strong id="dashTransactions">â</strong>
+      </div>
+
+      <div class="stat">
+       <small>Withdrawals</small>
+       <strong id="dashWithdrawals">â</strong>
+      </div>
+
+     </div>
+
+     <div class="panelGrid">
+
+      <div class="panel">
+
+       <h2>
+        ð Question Bank
+       </h2>
+
+       <p>
+        Add, edit, delete and import CBT questions.
+       </p>
+
+       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">
+
+        <button
+         class="btn primary"
+         onclick="adminQuestionBank()">
+
+         Open Question Bank
+
+        </button>
+
+        <button
+         class="btn secondary"
+         onclick="openCSVImport()">
+
+         ð¥ Import Questions
+
+        </button>
+
+       </div>
+
+      </div>
+
+      <div class="panel">
+
+       <h2>
+        ð Subjects & Topics
+       </h2>
+
+       <p>
+        Manage the subjects and topics used
+        throughout the examination system.
+       </p>
+
+       <button
+        class="btn primary"
+        style="margin-top:15px"
+        onclick="adminSubjects()">
+
+        Manage Subjects
+
+       </button>
+
+      </div>
+
+      <div class="panel">
+
+       <h2>
+        ð§ª Exams
+       </h2>
+
+       <p>
+        Create examinations and configure
+        duration, marks and access.
+       </p>
+
+       <button
+        class="btn primary"
+        style="margin-top:15px"
+        onclick="adminModule('exams')">
+
+        Manage Exams
+
+       </button>
+
+      </div>
+
+      <div class="panel">
+
+       <h2>
+        ð Reports
+       </h2>
+
+       <p>
+        View live statistics from the database.
+       </p>
+
+       <button
+        class="btn primary"
+        style="margin-top:15px"
+        onclick="renderReports()">
+
+        Open Reports
+
+       </button>
+
+      </div>
 
      </div>
 
@@ -1909,6 +2007,34 @@ async function renderAdmin(){
 
   </div>`;
 
+  const fields=[
+    ["dashStudents","user_roles",[["role","student"]]],
+    ["dashTutors","user_roles",[["role","tutor"]]],
+    ["dashSubjects","subjects",[]],
+    ["dashQuestions","questions",[]],
+    ["dashExams","exams",[]],
+    ["dashAttempts","exam_attempts",[]],
+    ["dashTransactions","transactions",[]],
+    ["dashWithdrawals","withdrawals",[]]
+  ];
+
+  for(
+    const [id,table,filters]
+    of fields
+  ){
+
+    const n=
+      await countTable(
+        table,
+        filters
+      );
+
+    const el=
+      document.getElementById(id);
+
+    if(el)
+      el.textContent=n;
+  }
 }
 
 /* =========================================================
@@ -5030,57 +5156,43 @@ async function renderStudent(){
     <button
      class="sideButton active"
      onclick="renderStudent()">
-
      ð Dashboard
-
     </button>
 
     <button
      class="sideButton"
      onclick="studentExams()">
-
      ð CBT Exams
-
     </button>
 
     <button
      class="sideButton"
      onclick="studentResults()">
-
      ð My Results
-
     </button>
 
     <button
      class="sideButton"
      onclick="featurePage('Study Materials')">
-
      ð Study Materials
-
     </button>
 
     <button
      class="sideButton"
      onclick="featurePage('Scholarships')">
-
      ð Scholarships
-
     </button>
 
     <button
      class="sideButton"
      onclick="featurePage('Messages')">
-
      ð¬ Messages
-
     </button>
 
     <button
      class="sideButton"
      onclick="logout()">
-
      ðª Sign Out
-
     </button>
 
    `)}
@@ -5110,30 +5222,17 @@ async function renderStudent(){
 
       <div class="stat">
        <small>Available Exams</small>
-       <strong id="studentExamCount">
-        â
-       </strong>
+       <strong id="studentExamCount">â</strong>
       </div>
 
       <div class="stat">
        <small>My Attempts</small>
-       <strong id="studentAttemptCount">
-        â
-       </strong>
-      </div>
-
-      <div class="stat">
-       <small>Questions</small>
-       <strong id="studentQuestionCount">
-        â
-       </strong>
+       <strong id="studentAttemptCount">â</strong>
       </div>
 
       <div class="stat">
        <small>Average Score</small>
-       <strong id="studentAverageScore">
-        â
-       </strong>
+       <strong id="studentAverageScore">â</strong>
       </div>
 
      </div>
@@ -5141,33 +5240,22 @@ async function renderStudent(){
      <div class="panelGrid">
 
       <div class="panel">
-
-       <h2>
-        ð Take CBT Examination
-       </h2>
-
+       <h2>ð Take CBT Examination</h2>
        <p>
         Choose an available examination and
-        begin your computer-based test.
+        select how many questions you want to answer.
        </p>
 
        <button
         class="btn primary"
         style="margin-top:15px"
         onclick="studentExams()">
-
         View Exams
-
        </button>
-
       </div>
 
       <div class="panel">
-
-       <h2>
-        ð Performance
-       </h2>
-
+       <h2>ð Performance</h2>
        <p>
         Review your results, weak topics and
         recommendations.
@@ -5177,11 +5265,8 @@ async function renderStudent(){
         class="btn primary"
         style="margin-top:15px"
         onclick="studentResults()">
-
         View Results
-
        </button>
-
       </div>
 
      </div>
@@ -5192,23 +5277,16 @@ async function renderStudent(){
 
   </div>`;
 
-  const examCount=
-    await countTable(
-      "exams",
-      [["status","published"]]
-    );
+  /*
+   * The dashboard must not expose the Admin Question Bank
+   * count. It only displays the number of published exams.
+   */
+  const examCount=await countPublishedStudentExams();
 
-  const attemptCount=
-    await countTable(
-      "exam_attempts",
-      [["student_id",user.id]]
-    );
-
-  const questionCount=
-    await countTable(
-      "questions",
-      []
-    );
+  const attemptCount=await countTable(
+    "exam_attempts",
+    [["student_id",user.id]]
+  );
 
   document.getElementById(
     "studentExamCount"
@@ -5218,11 +5296,33 @@ async function renderStudent(){
     "studentAttemptCount"
   ).textContent=attemptCount;
 
-  document.getElementById(
-    "studentQuestionCount"
-  ).textContent=questionCount;
-
   await calculateStudentAverage();
+}
+
+async function countPublishedStudentExams(){
+
+  try{
+    const result=await db
+      .from("exams")
+      .select("id,title,status");
+
+    if(result.error){
+      console.warn("Published exam count:",result.error);
+      return "â";
+    }
+
+    return (result.data||[]).filter(e=>{
+      const status=String(e.status||"").trim().toLowerCase();
+      const title=String(e.title||"").trim().toLowerCase();
+
+      return status==="published" &&
+        title!=="general knowledge";
+    }).length;
+
+  }catch(error){
+    console.warn(error);
+    return "â";
+  }
 }
 
 async function calculateStudentAverage(){
@@ -5352,162 +5452,395 @@ async function studentExams(){
 
 async function loadStudentExams(){
 
-  const area=
-    document.getElementById(
-      "studentExamArea"
-    );
+  const area=document.getElementById("studentExamArea");
+  if(!area)return;
 
   /*
-   * Published exams are available to students.
-  */
-
-  const result=
-    await db
-      .from("exams")
-      .select("*")
-      .eq("status","published")
-      .order(
-        "created_at",
-        {ascending:false}
-      )
-      .limit(100);
+   * Students see ONLY exams published by Admin.
+   * General Knowledge is intentionally excluded from
+   * the student CBT catalogue.
+   *
+   * We fetch the live exam rows instead of relying on a
+   * cached count, so a newly published exam appears as
+   * soon as the student refreshes/opens CBT Exams.
+   */
+  const result=await db
+    .from("exams")
+    .select("*")
+    .order("created_at",{ascending:false})
+    .limit(500);
 
   if(result.error){
-
     area.innerHTML=`
-
-    <div class="errorBox">
-     ${escapeHTML(
-       result.error.message
-     )}
-    </div>`;
-
+      <div class="errorBox">
+        ${escapeHTML(result.error.message)}
+      </div>`;
     return;
   }
 
-  const exams=
-    result.data||[];
+  const exams=(result.data||[]).filter(e=>{
+    const status=String(e.status||"").trim().toLowerCase();
+    const title=String(e.title||"").trim().toLowerCase();
+
+    return status==="published" &&
+      title!=="general knowledge";
+  });
 
   if(!exams.length){
-
     area.innerHTML=`
-
-    <div class="tableEmpty">
-
-     <h3>
-      No published exams yet.
-     </h3>
-
-     <p style="margin-top:8px">
-      Check again later.
-     </p>
-
-    </div>`;
-
+      <div class="tableEmpty">
+        <h3>No published examinations yet.</h3>
+        <p style="margin-top:8px">
+          Published examinations will appear here automatically.
+        </p>
+      </div>`;
     return;
   }
 
-  area.innerHTML=
-    exams.map(e=>`
+  /*
+   * Build each exam card with a question-count selector.
+   * The actual number of questions uploaded in the Admin
+   * Question Bank is never displayed to students.
+   */
+  const cards=[];
 
-    <div class="panel">
+  for(const e of exams){
 
-     <h2>
-      ${escapeHTML(
-        e.title||
-        "Untitled Exam"
-      )}
-     </h2>
+    let available=0;
 
-     <p>
-      ${escapeHTML(
-        e.description||
-        "Online CBT examination."
-      )}
-     </p>
+    try{
+      const links=await db
+        .from("exam_questions")
+        .select("id,question_id")
+        .eq("exam_id",e.id);
 
-     <div style="
-      margin-top:15px;
-      display:grid;
-      gap:7px">
-
-      <div>
-       <strong>Duration:</strong>
-       ${escapeHTML(
-         e.duration_minutes||
-         "â"
-       )} minutes
-      </div>
-
-      <div>
-       <strong>Questions:</strong>
-       ${escapeHTML(
-         e.total_questions||
-         "Auto"
-       )}
-      </div>
-
-      <div>
-       <strong>Total Marks:</strong>
-       ${escapeHTML(
-         e.total_marks||
-         "Auto"
-       )}
-      </div>
-
-      <div>
-       <strong>Access:</strong>
-       ${escapeHTML(
-         e.access_level||
-         "free"
-       )}
-      </div>
-
-      ${
-        Number(e.price||0)>0
-        ?`
-         <div>
-          <strong>Price:</strong>
-          ${money(
-            e.price,
-            e.currency||"NGN"
-          )}
-         </div>
-        `
-        :""
+      if(!links.error){
+        available=(links.data||[])
+          .filter(x=>x.question_id||x.questionId)
+          .length;
       }
+    }catch(error){
+      console.warn("Exam question count:",error);
+    }
 
-     </div>
+    /*
+     * If an exam has linked questions, give the student
+     * sensible choices up to the number actually available.
+     * Do not expose the total as a label.
+     */
+    const configured=Number(e.total_questions||0);
+    const maxQuestions=available>0
+      ?Math.min(available,configured>0?configured:available)
+      :Math.max(configured,0);
 
-     <button
-      class="btn primary"
-      style="margin-top:18px"
-      onclick="startExam('${e.id}')">
+    const choices=[];
+    const standard=[5,10,15,20,25,30,40,50,60,75,100];
 
-      Start Examination
+    if(maxQuestions>0){
+      standard.forEach(n=>{
+        if(n<=maxQuestions&&!choices.includes(n))
+          choices.push(n);
+      });
 
-     </button>
+      if(!choices.includes(maxQuestions))
+        choices.push(maxQuestions);
 
-    </div>
+      choices.sort((a,b)=>a-b);
+    }
 
-    `).join("");
+    const defaultCount=
+      choices.includes(10)
+      ?10
+      :(choices[choices.length-1]||5);
+
+    cards.push(`
+      <div class="panel">
+        <h2>
+          ${escapeHTML(e.title||"Untitled Exam")}
+        </h2>
+
+        <p style="margin-top:8px">
+          ${escapeHTML(
+            e.description||
+            "Online CBT examination."
+          )}
+        </p>
+
+        <div style="
+          margin-top:15px;
+          display:grid;
+          gap:8px">
+
+          <div>
+            <strong>Duration:</strong>
+            ${escapeHTML(e.duration_minutes||"â")} minutes
+          </div>
+
+          <div>
+            <strong>Total Marks:</strong>
+            ${escapeHTML(e.total_marks||"Auto")}
+          </div>
+
+          <div>
+            <strong>Access:</strong>
+            ${escapeHTML(e.access_level||"free")}
+          </div>
+
+          ${
+            Number(e.price||0)>0
+            ?`
+              <div>
+                <strong>Price:</strong>
+                ${money(e.price,e.currency||"NGN")}
+              </div>
+            `
+            :""
+          }
+
+          <div style="margin-top:8px">
+            <label
+              for="examCount_${e.id}"
+              style="display:block;font-weight:800;margin-bottom:7px">
+              Number of Questions
+            </label>
+
+            <select
+              id="examCount_${e.id}"
+              ${
+                choices.length
+                ?""
+                :"disabled"
+              }>
+
+              ${
+                choices.length
+                ?choices.map(n=>`
+                    <option
+                      value="${n}"
+                      ${n===defaultCount?"selected":""}>
+                      ${n} Questions
+                    </option>
+                  `).join("")
+                :`
+                  <option value="">
+                    Questions not available yet
+                  </option>
+                `
+              }
+
+            </select>
+          </div>
+
+        </div>
+
+        <button
+          class="btn primary"
+          style="margin-top:18px"
+          ${
+            choices.length
+            ?""
+            :"disabled"
+          }
+          onclick="startExam(
+            '${e.id}',
+            Number(document.getElementById('examCount_${e.id}')?.value||0)
+          )">
+
+          Start Examination
+        </button>
+
+      </div>
+    `);
+  }
+
+  area.innerHTML=cards.join("");
 }
 
-/* =========================================================
-   START EXAM
-========================================================= */
+async function loadExamQuestionPool(examId){
 
-async function startExam(examId){
+  /*
+   * IMPORTANT:
+   * Do not trust get_exam_questions alone. Some installations
+   * return only a small subset or return rows without the
+   * question text/options. The source of truth is:
+   *
+   * exam_questions -> questions -> question_options
+   *
+   * The RPC is only used as a last-resort fallback.
+   */
 
-  const result=
-    await db
-      .from("exams")
-      .select("*")
-      .eq("id",examId)
-      .single();
+  let links=[];
+  let linkResult=await db
+    .from("exam_questions")
+    .select("*")
+    .eq("exam_id",examId)
+    .order("question_number",{ascending:true});
+
+  if(!linkResult.error){
+    links=linkResult.data||[];
+  }else{
+    console.warn(
+      "exam_questions:",
+      linkResult.error
+    );
+  }
+
+  let questions=[];
+
+  if(links.length){
+
+    const ids=links
+      .map(x=>x.question_id||x.questionId)
+      .filter(Boolean);
+
+    if(ids.length){
+
+      const qr=await db
+        .from("questions")
+        .select("*")
+        .in("id",ids);
+
+      if(qr.error){
+        throw new Error(
+          "Could not load exam questions: "+
+          qr.error.message
+        );
+      }
+
+      const map={};
+      (qr.data||[]).forEach(q=>{
+        map[q.id]=q;
+      });
+
+      questions=links.map(link=>{
+
+        const questionId=
+          link.question_id||
+          link.questionId;
+
+        const q=map[questionId];
+
+        if(!q)return null;
+
+        return {
+          ...q,
+          exam_question_id:link.id,
+          question_number:
+            link.question_number
+        };
+
+      }).filter(Boolean);
+    }
+  }
+
+  /*
+   * RPC fallback for installations where exam_questions
+   * is protected but the database function is available.
+   */
+  if(!questions.length){
+
+    try{
+      const rpc=await db.rpc(
+        "get_exam_questions",
+        {p_exam_id:examId}
+      );
+
+      if(!rpc.error){
+        questions=rpc.data||[];
+      }
+    }catch(error){
+      console.warn(
+        "get_exam_questions fallback:",
+        error
+      );
+    }
+  }
+
+  if(!questions.length){
+    throw new Error(
+      "This examination does not have any linked questions yet. "+
+      "Link the questions to this exam in exam_questions."
+    );
+  }
+
+  /*
+   * Attach question_options as a supplement.
+   * Direct option_a/b/c/d values remain the preferred source.
+   */
+  try{
+
+    const ids=questions
+      .map(q=>q.id)
+      .filter(Boolean);
+
+    if(ids.length){
+
+      const optionsResult=await db
+        .from("question_options")
+        .select("*")
+        .in("question_id",ids);
+
+      if(!optionsResult.error){
+
+        const optionMap={};
+
+        (optionsResult.data||[]).forEach(o=>{
+          if(!optionMap[o.question_id])
+            optionMap[o.question_id]=[];
+
+          optionMap[o.question_id].push(o);
+        });
+
+        questions=questions.map(q=>({
+          ...q,
+          question_options:
+            optionMap[q.id]||
+            q.question_options||
+            []
+        }));
+      }
+    }
+
+  }catch(error){
+    console.warn(
+      "Question options:",
+      error
+    );
+  }
+
+  /*
+   * Validate the actual content before the CBT starts.
+   * This prevents the student from seeing empty Question 1-5.
+   */
+  questions=questions.filter(q=>{
+    const questionText=String(
+      q.question_text||
+      q.question||
+      q.text||
+      ""
+    ).trim();
+
+    const options=getQuestionOptions(q);
+
+    return Boolean(
+      q.id&&
+      questionText&&
+      options.length>=2
+    );
+  });
+
+  return questions;
+}
+
+async function startExam(examId,requestedCount=0){
+
+  const result=await db
+    .from("exams")
+    .select("*")
+    .eq("id",examId)
+    .single();
 
   if(result.error){
-
     alert(result.error.message);
     return;
   }
@@ -5515,224 +5848,104 @@ async function startExam(examId){
   currentExam=result.data;
 
   /*
-   * Prefer the installed database exam function if it
-   * exists. If not, load exam_questions directly.
-  */
+   * Never allow a student to start an unpublished exam.
+   * Also keep General Knowledge hidden even if someone
+   * manually opens an old button/link.
+   */
+  const status=String(
+    currentExam.status||""
+  ).trim().toLowerCase();
 
-  let questions=[];
+  const title=String(
+    currentExam.title||""
+  ).trim().toLowerCase();
+
+  if(status!=="published"){
+    alert("This examination is not currently published.");
+    return;
+  }
+
+  if(title==="general knowledge"){
+    alert("This examination is not available to students.");
+    return;
+  }
+
+  let questions;
 
   try{
-
-    const functionResult=
-      await db.rpc(
-        "get_exam_questions",
-        {
-          p_exam_id:examId
-        }
-      );
-
-    if(
-      !functionResult.error&&
-      functionResult.data?.length
-    ){
-
-      questions=
-        functionResult.data;
-    }
-
+    questions=await loadExamQuestionPool(examId);
   }catch(error){
-
-    console.warn(
-      "get_exam_questions:",
-      error
-    );
+    console.error(error);
+    alert(error.message||"Could not load the examination questions.");
+    return;
   }
 
   if(!questions.length){
-
-    const eq=
-      await db
-        .from("exam_questions")
-        .select("*")
-        .eq("exam_id",examId)
-        .order("question_number",{ascending:true});
-
-    if(eq.error){
-
-      alert(eq.error.message);
-      return;
-    }
-
-    const links=
-      eq.data||[];
-
-    const ids=
-      links
-        .map(x=>
-          x.question_id||
-          x.questionId
-        )
-        .filter(Boolean);
-
-    if(!ids.length){
-
-      alert(
-        "This examination does not have any questions yet."
-      );
-
-      return;
-    }
-
-    const qr=
-      await db
-        .from("questions")
-        .select("*")
-        .in("id",ids);
-
-    if(qr.error){
-
-      alert(qr.error.message);
-      return;
-    }
-
-    const map={};
-
-    (qr.data||[])
-      .forEach(
-        q=>map[q.id]=q
-      );
-
-    questions=
-      links.map(link=>({
-
-        ...map[
-          link.question_id||
-          link.questionId
-        ],
-
-        exam_question_id:
-          link.id,
-
-        question_number:
-          link.question_number
-
-      })).filter(
-        x=>x.id
-      );
-  }
-
-  if(!questions.length){
-
     alert(
-      "No questions could be loaded for this exam."
+      "No complete questions are available for this examination."
     );
-
     return;
   }
 
   /*
-   * Attach question_options where necessary.
-  */
+   * Student-selected count takes priority.
+   * Admin total_questions is treated as a maximum only;
+   * it is NOT shown to the student.
+   */
+  const requested=Math.floor(
+    Number(requestedCount||0)
+  );
 
-  try{
+  const adminLimit=Math.floor(
+    Number(currentExam.total_questions||0)
+  );
 
-    const ids=
-      questions.map(
-        q=>q.id
-      );
+  let limit=requested>0
+    ?requested
+    :(adminLimit>0?adminLimit:questions.length);
 
-    const optionsResult=
-      await db
-        .from("question_options")
-        .select("*")
-        .in("question_id",ids);
-
-    if(!optionsResult.error){
-
-      const map={};
-
-      (optionsResult.data||[])
-        .forEach(o=>{
-
-          if(!map[o.question_id])
-            map[o.question_id]=[];
-
-          map[o.question_id].push(o);
-
-        });
-
-      questions=
-        questions.map(q=>({
-
-          ...q,
-
-          question_options:
-            map[q.id]||[]
-
-        }));
-    }
-
-  }catch(error){
-
-    console.warn(error);
-  }
+  limit=Math.max(
+    1,
+    Math.min(limit,questions.length)
+  );
 
   /*
-   * Respect configured question count.
-  */
+   * Randomize before selecting so students receive a
+   * random subset when Randomize Questions is enabled.
+   */
+  if(currentExam.randomize_questions!==false){
+    questions=shuffle(questions);
+  }
 
-  const limit=
-    Number(
-      currentExam.total_questions||0
+  questions=questions.slice(0,limit);
+
+  /*
+   * Keep the question order stable when randomization is off.
+   */
+  if(currentExam.randomize_questions===false){
+    questions.sort((a,b)=>
+      Number(a.question_number||0)-
+      Number(b.question_number||0)
     );
-
-  if(
-    limit>0&&
-    questions.length>limit
-  ){
-
-    questions=
-      questions.slice(0,limit);
   }
 
-  if(
-    currentExam.randomize_questions
-  ){
-
-    questions=
-      shuffle(
-        questions
-      );
-  }
-
-  currentExamQuestions=
-    questions;
-
+  currentExamQuestions=questions;
   currentExamIndex=0;
   currentExamAnswers={};
-
-  /*
-   * Create attempt.
-  */
 
   const attemptPayload={
     exam_id:currentExam.id,
     student_id:user.id,
-    started_at:
-      new Date().toISOString(),
-    status:"in_progress"
+    started_at:new Date().toISOString(),
+    status:"in_progress",
+    total_questions:questions.length
   };
 
-  let attempt=
-    await db
-      .from("exam_attempts")
-      .insert(attemptPayload)
-      .select()
-      .single();
-
-  /*
-   * Some schemas use user_id instead of student_id.
-  */
+  let attempt=await db
+    .from("exam_attempts")
+    .insert(attemptPayload)
+    .select()
+    .single();
 
   if(
     attempt.error&&
@@ -5740,50 +5953,35 @@ async function startExam(examId){
       attempt.error.message||""
     )
   ){
-
     delete attemptPayload.student_id;
-
     attemptPayload.user_id=user.id;
 
-    attempt=
-      await db
-        .from("exam_attempts")
-        .insert(attemptPayload)
-        .select()
-        .single();
+    attempt=await db
+      .from("exam_attempts")
+      .insert(attemptPayload)
+      .select()
+      .single();
   }
 
   if(attempt.error){
-
-    /*
-     * If attempts are protected by a database function,
-     * still allow the CBT to run without the attempt ID.
-    */
-
     console.warn(
       "Attempt creation:",
       attempt.error
     );
 
     cbt.attemptId=null;
-
   }else{
-
-    cbt.attemptId=
-      attempt.data?.id;
+    cbt.attemptId=attempt.data?.id;
   }
 
-  cbt.startedAt=
-    new Date();
+  cbt.startedAt=new Date();
 
   cbt.seconds=
-    Number(
-      currentExam.duration_minutes||
-      60
-    )*60;
+    Number(currentExam.duration_minutes||60)*60;
+
+  document.body.dataset.submitting="0";
 
   renderCBT();
-
   startCBTTimer();
 }
 
@@ -5821,14 +6019,48 @@ function shuffle(array){
 function renderCBT(){
 
   const q=
-    currentExamQuestions[
-      currentExamIndex
-    ];
+    currentExamQuestions[currentExamIndex];
 
   if(!q)return;
 
-  const options=
-    getQuestionOptions(q);
+  const options=getQuestionOptions(q);
+
+  /*
+   * Defensive normalization: if a database/RPC returns
+   * alternate field names, still render the real statement.
+   */
+  const questionText=String(
+    q.question_text||
+    q.question||
+    q.text||
+    ""
+  ).trim();
+
+  if(!questionText||!options.length){
+    document.getElementById("app").innerHTML=`
+      <div class="content">
+        <div class="errorBox">
+          This question could not be displayed because its
+          question text or answer options are missing.
+          Please contact the administrator.
+        </div>
+      </div>`;
+    return;
+  }
+
+  /*
+   * Randomize the displayed option order when Admin enabled it.
+   * The option letter remains attached to its answer, so marking
+   * stays correct.
+   */
+  let displayOptions=[...options];
+
+  if(currentExam?.randomize_options!==false){
+    displayOptions=shuffle(displayOptions);
+  }
+
+  const allowBack=
+    currentExam?.allow_back_navigation!==false;
 
   document.getElementById("app").innerHTML=`
 
@@ -5839,7 +6071,6 @@ function renderCBT(){
     <div class="cbtHeader">
 
      <div>
-
       <strong>
        ${escapeHTML(
          currentExam?.title||
@@ -5849,25 +6080,18 @@ function renderCBT(){
 
       <div class="muted"
        style="margin-top:5px">
-
        Question
        ${currentExamIndex+1}
        of
        ${currentExamQuestions.length}
-
       </div>
 
      </div>
 
      <div>
-
-      <div class="timer"
-       id="cbtTimer">
-
+      <div class="timer" id="cbtTimer">
        00:00:00
-
       </div>
-
      </div>
 
     </div>
@@ -5875,25 +6099,16 @@ function renderCBT(){
     <div class="questionCard">
 
      <div class="questionNumber">
-
       Question ${currentExamIndex+1}
-
      </div>
 
      <div class="questionText">
-
-      ${escapeHTML(
-        q.question_text||
-        q.question||
-        q.text||
-        ""
-      )}
-
+      ${escapeHTML(questionText)}
      </div>
 
      <div class="optionList">
 
-      ${options.map(o=>`
+      ${displayOptions.map(o=>`
 
        <div
         class="option ${
@@ -5904,13 +6119,11 @@ function renderCBT(){
         onclick="selectCBTAnswer('${o.letter}')">
 
         <div class="optionLetter">
-         ${o.letter}
+         ${escapeHTML(o.letter)}
         </div>
 
         <div>
-         ${escapeHTML(
-           o.text
-         )}
+         ${escapeHTML(o.text)}
         </div>
 
        </div>
@@ -5921,68 +6134,82 @@ function renderCBT(){
 
      <div class="cbtActions">
 
-      <button
-       class="btn secondary"
-       ${
-        currentExamIndex===0
-        ?"disabled"
-        :""
-       }
-       onclick="previousCBTQuestion()">
+      ${
+        allowBack
+        ?`
+          <button
+           class="btn secondary"
+           ${
+            currentExamIndex===0
+            ?"disabled"
+            :""
+           }
+           onclick="previousCBTQuestion()">
 
-       â Previous
+           â Previous
 
-      </button>
+          </button>
+        `
+        :`
+          <span></span>
+        `
+      }
 
       ${
         currentExamIndex===
         currentExamQuestions.length-1
         ?`
-         <button
-          class="btn primary"
-          onclick="confirmSubmitExam()">
+          <button
+           class="btn primary"
+           onclick="confirmSubmitExam()">
 
-          Submit Examination
+           Submit Examination
 
-         </button>
+          </button>
         `
         :`
-         <button
-          class="btn primary"
-          onclick="nextCBTQuestion()">
+          <button
+           class="btn primary"
+           onclick="nextCBTQuestion()">
 
-          Next â
+           Next â
 
-         </button>
+          </button>
         `
       }
 
      </div>
 
-     <div class="questionPalette">
+     ${
+       allowBack
+       ?`
+         <div class="questionPalette">
 
-      ${currentExamQuestions.map(
-        (item,i)=>`
+          ${currentExamQuestions.map(
+            (item,i)=>`
 
-        <button
-         class="paletteBtn ${
-          i===currentExamIndex
-          ?"current"
-          :""
-         } ${
-          currentExamAnswers[item.id]
-          ?"answered"
-          :""
-         }"
-         onclick="goToCBTQuestion(${i})">
+            <button
+             class="paletteBtn ${
+              i===currentExamIndex
+              ?"current"
+              :""
+             } ${
+              currentExamAnswers[item.id]
+              ?"answered"
+              :""
+             }"
+             onclick="goToCBTQuestion(${i})">
 
-         ${i+1}
+             ${i+1}
 
-        </button>
+            </button>
 
-      `).join("")}
+          `).join("")}
 
-     </div>
+         </div>
+       `
+       :""
+     }
 
     </div>
 
@@ -5995,70 +6222,71 @@ function getQuestionOptions(q){
 
   let options=[];
 
+  /*
+   * Direct question columns are the primary source because
+   * the Admin importer stores option_a/b/c/d there.
+   */
   const direct=[
-    ["A",q.option_a],
-    ["B",q.option_b],
-    ["C",q.option_c],
-    ["D",q.option_d]
+    ["A",q?.option_a],
+    ["B",q?.option_b],
+    ["C",q?.option_c],
+    ["D",q?.option_d]
   ];
 
-  if(
-    direct.some(
-      x=>x[1]
+  const directOptions=direct
+    .filter(x=>
+      x[1]!==undefined&&
+      x[1]!==null&&
+      String(x[1]).trim()!==""
     )
-  ){
+    .map(x=>({
+      letter:x[0],
+      text:String(x[1])
+    }));
 
-    options=
-      direct
-        .filter(
-          x=>x[1]!==undefined&&
-             x[1]!==null
-        )
-        .map(
-          x=>({
-            letter:x[0],
-            text:x[1]
-          })
-        );
-
-    return options;
+  if(directOptions.length>=2){
+    return directOptions;
   }
 
+  /*
+   * Fallback for schemas that store options in
+   * question_options.
+   */
   const rows=
-    q.question_options||
-    [];
+    Array.isArray(q?.question_options)
+    ?q.question_options
+    :[];
 
-  options=
-    rows.map(o=>{
+  options=rows.map(o=>{
 
-      const letter=
-        String(
-          o.option_letter||
-          o.label||
-          o.key||
-          o.option||
-          ""
-        )
-        .trim()
-        .toUpperCase();
+    let letter=String(
+      o?.option_letter||
+      o?.label||
+      o?.key||
+      o?.option||
+      ""
+    )
+    .trim()
+    .toUpperCase();
 
-      return {
-        letter:
-          letter.replace(
-            "OPTION ",
-            ""
-          ),
-        text:
-          o.option_text||
-          o.text||
-          o.value||
-          ""
-      };
-    })
-    .filter(
-      o=>["A","B","C","D"]
-        .includes(o.letter)
-    );
+    letter=letter
+      .replace(/^OPTION\s+/,"")
+      .replace(/^ANSWER\s+/,"");
+
+    return {
+      letter,
+      text:String(
+        o?.option_text||
+        o?.text||
+        o?.value||
+        ""
+      )
+    };
+
+  }).filter(o=>
+    ["A","B","C","D"].includes(o.letter)&&
+    o.text.trim()!==""
+  );
 
   return options.sort(
     (a,b)=>
