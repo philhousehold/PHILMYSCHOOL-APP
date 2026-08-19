@@ -1665,85 +1665,85 @@ function adminSidebar(){
    <button
     class="sideButton active"
     onclick="renderAdmin()">
-    ð Dashboard
+     Dashboard
    </button>
 
    <button
     class="sideButton"
     onclick="renderStudentManagement()">
-    ð¨âð Students
+     Students
    </button>
 
    <button
     class="sideButton"
     onclick="renderTutors()">
-    ð¨âð« Tutors
+     Tutors
    </button>
 
    <button
     class="sideButton"
     onclick="adminQuestionBank()">
-    ð Question Bank
+     Question Bank
    </button>
 
    <button
     class="sideButton"
     onclick="adminSubjects()">
-    ð Subjects
+     Subjects
    </button>
 
    <button
     class="sideButton"
     onclick="adminTopics()">
-    ð Topics
+     Topics
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('exams')">
-    ð§ª Exams
+     Exams
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('materials')">
-    ð Materials
+     Materials
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('scholarships')">
-    ð Scholarships
+     Scholarships
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('subscriptions')">
-    ð³ Subscriptions
+     Subscriptions
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('transactions')">
-    ð° Transactions
+     Transactions
    </button>
 
    <button
     class="sideButton"
     onclick="adminModule('withdrawals')">
-    ð¦ Withdrawals
+     Withdrawals
    </button>
 
    <button
     class="sideButton"
     onclick="renderReports()">
-    ð Reports
+     Reports
    </button>
 
    <button
     class="sideButton"
     onclick="logout()">
-    ðª Sign Out
+     Sign Out
    </button>
   `);
 }
@@ -1844,7 +1844,7 @@ async function renderAdmin(){
     <main class="content">
 
      <h1>
-      Admin Dashboard ð
+      Admin Dashboard 
      </h1>
 
      <p class="muted">
@@ -1905,7 +1905,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        ð Question Bank
+         Question Bank
        </h2>
 
        <p>
@@ -1926,7 +1926,7 @@ async function renderAdmin(){
          class="btn secondary"
          onclick="openCSVImport()">
 
-         ð¥ Import Questions
+          Import Questions
 
         </button>
 
@@ -1937,7 +1937,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        ð Subjects & Topics
+         Subjects & Topics
        </h2>
 
        <p>
@@ -1959,7 +1959,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        ð§ª Exams
+         Exams
        </h2>
 
        <p>
@@ -1981,7 +1981,7 @@ async function renderAdmin(){
       <div class="panel">
 
        <h2>
-        ð Reports
+         Reports
        </h2>
 
        <p>
@@ -2155,7 +2155,7 @@ async function adminSubjects(){
 
     <main class="content">
 
-     <h1>ð Subject Management</h1>
+     <h1> Subject Management</h1>
 
      <p class="muted">
       Manage subjects used by the CBT system.
@@ -2607,7 +2607,7 @@ async function adminTopics(){
 
     <main class="content">
 
-     <h1>ð Topic Management</h1>
+     <h1> Topic Management</h1>
 
      <p class="muted">
       Manage topics used by subjects and questions.
@@ -3026,7 +3026,7 @@ async function adminQuestionBank(){
 
     <main class="content">
 
-     <h1>ð Question Bank</h1>
+     <h1> Question Bank</h1>
 
      <p class="muted">
       Manage CBT questions, answers,
@@ -4241,7 +4241,7 @@ subject_id,subject,topic_id,topic,question_text,option_a,option_b,option_c,optio
         class="btn primary"
         id="csvImportButton"
         onclick="importCSV()">
-        ð¥ Import Questions
+         Import Questions
        </button>
 
       </div>
@@ -4551,7 +4551,7 @@ async function importCSV(){
   }finally{
     if(button){
       button.disabled=false;
-      button.textContent="ð¥ Import Questions";
+      button.textContent=" Import Questions";
     }
   }
 }
@@ -4575,7 +4575,7 @@ async function renderStudentManagement(){
     <main class="content">
 
      <h1>
-      Student Management ð¨âð
+      Student Management 
      </h1>
 
      <p class="muted">
@@ -4994,7 +4994,7 @@ function renderTutor(){
       class="sideButton active"
       onclick="renderTutor()">
 
-      ð Dashboard
+       Dashboard
 
      </button>
 
@@ -5002,7 +5002,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('My Tutor Services')">
 
-      ð My Services
+       My Services
 
      </button>
 
@@ -5018,7 +5018,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('My Students')">
 
-      ð¨âð My Students
+       My Students
 
      </button>
 
@@ -5042,7 +5042,7 @@ function renderTutor(){
       class="sideButton"
       onclick="featurePage('Tutor Earnings')">
 
-      ð° Earnings
+       Earnings
 
      </button>
 
@@ -5050,7 +5050,7 @@ function renderTutor(){
       class="sideButton"
       onclick="logout()">
 
-      ðª Sign Out
+       Sign Out
 
      </button>
     `);
@@ -5070,7 +5070,7 @@ function renderTutor(){
     <main class="content">
 
      <h1>
-      Tutor Dashboard ð¨âð«
+      Tutor Dashboard 
      </h1>
 
      <p class="muted">
@@ -5105,7 +5105,7 @@ function renderTutor(){
      <div class="panelGrid">
 
       <div class="panel">
-       <h2>ð My Services</h2>
+       <h2> My Services</h2>
        <p>
         Create and manage tutoring services.
        </p>
@@ -5126,7 +5126,7 @@ function renderTutor(){
       </div>
 
       <div class="panel">
-       <h2>ð° Earnings</h2>
+       <h2> Earnings</h2>
        <p>
         Track tutoring income and withdrawals.
        </p>
@@ -5156,31 +5156,31 @@ async function renderStudent(){
     <button
      class="sideButton active"
      onclick="renderStudent()">
-     ð Dashboard
+      Dashboard
     </button>
 
     <button
      class="sideButton"
      onclick="studentExams()">
-     ð CBT Exams
+      CBT Exams
     </button>
 
     <button
      class="sideButton"
      onclick="studentResults()">
-     ð My Results
+      My Results
     </button>
 
     <button
      class="sideButton"
      onclick="featurePage('Study Materials')">
-     ð Study Materials
+      Study Materials
     </button>
 
     <button
      class="sideButton"
      onclick="featurePage('Scholarships')">
-     ð Scholarships
+      Scholarships
     </button>
 
     <button
@@ -5192,7 +5192,7 @@ async function renderStudent(){
     <button
      class="sideButton"
      onclick="logout()">
-     ðª Sign Out
+      Sign Out
     </button>
 
    `)}
@@ -5240,7 +5240,7 @@ async function renderStudent(){
      <div class="panelGrid">
 
       <div class="panel">
-       <h2>ð Take CBT Examination</h2>
+       <h2> Take CBT Examination</h2>
        <p>
         Choose an available examination and
         select how many questions you want to answer.
@@ -5255,7 +5255,7 @@ async function renderStudent(){
       </div>
 
       <div class="panel">
-       <h2>ð Performance</h2>
+       <h2> Performance</h2>
        <p>
         Review your results, weak topics and
         recommendations.
@@ -5304,20 +5304,19 @@ async function countPublishedStudentExams(){
   try{
     const result=await db
       .from("exams")
-      .select("id,title,status");
+      .select("id,title,slug,exam_type,status");
 
     if(result.error){
-      console.warn("Published exam count:",result.error);
+      console.warn(
+        "Published exam count:",
+        result.error
+      );
       return "â";
     }
 
-    return (result.data||[]).filter(e=>{
-      const status=String(e.status||"").trim().toLowerCase();
-      const title=String(e.title||"").trim().toLowerCase();
-
-      return status==="published" &&
-        title!=="general knowledge";
-    }).length;
+    return (result.data||[])
+      .filter(isPublishedStudentExam)
+      .length;
 
   }catch(error){
     console.warn(error);
@@ -5374,6 +5373,117 @@ async function calculateStudentAverage(){
     el.textContent=average;
 }
 
+
+/* =========================================================
+   STUDENT EXAM VISIBILITY / SUBJECT HELPERS
+========================================================= */
+
+function normalizedExamStatus(value){
+  return String(value||"")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g,"");
+}
+
+function isGeneralKnowledgeExam(exam){
+  const title=String(exam?.title||"").trim().toLowerCase();
+  const slug=String(exam?.slug||"").trim().toLowerCase();
+  const type=String(exam?.exam_type||"").trim().toLowerCase();
+
+  return (
+    title.includes("general knowledge") ||
+    slug.includes("general-knowledge") ||
+    slug.includes("general_knowledge") ||
+    type==="general knowledge"
+  );
+}
+
+function isPublishedStudentExam(exam){
+  return (
+    normalizedExamStatus(exam?.status)==="published" &&
+    !isGeneralKnowledgeExam(exam)
+  );
+}
+
+async function findExamSubjectIds(exam){
+  try{
+    const sr=await db
+      .from("subjects")
+      .select("*")
+      .order("name",{ascending:true});
+
+    if(sr.error)
+      return [];
+
+    const title=String(exam?.title||"").toLowerCase();
+    const slug=String(exam?.slug||"").toLowerCase();
+    const combined=(title+" "+slug).trim();
+
+    const matches=(sr.data||[])
+      .filter(s=>{
+        const name=String(
+          s.name||s.subject_name||""
+        ).trim().toLowerCase();
+
+        const code=String(
+          s.code||s.subject_code||""
+        ).trim().toLowerCase();
+
+        return (
+          (name && (
+            combined.includes(name) ||
+            name.split(/\s+/).some(
+              word=>word.length>=4 &&
+              combined.includes(word)
+            )
+          )) ||
+          (code && combined.includes(code))
+        );
+      })
+      .map(s=>s.id)
+      .filter(Boolean);
+
+    return [...new Set(matches)];
+  }catch(error){
+    console.warn(
+      "Exam subject matching:",
+      error
+    );
+    return [];
+  }
+}
+
+async function getAvailableQuestionIdsForExam(exam){
+  const linked=await db
+    .from("exam_questions")
+    .select("id,question_id")
+    .eq("exam_id",exam.id);
+
+  if(!linked.error && (linked.data||[]).length){
+    return (linked.data||[])
+      .map(x=>x.question_id||x.questionId)
+      .filter(Boolean);
+  }
+
+  const subjectIds=await findExamSubjectIds(exam);
+
+  if(!subjectIds.length)
+    return [];
+
+  const qr=await db
+    .from("questions")
+    .select("id")
+    .in("subject_id",subjectIds)
+    .limit(5000);
+
+  if(qr.error)
+    return [];
+
+  return (qr.data||[])
+    .map(q=>q.id)
+    .filter(Boolean);
+}
+
 /* =========================================================
    STUDENT EXAMS
 ========================================================= */
@@ -5395,19 +5505,19 @@ async function studentExams(){
     <button
      class="sideButton active"
      onclick="studentExams()">
-     ð CBT Exams
+      CBT Exams
     </button>
 
     <button
      class="sideButton"
      onclick="studentResults()">
-     ð My Results
+      My Results
     </button>
 
     <button
      class="sideButton"
      onclick="logout()">
-     ðª Sign Out
+      Sign Out
     </button>
 
    `)}
@@ -5455,20 +5565,16 @@ async function loadStudentExams(){
   const area=document.getElementById("studentExamArea");
   if(!area)return;
 
-  /*
-   * Students see ONLY exams published by Admin.
-   * General Knowledge is intentionally excluded from
-   * the student CBT catalogue.
-   *
-   * We fetch the live exam rows instead of relying on a
-   * cached count, so a newly published exam appears as
-   * soon as the student refreshes/opens CBT Exams.
-   */
+  area.innerHTML=`
+    <div class="loading">
+      Loading published examinations...
+    </div>`;
+
   const result=await db
     .from("exams")
     .select("*")
     .order("created_at",{ascending:false})
-    .limit(500);
+    .limit(5000);
 
   if(result.error){
     area.innerHTML=`
@@ -5478,60 +5584,46 @@ async function loadStudentExams(){
     return;
   }
 
-  const exams=(result.data||[]).filter(e=>{
-    const status=String(e.status||"").trim().toLowerCase();
-    const title=String(e.title||"").trim().toLowerCase();
-
-    return status==="published" &&
-      title!=="general knowledge";
-  });
+  const exams=(result.data||[])
+    .filter(isPublishedStudentExam);
 
   if(!exams.length){
     area.innerHTML=`
       <div class="tableEmpty">
         <h3>No published examinations yet.</h3>
         <p style="margin-top:8px">
-          Published examinations will appear here automatically.
+          Publish an examination in Admin and refresh this page.
         </p>
       </div>`;
     return;
   }
 
-  /*
-   * Build each exam card with a question-count selector.
-   * The actual number of questions uploaded in the Admin
-   * Question Bank is never displayed to students.
-   */
   const cards=[];
 
   for(const e of exams){
 
-    let available=0;
+    let availableIds=[];
 
     try{
-      const links=await db
-        .from("exam_questions")
-        .select("id,question_id")
-        .eq("exam_id",e.id);
-
-      if(!links.error){
-        available=(links.data||[])
-          .filter(x=>x.question_id||x.questionId)
-          .length;
-      }
+      availableIds=await getAvailableQuestionIdsForExam(e);
     }catch(error){
-      console.warn("Exam question count:",error);
+      console.warn(
+        "Available questions:",
+        error
+      );
     }
 
-    /*
-     * If an exam has linked questions, give the student
-     * sensible choices up to the number actually available.
-     * Do not expose the total as a label.
-     */
-    const configured=Number(e.total_questions||0);
+    const available=availableIds.length;
+    const configured=Math.floor(
+      Number(e.total_questions||0)
+    );
+
     const maxQuestions=available>0
-      ?Math.min(available,configured>0?configured:available)
-      :Math.max(configured,0);
+      ?Math.min(
+        available,
+        configured>0 ? configured : available
+      )
+      :0;
 
     const choices=[];
     const standard=[5,10,15,20,25,30,40,50,60,75,100];
@@ -5551,12 +5643,15 @@ async function loadStudentExams(){
     const defaultCount=
       choices.includes(10)
       ?10
-      :(choices[choices.length-1]||5);
+      :(choices[choices.length-1]||0);
 
     cards.push(`
       <div class="panel">
+
         <h2>
-          ${escapeHTML(e.title||"Untitled Exam")}
+          ${escapeHTML(
+            e.title||"Untitled Examination"
+          )}
         </h2>
 
         <p style="margin-top:8px">
@@ -5573,17 +5668,23 @@ async function loadStudentExams(){
 
           <div>
             <strong>Duration:</strong>
-            ${escapeHTML(e.duration_minutes||"â")} minutes
+            ${escapeHTML(
+              e.duration_minutes||"â"
+            )} minutes
           </div>
 
           <div>
             <strong>Total Marks:</strong>
-            ${escapeHTML(e.total_marks||"Auto")}
+            ${escapeHTML(
+              e.total_marks||"Auto"
+            )}
           </div>
 
           <div>
             <strong>Access:</strong>
-            ${escapeHTML(e.access_level||"free")}
+            ${escapeHTML(
+              e.access_level||"free"
+            )}
           </div>
 
           ${
@@ -5591,26 +5692,31 @@ async function loadStudentExams(){
             ?`
               <div>
                 <strong>Price:</strong>
-                ${money(e.price,e.currency||"NGN")}
+                ${money(
+                  e.price,
+                  e.currency||"NGN"
+                )}
               </div>
             `
             :""
           }
 
           <div style="margin-top:8px">
+
             <label
               for="examCount_${e.id}"
-              style="display:block;font-weight:800;margin-bottom:7px">
+              style="
+                display:block;
+                font-weight:800;
+                margin-bottom:7px">
+
               Number of Questions
+
             </label>
 
             <select
               id="examCount_${e.id}"
-              ${
-                choices.length
-                ?""
-                :"disabled"
-              }>
+              ${choices.length?"":"disabled"}>
 
               ${
                 choices.length
@@ -5623,12 +5729,13 @@ async function loadStudentExams(){
                   `).join("")
                 :`
                   <option value="">
-                    Questions not available yet
+                    Questions are not linked to this subject yet
                   </option>
                 `
               }
 
             </select>
+
           </div>
 
         </div>
@@ -5636,17 +5743,20 @@ async function loadStudentExams(){
         <button
           class="btn primary"
           style="margin-top:18px"
-          ${
-            choices.length
-            ?""
-            :"disabled"
-          }
-          onclick="startExam(
-            '${e.id}',
-            Number(document.getElementById('examCount_${e.id}')?.value||0)
-          )">
+          ${choices.length?"":"disabled"}
+          onclick="
+            startExam(
+              '${e.id}',
+              Number(
+                document.getElementById(
+                  'examCount_${e.id}'
+                )?.value||0
+              )
+            )
+          ">
 
           Start Examination
+
         </button>
 
       </div>
@@ -5756,6 +5866,29 @@ async function loadExamQuestionPool(examId){
     }
   }
 
+  /*
+   * Final fallback: match the published exam to its subject
+   * and load the questions belonging to that subject.
+   */
+  if(!questions.length && currentExam){
+
+    const subjectIds=
+      await findExamSubjectIds(currentExam);
+
+    if(subjectIds.length){
+
+      const qr=await db
+        .from("questions")
+        .select("*")
+        .in("subject_id",subjectIds)
+        .limit(5000);
+
+      if(!qr.error){
+        questions=qr.data||[];
+      }
+    }
+  }
+
   if(!questions.length){
     throw new Error(
       "This examination does not have any linked questions yet. "+
@@ -5852,21 +5985,10 @@ async function startExam(examId,requestedCount=0){
    * Also keep General Knowledge hidden even if someone
    * manually opens an old button/link.
    */
-  const status=String(
-    currentExam.status||""
-  ).trim().toLowerCase();
-
-  const title=String(
-    currentExam.title||""
-  ).trim().toLowerCase();
-
-  if(status!=="published"){
-    alert("This examination is not currently published.");
-    return;
-  }
-
-  if(title==="general knowledge"){
-    alert("This examination is not available to students.");
+  if(!isPublishedStudentExam(currentExam)){
+    alert(
+      "This examination is not currently available to students."
+    );
     return;
   }
 
@@ -6847,7 +6969,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       ð Subject Performance
+        Subject Performance
       </h2>
 
       <div style="margin-top:15px">
@@ -6956,7 +7078,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       ð¯ What You Should Study
+        What You Should Study
       </h2>
 
       ${
@@ -7007,7 +7129,7 @@ function renderExamResult(
      <div class="analysisItem">
 
       <h2>
-       ð Summary
+        Summary
       </h2>
 
       <div style="
@@ -7116,19 +7238,19 @@ async function studentResults(){
     <button
      class="sideButton"
      onclick="studentExams()">
-     ð CBT Exams
+      CBT Exams
     </button>
 
     <button
      class="sideButton active"
      onclick="studentResults()">
-     ð My Results
+      My Results
     </button>
 
     <button
      class="sideButton"
      onclick="logout()">
-     ðª Sign Out
+      Sign Out
     </button>
 
    `)}
@@ -7140,7 +7262,7 @@ async function studentResults(){
     <main class="content">
 
      <h1>
-      ð My Examination Results
+       My Examination Results
      </h1>
 
      <p class="muted">
@@ -7401,7 +7523,7 @@ const MODULES={
 
   exams:{
     title:"Exams",
-    icon:"ð",
+    icon:"",
     table:"exams",
 
     columns:[
@@ -7451,7 +7573,7 @@ const MODULES={
 
   materials:{
     title:"Materials",
-    icon:"ð",
+    icon:"",
     table:"materials",
 
     columns:[
@@ -7477,7 +7599,7 @@ const MODULES={
 
   scholarships:{
     title:"Scholarships",
-    icon:"ð",
+    icon:"",
     table:"scholarships",
 
     columns:[
@@ -7503,7 +7625,7 @@ const MODULES={
 
   subscriptions:{
     title:"Subscriptions",
-    icon:"ð³",
+    icon:"",
     table:"subscriptions",
 
     columns:[
@@ -7533,7 +7655,7 @@ const MODULES={
 
   transactions:{
     title:"Transactions",
-    icon:"ð°",
+    icon:"",
     table:"transactions",
 
     columns:[
@@ -7565,7 +7687,7 @@ const MODULES={
 
   withdrawals:{
     title:"Withdrawals",
-    icon:"ð¦",
+    icon:"",
     table:"withdrawals",
 
     columns:[
@@ -8165,7 +8287,7 @@ async function renderTutors(){
     <main class="content">
 
      <h1>
-      ð¨âð« Tutor Management
+       Tutor Management
      </h1>
 
      <p class="muted">
@@ -8438,7 +8560,7 @@ async function renderReports(){
     <main class="content">
 
      <h1>
-      ð Reports
+       Reports
      </h1>
 
      <p class="muted">
@@ -8616,7 +8738,7 @@ function featurePage(title){
      class="sideButton"
      onclick="logout()">
 
-     ðª Sign Out
+      Sign Out
 
     </button>
 
@@ -8697,8 +8819,7 @@ async function logout(){
   user=null;
   profile=null;
   role=null;
-
-  clearInterval(
+clearInterval(
     cbt.timer
   );
 
@@ -8755,6 +8876,34 @@ window.importCSV = importCSV;
     if(!initializeSupabase())return;
 
     registerAuthListener();
+
+    try{
+      window.philExamRealtime=
+        db
+          .channel("philmyschool-exams-live")
+          .on(
+            "postgres_changes",
+            {
+              event:"*",
+              schema:"public",
+              table:"exams"
+            },
+            ()=>{
+              if(
+                role==="student" &&
+                document.getElementById("studentExamArea")
+              ){
+                loadStudentExams();
+              }
+            }
+          )
+          .subscribe();
+    }catch(error){
+      console.warn(
+        "Exam realtime subscription:",
+        error
+      );
+    }
 
     const result=await db.auth.getSession();
 
