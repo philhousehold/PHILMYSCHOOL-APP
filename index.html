@@ -5767,7 +5767,7 @@ async function updateExamQuestionChoices(exam,subjects,jamb){
     if(jamb){
       document.getElementById('examRequestedCountWrap').innerHTML='<div class="jambStandardLine"><strong>JAMB standard:</strong> English Language 60 + 3 selected subjects Ã 40 = 180 questions.</div>';
       select.innerHTML='<option value="180">180 Questions</option>';
-      msg.innerHTML=`<div class="successBox">${count} published linked questions found across the selected subjects. You can start the examination.</div>`;
+      msg.innerHTML=`<div class="successBox">Your selected subjects are ready. You can start the examination.</div>`;
     }else{
       document.getElementById('examRequestedCountWrap').innerHTML='';
       const paid=await hasPaidExamAccess();
@@ -5776,7 +5776,7 @@ async function updateExamQuestionChoices(exam,subjects,jamb){
       const accessText=paid
         ?`<strong>Paid access:</strong> You can select up to <strong>100 questions</strong>.`
         :`<strong>Free access:</strong> You can select up to <strong>20 questions</strong>. Pay/subscribe to unlock up to 100 questions.`;
-      msg.innerHTML=`<div class="successBox"><strong>${count}</strong> published questions are linked and available for random selection.<br><span style="display:block;margin-top:6px">${accessText}</span></div>`;
+      msg.innerHTML=`<div class="successBox">Questions are ready. Select the number of questions you want to answer.<br><span style="display:block;margin-top:6px">${accessText}</span></div>`;
       // Keep the student-facing selector simple and fixed.
       // The question bank may contain hundreds of questions, but students
       // should only see the approved exam sizes: 3, 20, 30 and 100.
