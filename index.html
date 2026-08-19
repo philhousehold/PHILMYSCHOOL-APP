@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#2563eb">
 
@@ -337,6 +338,36 @@ textarea{
   display:block;
   font-size:28px;
   margin-top:8px;
+}
+
+.adminQuickActions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:25px;
+}
+
+.adminQuickActions .btn{
+  min-width:150px;
+}
+
+.adminWelcome{
+  margin-top:25px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:0 4px 15px rgba(15,23,42,.03);
+}
+
+.adminWelcome h2{
+  font-size:20px;
+}
+
+.adminWelcome p{
+  color:var(--muted);
+  margin-top:10px;
+  line-height:1.7;
 }
 
 .panelGrid{
@@ -1776,7 +1807,7 @@ function portalHeader(title){
     <button
      class="mobileMenu"
      onclick="toggleSidebar()">
-     â°
+     &#9776;
     </button>
 
     <div class="headerTitle">
@@ -1824,7 +1855,7 @@ async function renderAdmin(){
     <main class="content">
 
      <h1>
-      Admin Dashboard ð
+      Admin Dashboard
      </h1>
 
      <p class="muted">
@@ -1832,152 +1863,43 @@ async function renderAdmin(){
       examinations and learning content.
      </p>
 
-     <div class="stats">
+     <div class="adminQuickActions">
 
-      <div class="stat">
-       <small>Students</small>
-       <strong id="dashStudents">â</strong>
-      </div>
+      <button
+       class="btn primary"
+       onclick="adminQuestionBank()">
+       Question Bank
+      </button>
 
-      <div class="stat">
-       <small>Tutors</small>
-       <strong id="dashTutors">â</strong>
-      </div>
+      <button
+       class="btn secondary"
+       onclick="adminSubjects()">
+       Subjects & Topics
+      </button>
 
-      <div class="stat">
-       <small>Subjects</small>
-       <strong id="dashSubjects">â</strong>
-      </div>
+      <button
+       class="btn secondary"
+       onclick="adminModule('exams')">
+       Exams
+      </button>
 
-      <div class="stat">
-       <small>Questions</small>
-       <strong id="dashQuestions">â</strong>
-      </div>
-
-     </div>
-
-     <div class="stats">
-
-      <div class="stat">
-       <small>Exams</small>
-       <strong id="dashExams">â</strong>
-      </div>
-
-      <div class="stat">
-       <small>Attempts</small>
-       <strong id="dashAttempts">â</strong>
-      </div>
-
-      <div class="stat">
-       <small>Transactions</small>
-       <strong id="dashTransactions">â</strong>
-      </div>
-
-      <div class="stat">
-       <small>Withdrawals</small>
-       <strong id="dashWithdrawals">â</strong>
-      </div>
+      <button
+       class="btn secondary"
+       onclick="renderReports()">
+       Reports
+      </button>
 
      </div>
 
-     <div class="panelGrid">
+     <div class="adminWelcome">
 
-      <div class="panel">
+      <h2>Welcome to PHILMYSCHOOL Admin</h2>
 
-       <h2>
-        ð Question Bank
-       </h2>
-
-       <p>
-        Add, edit, delete and import CBT questions.
-       </p>
-
-       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">
-
-        <button
-         class="btn primary"
-         onclick="adminQuestionBank()">
-
-         Open Question Bank
-
-        </button>
-
-        <button
-         class="btn secondary"
-         onclick="openCSVImport()">
-
-         ð¥ Import Questions
-
-        </button>
-
-       </div>
-
-      </div>
-
-      <div class="panel">
-
-       <h2>
-        ð Subjects & Topics
-       </h2>
-
-       <p>
-        Manage the subjects and topics used
-        throughout the examination system.
-       </p>
-
-       <button
-        class="btn primary"
-        style="margin-top:15px"
-        onclick="adminSubjects()">
-
-        Manage Subjects
-
-       </button>
-
-      </div>
-
-      <div class="panel">
-
-       <h2>
-        ð§ª Exams
-       </h2>
-
-       <p>
-        Create examinations and configure
-        duration, marks and access.
-       </p>
-
-       <button
-        class="btn primary"
-        style="margin-top:15px"
-        onclick="adminModule('exams')">
-
-        Manage Exams
-
-       </button>
-
-      </div>
-
-      <div class="panel">
-
-       <h2>
-        ð Reports
-       </h2>
-
-       <p>
-        View live statistics from the database.
-       </p>
-
-       <button
-        class="btn primary"
-        style="margin-top:15px"
-        onclick="renderReports()">
-
-        Open Reports
-
-       </button>
-
-      </div>
+      <p>
+       Use the menu on the left to manage students,
+       tutors, subjects, questions, examinations,
+       results and other school settings.
+      </p>
 
      </div>
 
@@ -1987,34 +1909,6 @@ async function renderAdmin(){
 
   </div>`;
 
-  const fields=[
-    ["dashStudents","user_roles",[["role","student"]]],
-    ["dashTutors","user_roles",[["role","tutor"]]],
-    ["dashSubjects","subjects",[]],
-    ["dashQuestions","questions",[]],
-    ["dashExams","exams",[]],
-    ["dashAttempts","exam_attempts",[]],
-    ["dashTransactions","transactions",[]],
-    ["dashWithdrawals","withdrawals",[]]
-  ];
-
-  for(
-    const [id,table,filters]
-    of fields
-  ){
-
-    const n=
-      await countTable(
-        table,
-        filters
-      );
-
-    const el=
-      document.getElementById(id);
-
-    if(el)
-      el.textContent=n;
-  }
 }
 
 /* =========================================================
