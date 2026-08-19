@@ -5312,12 +5312,45 @@ async function renderStudent(){
   await calculateStudentAverage();
 }
 
+async function getPublishedStudentExamsLive(){
+  /*
+   * Use the SECURITY DEFINER RPC first. This prevents Supabase RLS
+   * from hiding published exams from ordinary student accounts.
+   */
+  try{
+    const rpc=await db.rpc("get_published_student_exams");
+
+    if(!rpc.error){
+      let data=rpc.data;
+
+      if(typeof data==="string"){
+        try{ data=JSON.parse(data); }catch(_){}
+      }
+
+      if(Array.isArray(data))
+        return {data,error:null,source:"rpc"};
+    }
+  }catch(error){
+    console.warn("Published exam RPC:",error);
+  }
+
+  const direct=await db
+    .from("exams")
+    .select("*")
+    .order("created_at",{ascending:false})
+    .limit(5000);
+
+  return {
+    data:direct.data||[],
+    error:direct.error||null,
+    source:"direct"
+  };
+}
+
 async function countPublishedStudentExams(){
 
   try{
-    const result=await db
-      .from("exams")
-      .select("id,title,slug,exam_type,status");
+    const result=await getPublishedStudentExamsLive();
 
     if(result.error){
       console.warn(
@@ -5467,6 +5500,37 @@ async function findExamSubjectIds(exam){
 }
 
 async function getAvailableQuestionIdsForExam(exam){
+  /*
+   * Use the student SECURITY DEFINER RPC first.
+   * This is important because normal SELECT access to the question
+   * tables may be restricted by Supabase RLS for students.
+   * The student only receives the question IDs/count internally;
+   * the question bank is never displayed on the dashboard.
+   */
+  try{
+    const rpc=await db.rpc(
+      "get_student_exam_questions",
+      {p_exam_id:String(exam.id)}
+    );
+
+    if(!rpc.error){
+      let data=rpc.data;
+
+      if(typeof data==="string"){
+        try{ data=JSON.parse(data); }catch(_){}
+      }
+
+      if(Array.isArray(data) && data.length){
+        return data
+          .map(q=>q.id||q.question_id||q.questionId)
+          .filter(Boolean);
+      }
+    }
+  }catch(error){
+    console.warn("Question availability RPC:",error);
+  }
+
+  /* Direct exam links are a fallback only. */
   const linked=await db
     .from("exam_questions")
     .select("id,question_id")
@@ -5478,6 +5542,7 @@ async function getAvailableQuestionIdsForExam(exam){
       .filter(Boolean);
   }
 
+  /* Subject questions are the final fallback. */
   const subjectIds=await findExamSubjectIds(exam);
 
   if(!subjectIds.length)
@@ -5583,11 +5648,7 @@ async function loadStudentExams(){
       Loading published examinations...
     </div>`;
 
-  const result=await db
-    .from("exams")
-    .select("*")
-    .order("created_at",{ascending:false})
-    .limit(5000);
+  const result=await getPublishedStudentExamsLive();
 
   if(result.error){
     area.innerHTML=`
@@ -5605,8 +5666,15 @@ async function loadStudentExams(){
       <div class="tableEmpty">
         <h3>No published examinations yet.</h3>
         <p style="margin-top:8px">
-          Publish an examination in Admin and refresh this page.
+          If an exam is Published in Admin but is not shown here,
+          install the supplied SQL fix once in Supabase.
         </p>
+        <button
+          class="btn secondary"
+          style="margin-top:14px"
+          onclick="loadStudentExams()">
+          Refresh Exams
+        </button>
       </div>`;
     return;
   }
@@ -5626,17 +5694,14 @@ async function loadStudentExams(){
       );
     }
 
-    const available=availableIds.length;
-    const configured=Math.floor(
-      Number(e.total_questions||0)
-    );
-
-    const maxQuestions=available>0
-      ?Math.min(
-        available,
-        configured>0 ? configured : available
-      )
-      :0;
+    /*
+     * IMPORTANT: this is the number of questions actually
+     * available to the student for this exam.
+     * We deliberately DO NOT use e.total_questions here.
+     * Admin's question-bank/exam setting must never be exposed
+     * or used to hide questions from the student's selector.
+     */
+    const maxQuestions=availableIds.length;
 
     const choices=[];
     const standard=[5,10,15,20,25,30,40,50,60,75,100];
@@ -5779,6 +5844,30 @@ async function loadStudentExams(){
   area.innerHTML=cards.join("");
 }
 
+async function loadStudentExamQuestionsLive(examId){
+  try{
+    const rpc=await db.rpc(
+      "get_student_exam_questions",
+      {p_exam_id:String(examId)}
+    );
+
+    if(!rpc.error){
+      let data=rpc.data;
+
+      if(typeof data==="string"){
+        try{ data=JSON.parse(data); }catch(_){}
+      }
+
+      if(Array.isArray(data) && data.length)
+        return data;
+    }
+  }catch(error){
+    console.warn("Student exam question RPC:",error);
+  }
+
+  return [];
+}
+
 async function loadExamQuestionPool(examId){
 
   /*
@@ -5791,6 +5880,66 @@ async function loadExamQuestionPool(examId){
    *
    * The RPC is only used as a last-resort fallback.
    */
+
+  let questions=await loadStudentExamQuestionsLive(examId);
+
+  if(questions.length){
+    /*
+     * Direct option_a/b/c/d fields remain the primary option source.
+     * question_options is only a supplement.
+     */
+    try{
+      const ids=questions.map(q=>q.id).filter(Boolean);
+
+      if(ids.length){
+        const optionsResult=await db
+          .from("question_options")
+          .select("*")
+          .in("question_id",ids);
+
+        if(!optionsResult.error){
+          const optionMap={};
+
+          (optionsResult.data||[]).forEach(o=>{
+            if(!optionMap[o.question_id])
+              optionMap[o.question_id]=[];
+
+            optionMap[o.question_id].push(o);
+          });
+
+          questions=questions.map(q=>({
+            ...q,
+            question_options:
+              optionMap[q.id]||
+              q.question_options||
+              []
+          }));
+        }
+      }
+    }catch(error){
+      console.warn("Question options:",error);
+    }
+
+    questions=questions.filter(q=>{
+      const questionText=String(
+        q.question_text||
+        q.question||
+        q.text||
+        ""
+      ).trim();
+
+      const options=getQuestionOptions(q);
+
+      return Boolean(
+        q.id &&
+        questionText &&
+        options.length>=2
+      );
+    });
+
+    if(questions.length)
+      return questions;
+  }
 
   let links=[];
   let linkResult=await db
@@ -5807,8 +5956,6 @@ async function loadExamQuestionPool(examId){
       linkResult.error
     );
   }
-
-  let questions=[];
 
   if(links.length){
 
@@ -5980,15 +6127,27 @@ async function loadExamQuestionPool(examId){
 
 async function startExam(examId,requestedCount=0){
 
-  const result=await db
+  let result=await db
     .from("exams")
     .select("*")
     .eq("id",examId)
     .single();
 
-  if(result.error){
-    alert(result.error.message);
-    return;
+  if(result.error || !result.data){
+    const live=await getPublishedStudentExamsLive();
+
+    const found=(live.data||[])
+      .find(e=>String(e.id)===String(examId));
+
+    if(!found){
+      alert(
+        result.error?.message||
+        "This examination could not be found."
+      );
+      return;
+    }
+
+    result={data:found,error:null};
   }
 
   currentExam=result.data;
@@ -6023,21 +6182,18 @@ async function startExam(examId,requestedCount=0){
   }
 
   /*
-   * Student-selected count takes priority.
-   * Admin total_questions is treated as a maximum only;
-   * it is NOT shown to the student.
+   * The student-selected count is the only dashboard selection.
+   * The Admin total_questions field is NOT used as the student's
+   * available-question count. The actual loaded question pool is
+   * the source of truth.
    */
   const requested=Math.floor(
     Number(requestedCount||0)
   );
 
-  const adminLimit=Math.floor(
-    Number(currentExam.total_questions||0)
-  );
-
   let limit=requested>0
     ?requested
-    :(adminLimit>0?adminLimit:questions.length);
+    :questions.length;
 
   limit=Math.max(
     1,
