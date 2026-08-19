@@ -5696,13 +5696,98 @@ async function openExamSetup(examId){
   document.body.appendChild(box);renderSubjectPickerSelected(jamb?'studentJambPicker':'studentWaecPicker');const pid=jamb?'studentJambPicker':'studentWaecPicker';box.querySelectorAll('#'+pid+' .subjectPickerItem').forEach(el=>el.addEventListener('click',()=>setTimeout(()=>updateExamQuestionChoices(exam,subjects,jamb),0)));await updateExamQuestionChoices(exam,subjects,jamb);
 }
 
+async function hasPaidExamAccess(){
+  // Paid students are identified by an active, non-expired subscription.
+  // Free students are limited to 20 questions; paid students can select up to 100.
+  if(role && role !== "student") return true;
+  const studentId=String(profile?.id||user?.id||"").trim();
+  if(!studentId || !db) return false;
+
+  try{
+    const result=await db
+      .from("subscriptions")
+      .select("id,status,current_period_end")
+      .eq("student_id",studentId)
+      .eq("status","active")
+      .order("current_period_end",{ascending:false})
+      .limit(1);
+
+    if(result.error || !Array.isArray(result.data) || !result.data.length)
+      return false;
+
+    const sub=result.data[0];
+    if(!sub.current_period_end) return true;
+    return new Date(sub.current_period_end).getTime() > Date.now();
+  }catch(error){
+    console.warn("Paid access check:",error);
+    return false;
+  }
+}
+
+async function getStudentQuestionSelectionLimit(exam){
+  // JAMB keeps its official 180-question structure.
+  if(isJambExam(exam)) return 180;
+  return (await hasPaidExamAccess()) ? 100 : 20;
+}
+
 async function updateExamQuestionChoices(exam,subjects,jamb){
   let selected=jamb?getSubjectPickerIds('studentJambPicker'):getSubjectPickerIds('studentWaecPicker');
   if(jamb){const english=subjects.find(s=>{const n=subjectDisplayName(s).toLowerCase(),c=String(s?.code||s?.subject_code||'').toLowerCase();return n==='english language'||c==='eng'});if(english)selected=[String(english.id),...selected.filter(x=>String(x)!==String(english.id))];const summary=document.getElementById('studentJambSummary');if(summary)summary.textContent=`Selected: ${Math.max(0,selected.length-1)} / 3`;}
   const msg=document.getElementById('examSetupMessage'),select=document.getElementById('examRequestedCount');if(!select)return;
   if(jamb&&selected.length!==4){msg.innerHTML='<div class="errorBox">Select exactly 3 other subjects. English Language is already compulsory.</div>';select.innerHTML='<option value="">Select subjects first</option>';return;}
   if(!jamb&&selected.length!==1){msg.innerHTML='<div class="errorBox">Select one subject to continue.</div>';select.innerHTML='<option value="">Select a subject first</option>';return;}
-  msg.innerHTML='<div class="panel">Checking available questions...</div>';try{const rpc=await db.rpc('get_student_exam_questions',{p_exam_id:String(exam.id),p_subject_ids:selected});let data=rpc.data;if(typeof data==='string'){try{data=JSON.parse(data)}catch(_){}}const count=(!rpc.error&&Array.isArray(data))?data.length:0;if(!count){msg.innerHTML='<div class="errorBox">No published questions are available under the selected subject(s). Add/import questions under those subjects in Admin Question Bank.</div>';select.innerHTML='<option value="">No questions available</option>';return;}if(jamb){document.getElementById('examRequestedCountWrap').innerHTML='<div class="jambStandardLine"><strong>JAMB standard:</strong> English Language 60 + 3 selected subjects Ã 40 = 180 questions.</div>';select.innerHTML='<option value="180">180 Questions</option>';msg.innerHTML='<div class="successBox">All 4 subjects are selected and questions are linked. You can start the examination.</div>';}else{document.getElementById('examRequestedCountWrap').innerHTML='';msg.innerHTML='<div class="successBox">Subject selected and questions are available. You can start the examination.</div>';const choices=[10,20,30,40,50,60,75,100,120,150,180,200].filter(n=>n<=count);if(!choices.includes(count))choices.push(count);choices.sort((a,b)=>a-b);select.innerHTML=choices.map(n=>`<option value="${n}">${n} Questions</option>`).join('');}}catch(error){msg.innerHTML=`<div class="errorBox">Could not check questions: ${escapeHTML(error.message||'')}</div>`;select.innerHTML='<option value="">Unable to load questions</option>';}}
+  msg.innerHTML='<div class="panel">Checking linked questions...</div>';try{
+    // IMPORTANT: Do NOT use get_student_exam_questions here as the primary count source.
+    // Some installations/RPC versions return only a subset or filter the questions incorrectly.
+    // The authoritative student pool is exam_questions -> questions.
+    let count=0;
+    const linkRes=await db.from('exam_questions').select('question_id,question_number').eq('exam_id',String(exam.id)).order('question_number',{ascending:true}).limit(10000);
+    if(!linkRes.error && Array.isArray(linkRes.data) && linkRes.data.length){
+      const ids=[...new Set(linkRes.data.map(x=>x.question_id).filter(Boolean).map(String))];
+      if(ids.length){
+        const qRes=await db.from('questions').select('id,subject_id,status').in('id',ids).eq('status','published').limit(10000);
+        if(!qRes.error){
+          const allowed=new Set(selected.map(String));
+          count=(qRes.data||[]).filter(q=>allowed.has(String(q.subject_id))).length;
+        }
+      }
+    }
+    // Fallback only when direct tables are protected by RLS.
+    if(!count){
+      try{
+        const rpc=await db.rpc('get_student_exam_questions',{p_exam_id:String(exam.id),p_subject_ids:selected});
+        let data=rpc.data;if(typeof data==='string'){try{data=JSON.parse(data)}catch(_){}}
+        if(!rpc.error && Array.isArray(data)) count=data.length;
+      }catch(_){ }
+    }
+    if(!count){
+      msg.innerHTML='<div class="errorBox">No published questions are linked to the selected subject for this examination. The Admin Question Bank must link the questions to this exact exam and subject.</div>';
+      select.innerHTML='<option value="">No questions available</option>';return;
+    }
+    if(jamb){
+      document.getElementById('examRequestedCountWrap').innerHTML='<div class="jambStandardLine"><strong>JAMB standard:</strong> English Language 60 + 3 selected subjects Ã 40 = 180 questions.</div>';
+      select.innerHTML='<option value="180">180 Questions</option>';
+      msg.innerHTML=`<div class="successBox">${count} published linked questions found across the selected subjects. You can start the examination.</div>`;
+    }else{
+      document.getElementById('examRequestedCountWrap').innerHTML='';
+      const paid=await hasPaidExamAccess();
+      const maxAllowed=paid?100:20;
+      const availableForSelection=Math.min(count,maxAllowed);
+      const accessText=paid
+        ?`<strong>Paid access:</strong> You can select up to <strong>100 questions</strong>.`
+        :`<strong>Free access:</strong> You can select up to <strong>20 questions</strong>. Pay/subscribe to unlock up to 100 questions.`;
+      msg.innerHTML=`<div class="successBox"><strong>${count}</strong> published questions are linked and available for random selection.<br><span style="display:block;margin-top:6px">${accessText}</span></div>`;
+      const base=[10,20,30,40,50,60,70,80,90,100];
+      const choices=base.filter(n=>n<=availableForSelection);
+      if(availableForSelection>0 && !choices.includes(availableForSelection))choices.push(availableForSelection);
+      choices.sort((a,b)=>a-b);
+      select.innerHTML=choices.length
+        ?choices.map(n=>`<option value="${n}">${n} Questions</option>`).join('')
+        :'<option value="">Not enough questions</option>';
+      select.style.display='block';
+      select.disabled=!choices.length;
+    }
+  }catch(error){msg.innerHTML=`<div class="errorBox">Could not check linked questions: ${escapeHTML(error.message||'')}</div>`;select.innerHTML='<option value="">Unable to load questions</option>';select.style.display='block';select.disabled=true;}}
 
 async function confirmExamSetup(examId,jamb){
   let selected=jamb?getSubjectPickerIds('studentJambPicker'):getSubjectPickerIds('studentWaecPicker');
@@ -5718,7 +5803,15 @@ async function confirmExamSetup(examId,jamb){
       selected.unshift(String(english.id));
   }
 
-  const count=jamb?180:Number(document.getElementById("examRequestedCount")?.value||0);
+  let count=jamb?180:Number(document.getElementById("examRequestedCount")?.value||0);
+
+  if(!jamb){
+    const maxAllowed=await getStudentQuestionSelectionLimit({id:examId,exam_type:"WAEC"});
+    if(count>maxAllowed){
+      alert(`Your current access allows a maximum of ${maxAllowed} questions. Subscribe/pay to unlock up to 100 questions.`);
+      return;
+    }
+  }
 
   if(jamb && selected.length!==4){
     alert("Select exactly 4 JAMB subjects: English Language plus 3 other subjects.");
@@ -6022,10 +6115,13 @@ async function loadExamQuestionPool(examId,subjectIds=[]){
       if(!qr.error){
         const map={};
         (qr.data||[]).forEach(q=>{map[String(q.id)]=q;});
+        const allowedSubjects=new Set((Array.isArray(subjectIds)?subjectIds:[]).map(String));
         questions=links.map(link=>{
           const questionId=link.question_id||link.questionId;
           const q=map[String(questionId)];
           if(!q)return null;
+          if(String(q.status||'published').toLowerCase()!=='published')return null;
+          if(allowedSubjects.size && !allowedSubjects.has(String(q.subject_id)))return null;
           return {...q,exam_question_id:link.id,question_number:link.question_number};
         }).filter(Boolean);
       }else{
@@ -6306,6 +6402,17 @@ async function startExam(examId,requestedCount=0,subjectIds=[]){
   let limit=requested>0
     ?requested
     :questions.length;
+
+  // Server-side/front-end safety gate: free students may not request more
+  // than 20 questions. An active paid subscription unlocks up to 100.
+  // JAMB's official 180-question structure is handled separately above.
+  if(!isJambExam(currentExam)){
+    const maxAllowed=await getStudentQuestionSelectionLimit(currentExam);
+    if(limit>maxAllowed){
+      alert(`Your current access allows a maximum of ${maxAllowed} questions. Subscribe/pay to unlock up to 100 questions.`);
+      return;
+    }
+  }
 
   limit=Math.max(
     1,
