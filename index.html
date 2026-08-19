@@ -5609,45 +5609,39 @@ async function getStudentExamSubjects(exam){
   if(!examId)return [];
 
   /*
-   * IMPORTANT:
-   * Students must only see subjects that are actually connected
-   * to the published examination. The central subjects table is
-   * the master list, but it must NOT be used as a fallback for an
-   * exam selector because that would expose unrelated subjects.
+   * IMPORTANT: The picker must use the real subjects.id values.
+   * Some versions of get_student_exam_subjects return an "id" field
+   * that is not subjects.id. That makes the student picker look correct
+   * but causes the question-pool lookup to return zero questions.
+   *
+   * Therefore exam_subjects.subject_id -> subjects.id is the authoritative
+   * source for the student subject picker. The RPC is only a fallback.
    */
-  try{
-    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:examId});
-    if(!rpc.error){
-      let data=rpc.data;
-      if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){}}
-      if(Array.isArray(data)&&data.length)return data;
-    }
-  }catch(error){
-    console.warn("Student exam subjects RPC:",error);
-  }
-
-  /* Direct fallback: Admin-configured exam_subjects -> subjects. */
   try{
     const link=await db
       .from("exam_subjects")
       .select("subject_id,is_compulsory,question_limit,sort_order,subject_order,is_active")
-      .eq("exam_id",examId);
+      .eq("exam_id",examId)
+      .eq("is_active",true);
 
-    if(!link.error&&(link.data||[]).length){
-      const ids=[...(link.data||[]).map(x=>x.subject_id).filter(Boolean)];
+    if(!link.error && Array.isArray(link.data) && link.data.length){
+      const ids=[...new Set(link.data.map(x=>x.subject_id).filter(Boolean).map(String))];
       if(ids.length){
         const sr=await db
           .from("subjects")
           .select("*")
           .in("id",ids)
           .order("name",{ascending:true});
-        if(!sr.error){
+
+        if(!sr.error && Array.isArray(sr.data)){
           const byId={};
-          (link.data||[]).forEach(x=>byId[String(x.subject_id)]=x);
-          return (sr.data||[])
+          link.data.forEach(x=>{byId[String(x.subject_id)]=x;});
+          return sr.data
             .filter(s=>byId[String(s.id)]?.is_active!==false)
             .map(s=>({
               ...s,
+              /* id MUST remain subjects.id for the question pool lookup. */
+              id:s.id,
               is_compulsory:Boolean(byId[String(s.id)]?.is_compulsory),
               question_limit:Number(byId[String(s.id)]?.question_limit||0),
               sort_order:byId[String(s.id)]?.sort_order??byId[String(s.id)]?.subject_order??0
@@ -5656,7 +5650,26 @@ async function getStudentExamSubjects(exam){
       }
     }
   }catch(error){
-    console.warn("Exam subject links:",error);
+    console.warn("Direct exam subject links:",error);
+  }
+
+  /* RPC fallback for installations where direct exam_subjects access is restricted. */
+  try{
+    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:examId});
+    if(!rpc.error){
+      let data=rpc.data;
+      if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){} }
+      if(Array.isArray(data)&&data.length){
+        /* Prefer subject_id from the RPC. Never replace it with exam_subjects.id. */
+        return data.map(row=>({
+          ...row,
+          id:row.subject_id||row.id,
+          subject_id:row.subject_id||row.id
+        }));
+      }
+    }
+  }catch(error){
+    console.warn("Student exam subjects RPC:",error);
   }
 
   return [];
@@ -5751,6 +5764,31 @@ async function updateExamQuestionChoices(exam,subjects,jamb){
           count=(qRes.data||[]).filter(q=>allowed.has(String(q.subject_id))).length;
         }
       }
+    }
+    /*
+     * Robust fallback for uploaded subjects such as WAEC English Language.
+     * If the normal linked-question read is affected by RLS or an older RPC,
+     * first resolve the real subjects.id values and then ask the question bank
+     * for published questions belonging to the selected subject. We only count
+     * questions that are actually linked to this exam when the link list is
+     * available; this never makes an unlinked question appear in the exam.
+     */
+    if(!count){
+      try{
+        const subj=[...new Set(selected.map(String).filter(Boolean))];
+        if(subj.length){
+          const bank=await db.from('questions').select('id,subject_id,status').in('subject_id',subj).eq('status','published').limit(10000);
+          if(!bank.error && Array.isArray(bank.data) && bank.data.length){
+            if(!linkRes.error && Array.isArray(linkRes.data) && linkRes.data.length){
+              const linked=new Set(linkRes.data.map(x=>String(x.question_id||'')).filter(Boolean));
+              count=(bank.data||[]).filter(q=>linked.has(String(q.id))).length;
+            } else if(linkRes.error){
+              /* If exam_questions itself is protected, fall through to the RPC. */
+              count=0;
+            }
+          }
+        }
+      }catch(_){ }
     }
     // Fallback only when direct tables are protected by RLS.
     if(!count){
