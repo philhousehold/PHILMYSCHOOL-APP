@@ -4272,27 +4272,39 @@ async function autoLinkQuestionToExam(examId, questionId, subjectId, marks=1){
   throw new Error("Automatic exam linking could not find a unique question number.");
 }
 
-async function autoLinkPublishedSubjectQuestions(examId, subjectId){
+async function autoLinkPublishedSubjectQuestions(examId, subjectId, examType="", examLabel=""){
   if(!examId || !subjectId) return {linked:0,alreadyLinked:0,failed:0};
-
-  const qRes=await db
-    .from("questions")
-    .select("id,marks")
-    .eq("subject_id",String(subjectId))
-    .eq("status","published")
-    .limit(10000);
-
-  if(qRes.error)
-    throw new Error("Could not load published questions for automatic linking: "+qRes.error.message);
-
-  let linked=0,alreadyLinked=0,failed=0;
-  for(const q of (qRes.data||[])){
-    try{
-      const result=await autoLinkQuestionToExam(examId,q.id,subjectId,q.marks);
-      if(result.alreadyLinked) alreadyLinked++; else if(result.linked) linked++;
-    }catch(error){
+  const [qRes,linkRes]=await Promise.all([
+    db.from("questions").select("id,marks,source_type,source_name").eq("subject_id",String(subjectId)).eq("status","published").limit(10000),
+    db.from("exam_questions").select("question_id,question_number").eq("exam_id",String(examId)).order("question_number",{ascending:true}).limit(10000)
+  ]);
+  if(qRes.error) throw new Error("Could not load published questions for automatic linking: "+qRes.error.message);
+  if(linkRes.error) throw new Error("Could not load existing examination question links: "+linkRes.error.message);
+  const typeText=String(examType||"").toLowerCase().trim();
+  const labelText=String(examLabel||"").toLowerCase().trim();
+  const questions=(qRes.data||[]).filter(q=>{
+    const st=String(q.source_type||"").toLowerCase().trim();
+    const sn=String(q.source_name||"").toLowerCase().trim();
+    return (typeText && st===typeText) || (labelText && sn===labelText) || (labelText && sn.includes(labelText));
+  });
+  const existingLinks=linkRes.data||[];
+  const existingIds=new Set(existingLinks.map(x=>String(x.question_id)).filter(Boolean));
+  let nextNumber=existingLinks.reduce((m,x)=>Math.max(m,Number(x.question_number)||0),0)+1;
+  let alreadyLinked=0,linked=0,failed=0;
+  questions.forEach(q=>{if(existingIds.has(String(q.id)))alreadyLinked++;});
+  const payload=questions.filter(q=>!existingIds.has(String(q.id))).map(q=>({exam_id:String(examId),question_id:String(q.id),question_number:nextNumber++,marks:Number(q.marks||1)}));
+  for(let i=0;i<payload.length;i+=300){
+    const batch=payload.slice(i,i+300);
+    const ins=await db.from("exam_questions").insert(batch);
+    if(!ins.error){linked+=batch.length;continue;}
+    for(const row of batch){
+      const one=await db.from("exam_questions").insert(row);
+      if(!one.error){linked++;continue;}
+      if(one.error.code==="23505"){
+        const exists=await db.from("exam_questions").select("id").eq("exam_id",String(examId)).eq("question_id",String(row.question_id)).maybeSingle();
+        if(!exists.error&&exists.data){alreadyLinked++;continue;}
+      }
       failed++;
-      console.warn("Automatic question link failed",q.id,error);
     }
   }
   return {linked,alreadyLinked,failed};
@@ -4585,12 +4597,22 @@ async function importCSV(){
     const subjectList=subjectsResult.data||[];
     const topicList=topicsResult.data||[];
     const linked=examSubjectResult.data||[];
-    if(!linked.some(x=>String(x.subject_id)===String(selectedSubjectId))){
-      throw new Error("The selected subject is not linked to this examination. Add it under Admin â Exam Subjects first.");
-    }
-
     const selectedSubject=subjectList.find(x=>String(x.id)===String(selectedSubjectId));
     if(!selectedSubject)throw new Error("The selected subject could not be found.");
+
+    // PERMANENT AUTO-SETUP: uploading a subject automatically creates the
+    // Exam â Subject record when it does not already exist. No SQL or separate
+    // Admin â Exam Subjects step is required after an upload.
+    if(!linked.some(x=>String(x.subject_id)===String(selectedSubjectId))){
+      const examTypeForSetup=String(csvImportExamType||"JAMB").toUpperCase();
+      const defaultLimit=(examTypeForSetup==="JAMB" && String(selectedSubject.code||"").toUpperCase()==="ENG")?60:40;
+      const setupPayload={exam_id:String(examId),subject_id:String(selectedSubjectId),is_compulsory:false,question_limit:defaultLimit,is_active:true};
+      let setup=await db.from("exam_subjects").insert(setupPayload).select("subject_id,question_limit,is_compulsory,is_active").single();
+      if(setup.error && setup.error.code!=="23505") throw new Error("Could not automatically activate this subject for the examination: "+setup.error.message);
+      if(setup.error && setup.error.code==="23505") setup=await db.from("exam_subjects").select("subject_id,question_limit,is_compulsory,is_active").eq("exam_id",examId).eq("subject_id",selectedSubjectId).maybeSingle();
+      if(setup.error) throw new Error("Could not confirm automatic examination subject setup: "+setup.error.message);
+      linked.push(setup.data||{subject_id:selectedSubjectId,question_limit:defaultLimit,is_compulsory:false,is_active:true});
+    }
 
     const findSubjectId=(raw)=>{
       const value=String(raw||"").trim();
@@ -4685,17 +4707,8 @@ async function importCSV(){
         const optionResult=await saveQuestionOptions(questionId,[["A",optionA],["B",optionB],["C",optionC],["D",optionD]],correctAnswer);
         if(!optionResult.success){await db.from("questions").delete().eq("id",questionId);throw new Error(optionResult.error||"Could not save answer options.");}
 
-        // Critical routing step: automatically attach the question to the selected exam.
-        // The helper is duplicate-safe and also protects against question-number collisions.
-        try{
-          await autoLinkQuestionToExam(examId,questionId,selectedSubjectId,Number(r.marks||1));
-        }catch(linkError){
-          await db.from("question_options").delete().eq("question_id",questionId);
-          await db.from("questions").delete().eq("id",questionId);
-          throw linkError;
-        }
-
-        nextQuestionNumber++;inserted++;linkedCount++;
+        // Linking is deferred until all questions are saved. Bulk reconciliation below links the selected subject to this exact exam.
+        nextQuestionNumber++;inserted++;
       }catch(rowError){failed++;errors.push(`Row ${i+2}: ${rowError.message||"Unknown error"}`);}
       finally{
         setImportProgress(i+1,totalRows,inserted,failed,linkedCount,`Processed question ${i+1} of ${totalRows}`);
@@ -4707,7 +4720,12 @@ async function importCSV(){
     // belonging to the selected subject to this exact examination now.
     let reconciliation={linked:0,alreadyLinked:0,failed:0};
     try{
-      reconciliation=await autoLinkPublishedSubjectQuestions(examId,selectedSubjectId);
+      reconciliation=await autoLinkPublishedSubjectQuestions(
+        examId,
+        selectedSubjectId,
+        csvImportExamType,
+        csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId)))
+      );
       linkedCount += reconciliation.linked;
     }catch(reconcileError){
       console.warn("Automatic reconciliation warning:",reconcileError);
