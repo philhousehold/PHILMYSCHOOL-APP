@@ -154,7 +154,7 @@ textarea{
 
 
 /* SEARCHABLE SUBJECT PICKERS */
-.bulkQuestionBar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 14px;padding:10px 0}.bulkQuestionBar label{display:flex;align-items:center;gap:8px;font-weight:700}.bulkQuestionBar input[type="checkbox"],.questionSelectBox{width:19px;height:19px;accent-color:#1677ed}.bulkDeleteBtn{border:0;border-radius:9px;padding:10px 14px;background:#dc2626;color:#fff;font-weight:800;cursor:pointer}.bulkDeleteBtn:disabled{background:#cbd5e1;color:#64748b;cursor:not-allowed}.questionSelectedCount{font-weight:700;color:var(--muted)}.questionSelectCell{width:42px;text-align:center}.jambEnglishLine{display:flex;align-items:center;gap:10px;margin:14px 0 12px;font-weight:700}.jambEnglishLine .check{width:20px;height:20px;border-radius:5px;background:#1677ed;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px}.jambEnglishLine small{display:block;color:var(--muted);font-weight:600;margin-top:2px}.jambStandardLine{margin-top:14px;font-size:14px;color:var(--muted)}
+.bulkQuestionBar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 14px;padding:10px 0}.bulkQuestionBar label{display:flex;align-items:center;gap:8px;font-weight:700}.bulkQuestionBar input[type="checkbox"],.questionSelectBox{width:19px;height:19px;accent-color:#1677ed}.bulkDeleteBtn{border:0;border-radius:9px;padding:10px 14px;background:#dc2626;color:#fff;font-weight:800;cursor:pointer}.bulkDeleteBtn:disabled{background:#cbd5e1;color:#64748b;cursor:not-allowed}.questionSelectedCount{font-weight:700;color:var(--muted)}.questionSelectCell{width:42px;text-align:center}.jambEnglishLine{display:flex;align-items:center;gap:10px;margin:14px 0 12px;font-weight:700}.jambEnglishLine .check{width:20px;height:20px;border-radius:5px;background:#1677ed;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px}.jambEnglishLine small{display:block;color:var(--muted);font-weight:600;margin-top:2px}.jambStandardLine{margin-top:14px;font-size:14px;color:var(--muted)}.csvImportTypeBar .btn{min-height:46px;font-size:16px}.csvImportTypeBar .btn.secondary{border:1px solid #dbe4f0;background:#fff;color:#1677ed}
 .subjectPicker{position:relative;width:100%}.subjectPickerSearch{margin-bottom:8px}.subjectPickerList{max-height:280px;overflow:auto;border:1px solid var(--border);border-radius:10px;background:#fff}.subjectPickerItem{display:flex;align-items:center;gap:10px;width:100%;padding:12px 13px;border:0;border-bottom:1px solid #eef2f7;background:#fff;text-align:left;cursor:pointer}.subjectPickerItem:hover{background:#eff6ff}.subjectPickerItem.selected{background:#dbeafe}.subjectPickerItem input{width:18px;height:18px;flex:0 0 auto;padding:0}.subjectPickerEmpty{padding:18px;text-align:center;color:var(--muted)}.subjectPickerSelected{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.subjectChip{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:6px 9px;font-size:13px;font-weight:700}.subjectChip button{border:0;background:transparent;color:inherit;font-weight:900;padding:0 2px}.studentSubjectPicker{margin-top:15px}.studentSubjectPicker .subjectPickerList{max-height:48vh}.examSelectedSummary{margin-top:10px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)}
 @media(max-width:700px){.modal{align-items:flex-start;padding:10px}.modalBox{max-height:96vh;padding:17px;border-radius:14px}.formGrid{grid-template-columns:1fr}.formGroup.full{grid-column:auto}.subjectPickerList{max-height:48vh}}
 
@@ -4201,442 +4201,378 @@ async function deleteQuestion(id){
 }
 
 /* =========================================================
-   CSV IMPORT
+   CSV IMPORT â EXAM / SUBJECT LINKED IMPORT
+   Questions imported here are attached to a specific examination
+   and subject so JAMB and WAEC question banks stay separated.
 ========================================================= */
 
-async function openCSVImport(){
+let csvImportExams=[];
+let csvImportSubjects=[];
+let csvImportTopics=[];
+let csvImportExamType="JAMB";
 
-  // Prevent duplicate import windows.
-  const existing=document.getElementById("csvModal");
-  if(existing){
-    existing.remove();
+function csvExamType(exam){
+  const text=(String(exam?.exam_type||exam?.type||"")+" "+String(exam?.title||exam?.name||"")).toLowerCase();
+  return text.includes("waec") ? "WAEC" : "JAMB";
+}
+
+function csvExamLabel(exam){
+  return String(exam?.title||exam?.name||"Examination");
+}
+
+async function loadCSVImportExams(type="JAMB"){
+  csvImportExamType=type;
+  const select=document.getElementById("csvExam");
+  const subjectSelect=document.getElementById("csvSubject");
+  if(select) select.innerHTML='<option value="">Loading examinations...</option>';
+  if(subjectSelect) subjectSelect.innerHTML='<option value="">Select examination first</option>';
+
+  const result=await db.from("exams").select("*").order("created_at",{ascending:false}).limit(5000);
+  if(result.error){
+    if(select) select.innerHTML='<option value="">Could not load examinations</option>';
+    throw new Error("Could not load examinations: "+result.error.message);
   }
 
-  // Make sure the subject list is available even when the
-  // import button is opened directly from the dashboard.
+  csvImportExams=(result.data||[]).filter(e=>csvExamType(e)===type);
+
+  if(!csvImportExams.length){
+    if(select) select.innerHTML=`<option value="">No ${type} examination found</option>`;
+    return;
+  }
+
+  if(select){
+    select.innerHTML='<option value="">Select '+type+' examination</option>'+csvImportExams.map(e=>
+      `<option value="${escapeHTML(String(e.id))}">${escapeHTML(csvExamLabel(e))}</option>`
+    ).join("");
+  }
+}
+
+async function loadCSVImportSubjects(examId){
+  const subjectSelect=document.getElementById("csvSubject");
+  if(subjectSelect) subjectSelect.innerHTML='<option value="">Loading subjects...</option>';
+  if(!examId){
+    if(subjectSelect) subjectSelect.innerHTML='<option value="">Select examination first</option>';
+    return;
+  }
+
+  let list=[];
   try{
-    if(!Array.isArray(subjects) || !subjects.length){
-      await loadSubjects();
-    }
+    const rpc=await db.rpc("get_student_exam_subjects",{p_exam_id:String(examId)});
+    let data=rpc.data;
+    if(typeof data==="string"){try{data=JSON.parse(data)}catch(_){} }
+    if(!rpc.error && Array.isArray(data)) list=data;
   }catch(error){
-    console.warn("Unable to load subjects before CSV import:",error);
+    console.warn("CSV exam subjects RPC:",error);
   }
 
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `
+  if(!list.length){
+    const direct=await db.from("exam_subjects").select("subject_id,question_limit,is_compulsory,is_active").eq("exam_id",examId);
+    if(!direct.error && direct.data?.length){
+      const ids=direct.data.map(x=>x.subject_id).filter(Boolean);
+      const sr=await db.from("subjects").select("*").in("id",ids).order("name",{ascending:true});
+      if(!sr.error) list=(sr.data||[]).map(s=>{
+        const link=direct.data.find(x=>String(x.subject_id)===String(s.id));
+        return {...s, question_limit:link?.question_limit, is_compulsory:link?.is_compulsory};
+      });
+    }
+  }
 
+  if(!list.length){
+    if(subjectSelect) subjectSelect.innerHTML='<option value="">No subjects are linked to this examination</option>';
+    csvImportSubjects=[];
+    return;
+  }
+
+  csvImportSubjects=list;
+  if(subjectSelect){
+    subjectSelect.innerHTML='<option value="">Select subject</option>'+list.map(s=>
+      `<option value="${escapeHTML(String(s.id))}">${escapeHTML(subjectDisplayName(s))}${s.code?` â ${escapeHTML(String(s.code))}`:""}${s.is_compulsory?" â Compulsory":""}</option>`
+    ).join("");
+  }
+}
+
+async function openCSVImport(){
+  document.getElementById("csvModal")?.remove();
+
+  try{
+    if(!Array.isArray(subjects) || !subjects.length) await loadSubjects();
+  }catch(error){ console.warn("Unable to load subjects before CSV import:",error); }
+
+  document.body.insertAdjacentHTML("beforeend",`
     <div class="modal" id="csvModal">
+      <div class="modalBox" style="max-width:760px">
+        <div class="modalHead">
+          <h2>Import Questions from CSV</h2>
+          <button type="button" class="closeBtn" onclick="closeCSVImport()">X</button>
+        </div>
 
-     <div class="modalBox">
+        <p class="muted" style="margin-top:8px">
+          Choose the examination first, then the exact subject. Every imported question will be saved to that subject and linked to that examination so it appears on the correct student exam.
+        </p>
 
-      <div class="modalHead">
+        <div class="csvImportTypeBar" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px">
+          <button type="button" id="csvJambType" class="btn primary" onclick="setCSVImportType('JAMB')">JAMB</button>
+          <button type="button" id="csvWaecType" class="btn secondary" onclick="setCSVImportType('WAEC')">WAEC</button>
+        </div>
 
-       <h2>
-        Import Questions from CSV
-       </h2>
+        <div class="formGroup" style="margin-top:16px">
+          <label>Examination</label>
+          <select id="csvExam" onchange="loadCSVImportSubjects(this.value);updateCSVRoutePreview()">
+            <option value="">Loading examinations...</option>
+          </select>
+          <small class="muted" style="display:block;margin-top:6px">Only ${csvImportExamType} examinations are shown.</small>
+        </div>
 
-       <button
-        type="button"
-        class="closeBtn"
-        onclick="closeCSVImport()">
+        <div class="formGroup">
+          <label>Particular Subject</label>
+          <select id="csvSubject" onchange="updateCSVRoutePreview()">
+            <option value="">Select examination first</option>
+          </select>
+          <small class="muted" style="display:block;margin-top:6px">Example: English Language â JAMB or English Language â WAEC. The selected subject controls where the questions go.</small>
+        </div>
 
-        X
+        <div class="panel" style="margin-top:15px">
+          <strong>CSV format</strong>
+          <code style="display:block;white-space:pre-wrap;line-height:1.7;margin-top:8px">subject_id,subject,topic_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answer,difficulty,marks,status,explanation,feedback,recommendation,source_type,source_name,source_year,image_url</code>
+          <p class="muted" style="margin-top:10px">The selected Examination and Subject above are the main routing controls. If <strong>subject_id</strong> is empty, the selected subject is used. <strong>correct_answer</strong> must be A, B, C or D.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <button type="button" class="btn secondary" onclick="downloadCSVTemplate('JAMB')">Download JAMB CSV Template</button>
+            <button type="button" class="btn secondary" onclick="downloadCSVTemplate('WAEC')">Download WAEC CSV Template</button>
+          </div>
+        </div>
 
-       </button>
+        <div class="formGroup" style="margin-top:16px">
+          <label>CSV File</label>
+          <input id="csvFile" type="file" accept=".csv,text/csv" onchange="showCSVFileName()">
+          <small id="csvFileName" class="muted" style="display:block;margin-top:7px">No file selected</small>
+        </div>
 
+        <div id="csvRoutePreview" class="panel" style="display:none;margin-top:14px"></div>
+        <div id="csvMessage"></div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+          <button type="button" class="btn secondary" onclick="closeCSVImport()">Cancel</button>
+          <button type="button" class="btn primary" id="csvImportButton" onclick="importCSV()">Import Questions</button>
+        </div>
       </div>
+    </div>`);
 
-      <p class="muted" style="margin-top:8px">
-       Upload a CSV file and the questions will be saved directly to PHILMYSCHOOL.
-      </p>
+  await setCSVImportType("JAMB");
+}
 
-      <div class="panel" style="margin-top:15px">
+async function setCSVImportType(type){
+  csvImportExamType=type;
+  const jamb=document.getElementById("csvJambType");
+  const waec=document.getElementById("csvWaecType");
+  if(jamb){jamb.className=type==="JAMB"?"btn primary":"btn secondary";}
+  if(waec){waec.className=type==="WAEC"?"btn primary":"btn secondary";}
+  const subject=document.getElementById("csvSubject");
+  if(subject)subject.innerHTML='<option value="">Select examination first</option>';
+  await loadCSVImportExams(type);
+  updateCSVRoutePreview();
+}
 
-       <strong>CSV columns</strong>
-
-       <code style="display:block;white-space:pre-wrap;line-height:1.7;margin-top:8px">
-subject_id,subject,topic_id,topic,question_text,option_a,option_b,option_c,option_d,correct_answer,difficulty,marks,status,explanation,feedback,recommendation
-       </code>
-
-       <p class="muted" style="margin-top:10px">
-        correct_answer must be A, B, C or D.
-       </p>
-
-      </div>
-
-      <div class="formGroup">
-
-       <label>CSV File</label>
-
-       <input
-        id="csvFile"
-        type="file"
-        accept=".csv,text/csv"
-        onchange="showCSVFileName()">
-
-       <small id="csvFileName" class="muted" style="display:block;margin-top:7px">
-        No file selected
-       </small>
-
-      </div>
-
-      <div class="formGroup">
-
-       <label>Default Subject</label>
-
-       <select id="csvSubject">
-
-        <option value="">
-         Use subject_id column
-        </option>
-
-        ${(Array.isArray(subjects)?subjects:[]).map(s=>`
-
-         <option value="${s.id}">
-          ${escapeHTML(s.name||s.subject_name||s.code||"")}
-         </option>
-
-        `).join("")}
-
-       </select>
-
-      </div>
-
-      <div id="csvMessage"></div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
-
-       <button
-        type="button"
-        class="btn secondary"
-        onclick="closeCSVImport()">
-        Cancel
-       </button>
-
-       <button
-        type="button"
-        class="btn primary"
-        id="csvImportButton"
-        onclick="importCSV()">
-         Import Questions
-       </button>
-
-      </div>
-
-     </div>
-
-    </div>`
-  );
+function updateCSVRoutePreview(){
+  const box=document.getElementById("csvRoutePreview");
+  if(!box)return;
+  const exam=document.getElementById("csvExam")?.selectedOptions?.[0]?.textContent||"Not selected";
+  const subject=document.getElementById("csvSubject")?.selectedOptions?.[0]?.textContent||"Not selected";
+  box.style.display="block";
+  box.innerHTML=`<strong>Import destination</strong><div style="margin-top:7px">${escapeHTML(csvImportExamType)} â ${escapeHTML(exam)} â ${escapeHTML(subject)}</div><small class="muted" style="display:block;margin-top:6px">Students will see these questions only through the selected examination/subject route.</small>`;
 }
 
 function showCSVFileName(){
   const input=document.getElementById("csvFile");
   const label=document.getElementById("csvFileName");
-  if(!label)return;
-  label.textContent=input?.files?.[0]
-    ? input.files[0].name
-    : "No file selected";
+  if(label)label.textContent=input?.files?.[0]?input.files[0].name:"No file selected";
+  updateCSVRoutePreview();
 }
 
-function closeCSVImport(){
-
-  document
-    .getElementById("csvModal")
-    ?.remove();
-}
+function closeCSVImport(){ document.getElementById("csvModal")?.remove(); }
 
 function parseCSV(text){
-
-  const rows=[];
-  let row=[];
-  let cell="";
-  let quoted=false;
-
+  const rows=[]; let row=[]; let cell=""; let quoted=false;
   for(let i=0;i<text.length;i++){
-
-    const char=text[i];
-    const next=text[i+1];
-
+    const char=text[i],next=text[i+1];
     if(char==='"'){
-
-      if(quoted&&next==='"'){
-
-        cell+='"';
-        i++;
-
-      }else{
-
-        quoted=!quoted;
-      }
-
+      if(quoted&&next==='"'){cell+='"';i++;}else quoted=!quoted;
       continue;
     }
-
-    if(char===","&&!quoted){
-
-      row.push(cell);
-      cell="";
-      continue;
+    if(char===','&&!quoted){row.push(cell);cell="";continue;}
+    if((char==='\n'||char==='\r')&&!quoted){
+      if(char==='\r'&&next==='\n')i++;
+      row.push(cell);cell="";
+      if(row.some(x=>x.trim()!==""))rows.push(row);
+      row=[];continue;
     }
-
-    if(
-      (char==="\n"||
-       char==="\r")&&!quoted
-    ){
-
-      if(
-        char==="\r"&&
-        next==="\n"
-      ){
-        i++;
-      }
-
-      row.push(cell);
-      cell="";
-
-      if(row.some(x=>x.trim()!==""))
-        rows.push(row);
-
-      row=[];
-      continue;
-    }
-
     cell+=char;
   }
-
-  if(cell.length||row.length){
-
-    row.push(cell);
-
-    if(row.some(x=>x.trim()!==""))
-      rows.push(row);
-  }
-
+  if(cell.length||row.length){row.push(cell);if(row.some(x=>x.trim()!==""))rows.push(row);}
   return rows;
 }
 
 function csvObjects(text){
+  const rows=parseCSV(text); if(rows.length<2)return [];
+  const headers=rows[0].map(h=>h.trim().toLowerCase().replace(/^\uFEFF/,''));
+  return rows.slice(1).map(row=>{const obj={};headers.forEach((h,i)=>obj[h]=(row[i]||"").trim());return obj;});
+}
 
-  const rows=parseCSV(text);
+function csvEscape(value){
+  const s=String(value??"");
+  return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
 
-  if(rows.length<2)
-    return [];
-
-  const headers=
-    rows[0].map(
-      h=>h.trim().toLowerCase()
-    );
-
-  return rows.slice(1).map(row=>{
-
-    const obj={};
-
-    headers.forEach(
-      (h,i)=>{
-        obj[h]=
-          (row[i]||"").trim();
-      }
-    );
-
-    return obj;
-  });
+function downloadCSVTemplate(type){
+  const headers=["subject_id","subject","topic_id","topic","question_text","option_a","option_b","option_c","option_d","correct_answer","difficulty","marks","status","explanation","feedback","recommendation","source_type","source_name","source_year","image_url"];
+  const example=type==="JAMB"
+    ?["","Mathematics","","Algebra","What is 2 + 2?","3","4","5","6","B","medium","1","published","2 + 2 equals 4.","","","JAMB","JAMB UTME 2027 Practice Examination","2027",""]
+    :["","Mathematics","","Number and Numeration","What is 2 + 2?","3","4","5","6","B","medium","1","published","2 + 2 equals 4.","","","WAEC","WAEC Mathematics Practice","2027",""];
+  const csv=headers.join(",")+"\n"+example.map(csvEscape).join(",")+"\n";
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a");
+  a.href=url;a.download=`PHILMYSCHOOL_${type}_QUESTION_TEMPLATE.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
 
 async function importCSV(){
-
   const fileInput=document.getElementById("csvFile");
   const subjectSelect=document.getElementById("csvSubject");
+  const examSelect=document.getElementById("csvExam");
   const message=document.getElementById("csvMessage");
   const button=document.getElementById("csvImportButton");
 
-  if(!fileInput || !message){
-    alert("The import window could not be opened correctly. Refresh the page and try again.");
-    return;
-  }
+  const file=fileInput?.files?.[0];
+  const examId=examSelect?.value||"";
+  const selectedSubjectId=subjectSelect?.value||"";
 
-  const file=fileInput.files?.[0];
-  if(!file){
-    message.innerHTML=`<div class="errorBox">Select a CSV file first.</div>`;
-    return;
-  }
+  if(!examId){message.innerHTML='<div class="errorBox">Select the particular examination first â JAMB or WAEC.</div>';return;}
+  if(!selectedSubjectId){message.innerHTML='<div class="errorBox">Select the particular subject before importing.</div>';return;}
+  if(!file){message.innerHTML='<div class="errorBox">Select a CSV file first.</div>';return;}
 
-  if(button){
-    button.disabled=true;
-    button.textContent="Importing... Importing...";
-  }
-
-  message.innerHTML=`<div class="panel">Reading and validating your CSV...</div>`;
+  if(button){button.disabled=true;button.textContent="Importing...";}
+  message.innerHTML='<div class="panel">Reading, validating and linking your questions...</div>';
 
   try{
     const text=await file.text();
     const rows=csvObjects(text);
+    if(!rows.length)throw new Error("No CSV records were found. Make sure the first row contains column headers.");
 
-    if(!rows.length){
-      throw new Error("No CSV records were found. Make sure the first row contains column headers.");
-    }
-
-    const defaultSubjectId=subjectSelect?.value||"";
-
-    // Load subjects/topics once so CSV files may use IDs, names, or codes.
-    const [subjectsResult,topicsResult]=await Promise.all([
+    const [subjectsResult,topicsResult,examSubjectResult]=await Promise.all([
       db.from("subjects").select("id,name,code,is_active"),
-      db.from("topics").select("id,subject_id,name,is_active")
+      db.from("topics").select("id,subject_id,name,is_active"),
+      db.from("exam_subjects").select("subject_id,question_limit,is_compulsory,is_active").eq("exam_id",examId)
     ]);
-
-    if(subjectsResult.error){
-      throw new Error("Could not load subjects: "+subjectsResult.error.message);
-    }
-
-    if(topicsResult.error){
-      throw new Error("Could not load topics: "+topicsResult.error.message);
-    }
+    if(subjectsResult.error)throw new Error("Could not load subjects: "+subjectsResult.error.message);
+    if(topicsResult.error)throw new Error("Could not load topics: "+topicsResult.error.message);
+    if(examSubjectResult.error)throw new Error("Could not verify examination subjects: "+examSubjectResult.error.message);
 
     const subjectList=subjectsResult.data||[];
     const topicList=topicsResult.data||[];
+    const linked=examSubjectResult.data||[];
+    if(!linked.some(x=>String(x.subject_id)===String(selectedSubjectId))){
+      throw new Error("The selected subject is not linked to this examination. Add it under Admin â Exam Subjects first.");
+    }
+
+    const selectedSubject=subjectList.find(x=>String(x.id)===String(selectedSubjectId));
+    if(!selectedSubject)throw new Error("The selected subject could not be found.");
 
     const findSubjectId=(raw)=>{
       const value=String(raw||"").trim();
-      if(!value)return defaultSubjectId||null;
+      if(!value)return selectedSubjectId;
+      if(String(selectedSubjectId)===value)return selectedSubjectId;
       if(subjectList.some(x=>String(x.id)===value))return value;
       const lower=value.toLowerCase();
-      const match=subjectList.find(x=>
-        String(x.name||"").trim().toLowerCase()===lower ||
-        String(x.code||"").trim().toLowerCase()===lower
-      );
+      const match=subjectList.find(x=>String(x.name||"").trim().toLowerCase()===lower||String(x.code||"").trim().toLowerCase()===lower);
       return match?.id||null;
     };
-
     const findTopicId=(raw,subjectId)=>{
-      const value=String(raw||"").trim();
-      if(!value)return null;
+      const value=String(raw||"").trim(); if(!value)return null;
       if(topicList.some(x=>String(x.id)===value))return value;
       const lower=value.toLowerCase();
-      const match=topicList.find(x=>
-        String(x.subject_id||"")===String(subjectId||"") &&
-        String(x.name||"").trim().toLowerCase()===lower
-      );
+      const match=topicList.find(x=>String(x.subject_id||"")===String(subjectId||"")&&String(x.name||"").trim().toLowerCase()===lower);
       return match?.id||null;
     };
 
-    let inserted=0;
-    let failed=0;
-    const errors=[];
+    // Start question numbering after the last linked question for this exam.
+    let nextQuestionNumber=1;
+    try{
+      const qr=await db.from("exam_questions").select("question_number").eq("exam_id",examId).order("question_number",{ascending:false}).limit(1);
+      if(!qr.error&&qr.data?.length)nextQuestionNumber=Number(qr.data[0].question_number||0)+1;
+    }catch(_){ }
+
+    let inserted=0,failed=0,linkedCount=0;const errors=[];
 
     for(let i=0;i<rows.length;i++){
       const r=rows[i]||{};
-
       try{
-        const subjectId=findSubjectId(
-          r.subject_id||r.subject_id_uuid||r.subject||r.subject_name||r.subject_code
-        );
-
-        const topicId=findTopicId(
-          r.topic_id||r.topic||r.topic_name,
-          subjectId
-        );
-
-        const questionText=String(
-          r.question_text||r.question||r.text||""
-        ).trim();
-
+        const subjectId=findSubjectId(r.subject_id||r.subject||r.subject_name||r.subject_code);
+        const topicId=findTopicId(r.topic_id||r.topic||r.topic_name,subjectId);
+        const questionText=String(r.question_text||r.question||r.text||"").trim();
         const optionA=String(r.option_a||r.a||"").trim();
         const optionB=String(r.option_b||r.b||"").trim();
         const optionC=String(r.option_c||r.c||"").trim();
         const optionD=String(r.option_d||r.d||"").trim();
+        const correctAnswer=normalizeAnswer(r.correct_answer||r.answer||r.correct);
 
-        const correctAnswer=normalizeAnswer(
-          r.correct_answer||r.answer||r.correct
-        );
-
-        if(!subjectId)throw new Error("Subject was not found. Use a subject UUID, subject name/code, or select Default Subject.");
+        if(!subjectId)throw new Error("Subject was not found.");
+        if(String(subjectId)!==String(selectedSubjectId))throw new Error(`CSV subject does not match selected subject ${subjectDisplayName(selectedSubject)}.`);
         if(!questionText)throw new Error("Question text is missing.");
         if(!optionA||!optionB||!optionC||!optionD)throw new Error("Options A, B, C and D are all required.");
         if(!["A","B","C","D"].includes(correctAnswer))throw new Error("Correct answer must be A, B, C or D.");
 
         const payload={
-          subject_id:subjectId,
+          subject_id:selectedSubjectId,
           topic_id:topicId,
           question_text:questionText,
           explanation:r.explanation||null,
           difficulty:r.difficulty||"medium",
           marks:Number(r.marks||1),
-          source_type:r.source_type||"import",
-          source_name:r.source_name||null,
+          source_type:r.source_type||csvImportExamType.toLowerCase(),
+          source_name:r.source_name||csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId)))||null,
           source_year:r.source_year?Number(r.source_year):null,
           status:r.status||"published",
           created_by:user?.id||null,
           reviewed_by:null,
           image_url:r.image_url||null,
-          option_a:optionA,
-          option_b:optionB,
-          option_c:optionC,
-          option_d:optionD,
+          option_a:optionA,option_b:optionB,option_c:optionC,option_d:optionD,
           correct_answer:correctAnswer,
           feedback:r.feedback||null,
           recommendation:r.recommendation||null
         };
 
-        const result=await db
-          .from("questions")
-          .insert(payload)
-          .select("id")
-          .single();
+        const result=await db.from("questions").insert(payload).select("id").single();
+        if(result.error)throw new Error(result.error.message);
+        const questionId=result.data?.id;if(!questionId)throw new Error("Question was saved but no question ID was returned.");
 
-        if(result.error){
-          throw new Error(result.error.message);
-        }
+        const optionResult=await saveQuestionOptions(questionId,[["A",optionA],["B",optionB],["C",optionC],["D",optionD]],correctAnswer);
+        if(!optionResult.success){await db.from("questions").delete().eq("id",questionId);throw new Error(optionResult.error||"Could not save answer options.");}
 
-        const questionId=result.data?.id;
-        if(!questionId)throw new Error("Question was saved but no question ID was returned.");
-
-        const optionResult=await saveQuestionOptions(
-          questionId,
-          [["A",optionA],["B",optionB],["C",optionC],["D",optionD]],
-          correctAnswer
-        );
-
-        if(!optionResult.success){
+        // Critical routing step: attach the question to the selected exam.
+        const link=await db.from("exam_questions").insert({exam_id:examId,question_id:questionId,question_number:nextQuestionNumber}).select("id").single();
+        if(link.error){
+          await db.from("question_options").delete().eq("question_id",questionId);
           await db.from("questions").delete().eq("id",questionId);
-          throw new Error(optionResult.error||"Could not save the answer options.");
+          throw new Error("Question was saved but could not be linked to the selected examination: "+link.error.message);
         }
 
-        inserted++;
-
-      }catch(rowError){
-        failed++;
-        errors.push(`Row ${i+2}: ${rowError.message||"Unknown error"}`);
-      }
+        nextQuestionNumber++;inserted++;linkedCount++;
+      }catch(rowError){failed++;errors.push(`Row ${i+2}: ${rowError.message||"Unknown error"}`);}
     }
 
-    const errorBlock=errors.length
-      ?`<div style="margin-top:14px;max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px">${escapeHTML(errors.slice(0,30).join("\n"))}</div>`
-      :"";
-
-    message.innerHTML=`
-      <div class="${failed?"errorBox":"successBox"}">
-        <strong>Import complete</strong><br><br>
-        Added: <strong>${inserted}</strong><br>
-        Failed: <strong>${failed}</strong>
-        ${errorBlock}
-      </div>`;
-
+    const errorBlock=errors.length?`<div style="margin-top:14px;max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px">${escapeHTML(errors.slice(0,30).join("\n"))}</div>`:"";
+    message.innerHTML=`<div class="${failed?"errorBox":"successBox"}"><strong>Import complete</strong><br><br>Exam: <strong>${escapeHTML(csvExamLabel(csvImportExams.find(e=>String(e.id)===String(examId))))}</strong><br>Subject: <strong>${escapeHTML(subjectDisplayName(selectedSubject))}</strong><br>Added: <strong>${inserted}</strong><br>Linked to student exam: <strong>${linkedCount}</strong><br>Failed: <strong>${failed}</strong>${errorBlock}</div>`;
     await loadQuestionBank();
-
   }catch(error){
     console.error("CSV IMPORT ERROR",error);
     message.innerHTML=`<div class="errorBox"><strong>Import failed</strong><br><br>${escapeHTML(error.message||"Unknown error")}</div>`;
   }finally{
-    if(button){
-      button.disabled=false;
-      button.textContent=" Import Questions";
-    }
+    if(button){button.disabled=false;button.textContent="Import Questions";}
   }
 }
 
 /* =========================================================
    STUDENT MANAGEMENT
 ========================================================= */
+
 
 async function renderStudentManagement(){
 
