@@ -3486,6 +3486,37 @@ function getFilteredQuestionRows(){
   });
 }
 
+async function deleteQuestionRelations(ids){
+  const cleanIds=[...new Set((ids||[]).map(String).filter(Boolean))];
+  if(!cleanIds.length)return;
+
+  // IMPORTANT: exam_questions has a foreign key to questions.
+  // Remove those links BEFORE deleting from questions, otherwise
+  // PostgreSQL rejects the delete with 23503 / 42P01-style FK errors.
+  for(let i=0;i<cleanIds.length;i+=100){
+    const chunk=cleanIds.slice(i,i+100);
+
+    const examLinks=await db
+      .from("exam_questions")
+      .delete()
+      .in("question_id",chunk);
+
+    if(examLinks.error){
+      throw new Error(`Could not remove exam question links: ${examLinks.error.message}`);
+    }
+
+    // Remove answer options linked to the questions.
+    const optionLinks=await db
+      .from("question_options")
+      .delete()
+      .in("question_id",chunk);
+
+    if(optionLinks.error && !/does not exist|relation .*question_options/i.test(optionLinks.error.message||"")){
+      throw new Error(`Could not remove question options: ${optionLinks.error.message}`);
+    }
+  }
+}
+
 async function bulkDeleteQuestions(){
   const ids=[...selectedQuestionIds].filter(Boolean);
   if(!ids.length)return;
@@ -3496,13 +3527,10 @@ async function bulkDeleteQuestions(){
   if(btn){btn.disabled=true;btn.textContent="Deleting...";}
 
   try{
-    // Remove linked answer options first where that table exists.
-    for(let i=0;i<ids.length;i+=100){
-      const chunk=ids.slice(i,i+100);
-      try{await db.from("question_options").delete().in("question_id",chunk);}catch(_){}
-    }
+    // First remove every foreign-key link, then remove the questions.
+    await deleteQuestionRelations(ids);
 
-    // Delete questions in small batches to avoid URL/request-size limits.
+    // Delete questions in small batches to avoid request-size limits.
     for(let i=0;i<ids.length;i+=100){
       const chunk=ids.slice(i,i+100);
       const result=await db.from("questions").delete().in("id",chunk);
@@ -4151,35 +4179,25 @@ async function deleteQuestion(id){
   ))
     return;
 
-  /*
-   * Delete options first where possible.
-  */
-
   try{
+    // Remove FK references before deleting the question itself.
+    await deleteQuestionRelations([id]);
 
-    await db
-      .from("question_options")
-      .delete()
-      .eq("question_id",id);
-
-  }catch(error){
-
-    console.warn(error);
-  }
-
-  const result=
-    await db
+    const result=await db
       .from("questions")
       .delete()
       .eq("id",id);
 
-  if(result.error){
+    if(result.error){
+      alert(result.error.message);
+      return;
+    }
 
-    alert(result.error.message);
-    return;
+    await adminQuestionBank();
+  }catch(error){
+    console.error("Question delete:",error);
+    alert(`Delete failed: ${error.message||"Unknown error"}`);
   }
-
-  await adminQuestionBank();
 }
 
 /* =========================================================
